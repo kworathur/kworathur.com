@@ -4,28 +4,55 @@ import * as styles from './Projects.module.scss';
 
 import resume from '../../../data/resume.json';
 import cv from '../../../data/cv.json';
+import { graphql, useStaticQuery } from 'gatsby';
+import {
+  GatsbyImage,
+  getImage,
+  IGatsbyImageData,
+  ImageDataLike,
+} from 'gatsby-plugin-image';
 
 const Projects = (): ReactElement => {
   const projectIds = resume.projects;
   const projects = cv.projects.filter((project) => {
     return projectIds.includes(project.id);
   });
-  console.log(styles);
+  const data = useStaticQuery(graphql`
+    query {
+      allFile(filter: { absolutePath: { regex: "/screens/" } }) {
+        nodes {
+          childImageSharp {
+            gatsbyImageData(layout: FULL_WIDTH, placeholder: BLURRED)
+          }
+          absolutePath
+        }
+      }
+    }
+  `);
+  console.log('Screen data ', data);
+
   return (
     <>
       <h2 className="section-title">Selected Work</h2>
 
       <div className="section">
-        <div className={styles['projects']}></div>
         {projects.map((project, i) => {
           return (
-            <div className={styles['portfolioCard']}>
-              <div className={styles['portfolioCardMedia']}>
-                Media
-                {/* TODO: research how to add lightbox */}
-              </div>
-              <div className={styles['portfolioCardBody']}>
-                <h3>{project.name}</h3>
+            <div key={i}>
+              <h3 className={styles['projectHeading']}>{project.name}</h3>
+              <p>{project.summary}</p>
+              <div>
+                {data.allFile.nodes
+                  .filter((n: ImageDataLike & { absolutePath: string }) => {
+                    console.log(project.id);
+                    console.log(n.absolutePath);
+                    console.log(n.absolutePath.includes(project.id));
+                    return n.absolutePath.includes(project.id);
+                  })
+                  .map((n: ImageDataLike, i: number) => (
+                    //@ts-ignore
+                    <GatsbyImage key={i} alt="alt" image={getImage(n)} />
+                  ))}
               </div>
             </div>
           );
@@ -34,49 +61,5 @@ const Projects = (): ReactElement => {
     </>
   );
 };
-
-// const character = ``;
-//           const triggerTitle = (
-//             <>
-//               <div className="item"></div>
-//               <h3 className="entry-title">
-//                 {project.name}, <i>{project.summary}</i> {character}
-//               </h3>
-//             </>
-//           );
-//           return (
-//             <Collapsible
-//               key={i}
-//               trigger={triggerTitle}
-//               transitionTime={300}
-//               easing="ease-in-out"
-//             >
-//               <div className="entry" key={i}>
-//                 <h5>
-//                   {project.location}—{project.date}
-//                 </h5>
-//                 <ul className="description">
-//                   {project.highlights.map((bullet, i) => {
-//                     return <li key={i}>{bullet}</li>;
-//                   })}
-//                 </ul>
-//                 <div className="techstack">
-//                   {project.technologies.map((tech, i) => {
-//                     return (
-//                       <div key={i} className="tech">
-//                         {tech}
-//                       </div>
-//                     );
-//                   })}
-//                 </div>
-//                 {project.demo_url && (
-//                   <p>
-//                     📽️ View a demo of this project{' '}
-//                     <a href={project.demo_url}>here</a>!
-//                   </p>
-//                 )}
-//               </div>
-//             </Collapsible>
-//           );
 
 export default Projects;

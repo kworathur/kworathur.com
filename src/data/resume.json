@@ -1,6 +1,6 @@
 {
-    "experience": ["freedom-qa", "g2l-research", "simple-it-cloud", "uoft-ta"],
-    "projects": ["pixel-party", "dl-tumor-classifier"],
-    "extracurriculars": [],
-    "education": ["uoft", "gatech"]
+  "experience": ["freedom-qa", "g2l-research", "simple-it-cloud", "uoft-ta"],
+  "projects": ["g2l", "dl-tumor-classifier"],
+  "extracurriculars": [],
+  "education": ["uoft", "gatech"]
 }
