@@ -73,20 +73,14 @@
       "website": "https://kworathur.dev",
       "github": "https://github.com/kworathur/pixel-party/tree/main",
       "date": "Nov 2023",
-      "summary": "Cutting-edge deep learning tools for pre-screening drug targets, used by research labs and pharma giants",
+      "summary": "Cutting-edge deep learning tools trusted by research labs and pharma giants for screening drug targets",
       "highlights": [
         "Developed a web application for thousands of users to simultaneously paint pixels of a large canvas, broadcasting updates to all users in real-time using a WebSockets API",
         "Leveraged AWS serverless services such as Lambda and API Gateway to scale the system to 150k+ users, achieving canvas update latency of less than one second for 95% of users.",
         "Automated provisioning of networking, storage, and compute resources using a CloudFormation template, reducing time to launch the system by 60%"
       ],
       "demo_url": "https://www.loom.com/share/099c728f2a3e435b8179c1ca1deffe71",
-      "technologies": [
-        "Javascript",
-        "Websockets",
-        "API Gateway",
-        "Elasticache",
-        "DynamoDB"
-      ]
+      "technologies": ["PyTorch", "FastAPI", "React"]
     },
     {
       "id": "dl-tumor-classifier",
