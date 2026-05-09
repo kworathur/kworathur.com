@@ -1,126 +1,133 @@
 {
-    "experiences": [
-        {
-            "id": "freedom-qa",
-            "organization" :"Lenovo Testing Center of Excellence (TCOE)",
-            "position": "QA Automation Specialist",
-            "location": "Toronto, ON",
-            "website" : "",
-            "startDate" : "Jul 2024",
-            "endDate" : "Jul 2025",
-            "summary" : "Architected a framework to test tab activations, rate plan changes, home internet subscriptions, credit checks for a large telecom company",
-            "highlights" : [
-                "Developed an automation framework using Typescript for end-to-end testing of Freedom Mobile’s wireless consumer applications, reducing QA regression execution time per release by 80 hours and earning a raise within 8 months.",
-                "Trained a team of ten software testers in Jenkins for automated data creation, creating scripts that automated over 100 account creations in under 30 minutes, saving the team over 40 hours of effort.",
-                "Collaborated with the director of DevOps to develop cloud CI/CD pipelines using Bitbucket pipelines and docker containers that trigger Playwright tests every time code is deployed to staging, saving approximately 10 hours per sprint."
-            ],
-            "technologies" : [ "Typescript", "JIRA", "Jenkins", "CI/CD"]
-        },
-        {
-            "id" : "g2l-research",
-            "organization" :"Gene2Lead Limited",
-            "position": "Computational Research Assistant",
-            "location": "Toronto, ON",
-            "website" : "",
-            "startDate" : "Aug 2024",
-            "endDate" : "Jul 2025",
-            "summary" : "Deep learning tooling for a biotechnology startup",
-            "highlights" : [
-                "Developed a machine learning pipeline using Python (PyTorch) to analyze the human proteome, enabling researchers to process datasets of up to 7 million protein-drug interactions, accelerating drug discovery.",
-                "Pitched a user-friendly visualization tool developed with React, WebGL, and FastAPI for understanding proteomic data, which led to adoption by 8 Gene2Lead researchers and positive feedback on usability.",
-                "Deployed protein feature extraction, training, inference and reporting pipelines on AWS Sagemaker to facilitate greater visibility into research project progress and data sharing."
-            ],
-            "technologies" : ["PyTorch", "FastAPI", "React"]
-        },
-        {
-            "id" : "simple-it-cloud",
-            "organization" :"Simple IT Firm",
-            "position": "Cloud Developer",
-            "location": "Toronto, ON",
-            "website" : "",
-            "startDate" : "Jan 2024",
-            "endDate" : "Jul 2024",
-            "summary" : "Early stage startup focused on managed services",
-            "highlights" : [
-                "Automated the extraction of information from personal and corporate tax returns using AWS Lambda and Textract, decreasing manual loan review time by 8% and accelerating the overall loan approval workflow.",
-                "Released custom web scraping tools to extract FAQ data from eight company websites and store the data in a vector database for fine tuning AI chatbot applications."
-            ],
-            "technologies" : ["AWS", "FastAPI",  "React"]
-        },
-        {
-            "id": "uoft-ta",
-            "organization": "University of Toronto",
-            "position": "Undergraduate Teaching Assistant",
-            "location": "Mississauga, ON",
-            "website": "https://www.utm.utoronto.ca/math-cs-stats/",
-            "startDate": "Sep 2023",
-            "endDate": "present",
-            "summary": "Teaching assistant for Operating Systems in Fall 2023.",
-            "highlights": [
-                "Facilitated interactive tutorials for upper-year CS courses (ML, Databases, OS), leveraging deep ML and systems knowledge.",
-                "Developed an automated test suite for marking assignments, resulting in an 8-hour reduction in grading time per TA.",
-                "Promptly answered student questions on course discussion boards, making 300+ contributions." 
-            ],
-            "technologies": ["GNU/Linux", "C", "git"]
-        }
-    ],
-    "projects": [
-        {
-            "id": "pixel-party",
-            "name": "Pixel Party",
-            "position": "Software Engineer",
-            "location": "Toronto, ON",
-            "website": "https://kworathur.dev",
-            "github": "https://github.com/kworathur/pixel-party/tree/main",
-            "date": "Nov 2023",
-            "summary": "A scalable, real-time collaborative painting app",
-            "highlights": [
-                "Developed a web application for thousands of users to simultaneously paint pixels of a large canvas, broadcasting updates to all users in real-time using a WebSockets API",
-                "Leveraged AWS serverless services such as Lambda and API Gateway to scale the system to 150k+ users, achieving canvas update latency of less than one second for 95% of users.",
-                "Automated provisioning of networking, storage, and compute resources using a CloudFormation template, reducing time to launch the system by 60%"
-            ],
-            "demo_url" : "https://www.loom.com/share/099c728f2a3e435b8179c1ca1deffe71",
-            "technologies" : ["Javascript", "Websockets", "API Gateway", "Elasticache", "DynamoDB"]
-        },
-        {
-            "id": "dl-tumor-classifier",
-            "name": "Deep Learning-Based Brain Tumor Classification",
-            "position": "ML Model Developer",
-            "location": "Toronto, ON",
-            "website": "https://kworathur.dev",
-            "github": "https://github.com/kworathur/CV-Capstone",
-            "date": "Sep 2023",
-            "summary": "A lightweight CNN architecture for brain tumor classification with novel visualizations",
-            "highlights": [
-                "Collaborated with a team of three researchers to develop an automatic tool for brain tumor classification using a custom CNN architecture.",
-                "Engineered a custom data processing pipeline in Tensorflow for processing 2D slices of MRI scans in batches.",
-                "Explored approaches for visualizing the model’s decision-making processes using state-of-the-art techniques such as GradCAM."
-            ],
-            "technologies": []
-        }
-    ],
-    "education": [
-        {
-            "id": "gatech",
-            "institution": "Georgia Institute of Technology",
-            "degree": "M.S. Computer Science - On Campus",
-            "location": "Atlanta, GA",
-            "website": "https://www.cc.gatech.edu/",
-            "startDate": "Aug 2025",
-            "endDate": "Apr 2027",
-            "gpa": "4.0/4.0",
-            "courses": ["Advanced Operating Systems", "Big Data Systems and Analytics"]
-        },
-        {
-            "id": "uoft",
-            "institution": "University of Toronto",
-            "degree": "B.Sc. Honours Computer Science",
-            "location": "Mississauga, ON",
-            "website": "https://www.utm.utoronto.ca/math-cs-stats/",
-            "startDate": "Sep 2020",
-            "endDate": "Apr 2024",
-            "gpa": "3.94/4",
-            "courses": ["Machine Learning", "Scalable Computing", "Intro to Databases"]
-        }
-    ]
+  "experiences": [
+    {
+      "id": "freedom-qa",
+      "organization": "Lenovo Testing Center of Excellence (TCOE)",
+      "position": "QA Automation Specialist",
+      "location": "Toronto, ON",
+      "website": "",
+      "startDate": "Jul 2024",
+      "endDate": "Jul 2025",
+      "summary": "Architected a framework to test tab activations, rate plan changes, home internet subscriptions, credit checks for a large telecom company",
+      "highlights": [
+        "Developed an automation framework using Typescript for end-to-end testing of Freedom Mobile’s wireless consumer applications, reducing QA regression execution time per release by 80 hours and earning a raise within 8 months.",
+        "Trained a team of ten software testers in Jenkins for automated data creation, creating scripts that automated over 100 account creations in under 30 minutes, saving the team over 40 hours of effort.",
+        "Collaborated with the director of DevOps to develop cloud CI/CD pipelines using Bitbucket pipelines and docker containers that trigger Playwright tests every time code is deployed to staging, saving approximately 10 hours per sprint."
+      ],
+      "technologies": ["Typescript", "JIRA", "Jenkins", "CI/CD"]
+    },
+    {
+      "id": "g2l-research",
+      "organization": "Gene2Lead Limited",
+      "position": "Computational Research Assistant",
+      "location": "Toronto, ON",
+      "website": "",
+      "startDate": "Aug 2024",
+      "endDate": "Jul 2025",
+      "summary": "Deep learning tooling for a biotechnology startup",
+      "highlights": [
+        "Developed a machine learning pipeline using Python (PyTorch) to analyze the human proteome, enabling researchers to process datasets of up to 7 million protein-drug interactions, accelerating drug discovery.",
+        "Pitched a user-friendly visualization tool developed with React, WebGL, and FastAPI for understanding proteomic data, which led to adoption by 8 Gene2Lead researchers and positive feedback on usability.",
+        "Deployed protein feature extraction, training, inference and reporting pipelines on AWS Sagemaker to facilitate greater visibility into research project progress and data sharing."
+      ],
+      "technologies": ["PyTorch", "FastAPI", "React"]
+    },
+    {
+      "id": "simple-it-cloud",
+      "organization": "Simple IT Firm",
+      "position": "Cloud Developer",
+      "location": "Toronto, ON",
+      "website": "",
+      "startDate": "Jan 2024",
+      "endDate": "Jul 2024",
+      "summary": "Early stage startup focused on managed services",
+      "highlights": [
+        "Automated the extraction of information from personal and corporate tax returns using AWS Lambda and Textract, decreasing manual loan review time by 8% and accelerating the overall loan approval workflow.",
+        "Released custom web scraping tools to extract FAQ data from eight company websites and store the data in a vector database for fine tuning AI chatbot applications."
+      ],
+      "technologies": ["AWS", "FastAPI", "React"]
+    },
+    {
+      "id": "uoft-ta",
+      "organization": "University of Toronto",
+      "position": "Undergraduate Teaching Assistant",
+      "location": "Mississauga, ON",
+      "website": "https://www.utm.utoronto.ca/math-cs-stats/",
+      "startDate": "Sep 2023",
+      "endDate": "present",
+      "summary": "Teaching assistant for Operating Systems in Fall 2023.",
+      "highlights": [
+        "Facilitated interactive tutorials for upper-year CS courses (ML, Databases, OS), leveraging deep ML and systems knowledge.",
+        "Developed an automated test suite for marking assignments, resulting in an 8-hour reduction in grading time per TA.",
+        "Promptly answered student questions on course discussion boards, making 300+ contributions."
+      ],
+      "technologies": ["GNU/Linux", "C", "git"]
+    }
+  ],
+  "projects": [
+    {
+      "id": "g2l",
+      "name": "ML Engineering @ Gene2Lead",
+      "position": "Software Engineer",
+      "location": "Toronto, ON",
+      "website": "https://kworathur.dev",
+      "github": "https://github.com/kworathur/pixel-party/tree/main",
+      "date": "Nov 2023",
+      "summary": "Cutting-edge deep learning tools trusted by research labs and pharma giants for screening drug targets",
+      "highlights": [
+        "Developed a web application for thousands of users to simultaneously paint pixels of a large canvas, broadcasting updates to all users in real-time using a WebSockets API",
+        "Leveraged AWS serverless services such as Lambda and API Gateway to scale the system to 150k+ users, achieving canvas update latency of less than one second for 95% of users.",
+        "Automated provisioning of networking, storage, and compute resources using a CloudFormation template, reducing time to launch the system by 60%"
+      ],
+      "demo_url": "https://www.loom.com/share/099c728f2a3e435b8179c1ca1deffe71",
+      "technologies": ["PyTorch", "FastAPI", "React"]
+    },
+    {
+      "id": "dl-tumor-classifier",
+      "name": "Deep Learning-Based Brain Tumor Classification",
+      "position": "ML Model Developer",
+      "location": "Toronto, ON",
+      "website": "https://kworathur.dev",
+      "github": "https://github.com/kworathur/CV-Capstone",
+      "date": "Sep 2023",
+      "summary": "A lightweight CNN architecture for brain tumor classification with novel visualizations",
+      "highlights": [
+        "Collaborated with a team of three researchers to develop an automatic tool for brain tumor classification using a custom CNN architecture.",
+        "Engineered a custom data processing pipeline in Tensorflow for processing 2D slices of MRI scans in batches.",
+        "Explored approaches for visualizing the model’s decision-making processes using state-of-the-art techniques such as GradCAM."
+      ],
+      "technologies": []
+    }
+  ],
+  "education": [
+    {
+      "id": "gatech",
+      "institution": "Georgia Institute of Technology",
+      "degree": "M.S. Computer Science - On Campus",
+      "location": "Atlanta, GA",
+      "website": "https://www.cc.gatech.edu/",
+      "startDate": "Aug 2025",
+      "endDate": "Apr 2027",
+      "gpa": "4.0/4.0",
+      "courses": [
+        "Advanced Operating Systems",
+        "Big Data Systems and Analytics"
+      ]
+    },
+    {
+      "id": "uoft",
+      "institution": "University of Toronto",
+      "degree": "B.Sc. Honours Computer Science",
+      "location": "Mississauga, ON",
+      "website": "https://www.utm.utoronto.ca/math-cs-stats/",
+      "startDate": "Sep 2020",
+      "endDate": "Apr 2024",
+      "gpa": "3.94/4",
+      "courses": [
+        "Machine Learning",
+        "Scalable Computing",
+        "Intro to Databases"
+      ]
+    }
+  ]
 }

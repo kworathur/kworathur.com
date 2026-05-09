@@ -1,0 +1,52 @@
+.projectHeading {
+  margin-bottom: 0.5rem;
+  margin-top: 2rem;
+}
+
+// Carousel for project screenshots
+.projectScreens {
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  gap: 2rem;
+  margin: 0;
+  padding: 1rem;
+  scrollbar-width: none;
+  anchor-name: --carousel;
+
+  > li {
+    scroll-snap-align: center;
+  }
+
+  &::scroll-button(*) {
+    position: fixed;
+    position-anchor: --carousel;
+    font: inherit;
+    border: 0;
+    border-radius: 50%;
+    background-color: none;
+    border-color: var(--text-normal);
+    font-weight: 700;
+  }
+
+  &::scroll-button(left) {
+    content: '⬅' / 'Scroll Left';
+    right: anchor(left);
+    position-area: center left;
+  }
+
+  &::scroll-button(right) {
+    content: '⮕' / 'Scroll Right';
+    position-area: center right;
+    left: anchor(right);
+  }
+
+  &::scroll-button(*):focus-visible {
+    outline-offset: 5px;
+  }
+
+  margin-bottom: 2rem;
+}
