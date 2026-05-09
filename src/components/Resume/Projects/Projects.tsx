@@ -19,7 +19,10 @@ const Projects = (): ReactElement => {
   });
   const data = useStaticQuery(graphql`
     query {
-      allFile(filter: { absolutePath: { regex: "/screens/" } }) {
+      allFile(
+        filter: { absolutePath: { regex: "/screens/" } }
+        sort: { absolutePath: ASC }
+      ) {
         nodes {
           childImageSharp {
             gatsbyImageData(layout: FULL_WIDTH, placeholder: BLURRED)
@@ -33,7 +36,7 @@ const Projects = (): ReactElement => {
 
   return (
     <>
-      <h2 className="section-title">Selected Work</h2>
+      <h2 className="section-title">My Work</h2>
 
       <div className="section">
         {projects.map((project, i) => {
@@ -41,18 +44,22 @@ const Projects = (): ReactElement => {
             <div key={i}>
               <h3 className={styles['projectHeading']}>{project.name}</h3>
               <p>{project.summary}</p>
-              <div>
+              <ul className={styles['projectScreens']}>
                 {data.allFile.nodes
-                  .filter((n: ImageDataLike & { absolutePath: string }) => {
-                    console.log(project.id);
-                    console.log(n.absolutePath);
-                    console.log(n.absolutePath.includes(project.id));
-                    return n.absolutePath.includes(project.id);
-                  })
+                  .filter((n: ImageDataLike & { absolutePath: string }) =>
+                    n.absolutePath.includes(project.id)
+                  )
                   .map((n: ImageDataLike, i: number) => (
-                    //@ts-ignore
-                    <GatsbyImage key={i} alt="alt" image={getImage(n)} />
+                    <li>
+                      {/* @ts-ignore */}
+                      <GatsbyImage key={i} alt="alt" image={getImage(n)} />
+                    </li>
                   ))}
+              </ul>
+              <div className="techstack">
+                {project.technologies.map((tech) => (
+                  <div className="tech">{tech}</div>
+                ))}
               </div>
             </div>
           );
