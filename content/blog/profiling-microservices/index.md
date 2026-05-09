@@ -45,21 +45,21 @@ Test Results @ http://10.10.1.2:5000
     Latency     7.08ms    5.47ms  21.73ms   79.14%
     Req/Sec   254.77     95.55   500.00     67.37%
   Latency Distribution (HdrHistogram - Recorded Latency)
- 50.000%    6.79ms
+ 50.000%    6.79ms <- median latency
  75.000%   10.83ms
  90.000%   14.59ms
- 99.000%   21.73ms
+ 99.000%   21.73ms <- p99 latency
  99.900%   29.41ms
  99.990%   38.40ms
  99.999%   42.08ms
 100.000%   42.91ms
 ```
 
-There's our p99 latency in the fifth row from the bottom! It looks like 99% percent of requests completed in under ~22 milliseconds. These results are already super helpful because they give us a soft "upper limit" on the latency figures we should get. Anything much larger than these numbers, and we can be sure that something might be wrong with our experimental setup.
+There's our p99 latency in the fifth row from the bottom! It looks like 99% percent of requests completed in under ~22 milliseconds. These results are already super helpful because they give us an upper limit on the latency figures we should get. Anything much larger than these numbers, and we can be sure that something might be wrong with our experimental setup.
 
 ## 2. Start out by Measuring a Single Path in Code
 
-With our baseline established, we can start collecting measurements for the _real experiments_. There is just one catch - our hotel reservation application executes multiple paths in code before returning a result. This can make debugging abnormal latency results fairly challenging, and it's why I recommend fully experimenting with one code path first before expanding experiments to the rest of the application
+With our baseline established, we can get into the _real experiments_. There is just one catch - our hotel reservation application executes multiple paths in code before returning a result. This can make debugging abnormal latency results fairly challenging, and it's why I recommend fully experimenting with one code path first before expanding experiments to the rest of the application
 
 To illustrate my point more clearly, we can use an observability platform called [Jaeger](https://www.jaegertracing.io/) to visualize the code paths that are exercised for a search request. Jaeger allows us to trace the path a request takes through code in a way that print statements can't; using Jaeger, we can trace applications where a request may be passed through multiple containers (as is the case here) or multiple virtual machines scattered across a datacenter.
 
@@ -87,7 +87,7 @@ If I were to try running experiments again, here's what I would have done differ
 
 ## 3. Document Your Configs
 
-When your config lives in one-liner commands that get buried in long slack threads, it makes you more prone to overlooking a misconfigured parameter and wasting a lot of time debugging results that don't make sense. For this reason, I recommend saving all of your config in a single file. Because I was using python for my testing scripts, it made sense to create a separate config.py file with _all_ of my experimental config in it:
+When your config lives in terminal commands that inevitably get buried in long slack threads, it makes you more prone to overlooking a misconfigured parameter and wasting a lot of time debugging results that don't make sense. For this reason, I recommend saving all of your config in a single file. Because I was using python for my testing scripts, it made sense to create a separate config.py file with _all_ of my experimental config in it:
 
 ```python
 #!/usr/bin/env python3
