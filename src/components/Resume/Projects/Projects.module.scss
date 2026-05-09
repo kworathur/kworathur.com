@@ -15,7 +15,6 @@
   margin: 0;
   padding: 1rem;
   scrollbar-width: none;
-
   anchor-name: --carousel;
 
   > li {
@@ -25,9 +24,7 @@
   &::scroll-button(*) {
     position: fixed;
     position-anchor: --carousel;
-
     font: inherit;
-
     border: 0;
     border-radius: 50%;
     background-color: none;

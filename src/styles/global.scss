@@ -4,15 +4,14 @@
 @import 'Light';
 
 $font-sans:
-  Inter,
+  inter,
   ui-sans-serif,
   system-ui,
   -apple-system,
-  BlinkMacSystemFont,
+  blinkmacsystemfont,
   'Segoe UI',
   sans-serif;
-$font-mono:
-  'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+$font-mono: 'JetBrains Mono', 'SFMono-Regular', consolas, 'Liberation Mono', monospace;
 
 // font face for logo
 @font-face {
