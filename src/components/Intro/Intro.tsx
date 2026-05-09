@@ -21,10 +21,9 @@ const Intro = (): ReactElement => {
         <p>Welcome to my website! I'm a software engineer that's:</p>
         <ul>
           <li>
-            Built pre-processing pipelines for protein structures{' '}
-            <a href="">like this one</a>, trained ML models to{' '}
-            <a href="">see and understand</a> 3D structure data like a chemist,
-            and packaged predictions in to an industry leading drug discovery
+            Built pre-processing pipelines for protein structures, trained ML
+            models to see and understand 3D structure data like a chemist, and
+            packaged predictions in to an industry leading drug discovery
             platform at{' '}
             <a
               target="_blank"
@@ -43,8 +42,7 @@ const Intro = (): ReactElement => {
             >
               Matmerize's
             </a>{' '}
-            flagship R&D platform used by 10+ customers for AI-assisted
-            industrial material design.
+            flagship ML platform for materials design.
           </li>
         </ul>
         <p>
