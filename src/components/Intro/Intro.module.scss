@@ -1,29 +1,26 @@
-
-
 .intro {
-    flex: 1
+  flex: 1;
 }
 
 .spacer {
-    flex: 1
+  flex: 1;
 }
 
 .tagline {
-    width: fit-content;
-    height: fit-content;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .tagline h1 {
-    padding-top: 0.4rem;
-    margin: 0;
+  margin: auto;
 }
 
 .divider {
-    align-self: stretch;
-    margin: 0 1rem;
-    width: 4px;
-    background-color: var(--text-normal);
+  align-self: stretch;
+  margin: 0 1rem;
+  width: 4px;
+  background-color: var(--text-normal);
 }

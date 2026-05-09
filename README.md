@@ -1,12 +1,12 @@
-
 [![Netlify Status](https://api.netlify.com/api/v1/badges/032662fa-5c72-49d4-a798-44928a4509d9/deploy-status)](https://app.netlify.com/projects/stellar-queijadas-9de6fb/deploys)
+
 <p align="center">
   <a href="https://www.gatsbyjs.com/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter">
     <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
   </a>
 </p>
 <h1 align="center">
-  Gatsby Minimal Starter
+  kworathur.com
 </h1>
 
 ## 🚀 Quick start
@@ -36,7 +36,6 @@
     Edit `src/pages/index.js` to see your site update in real-time!
 
 4.  **Learn more**
-
     - [Documentation](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
     - [Tutorials](https://www.gatsbyjs.com/docs/tutorial/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
     - [Guides](https://www.gatsbyjs.com/docs/how-to/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)

@@ -3,17 +3,16 @@
 @import 'Dark';
 @import 'Light';
 
-/* Modern, technical font stack for ML-engineering positioning. */
 $font-sans:
-  Inter,
+  inter,
   ui-sans-serif,
   system-ui,
   -apple-system,
-  BlinkMacSystemFont,
+  blinkmacsystemfont,
   'Segoe UI',
   sans-serif;
 $font-mono:
-  'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  'JetBrains Mono', 'SFMono-Regular', consolas, 'Liberation Mono', monospace;
 
 // font face for logo
 @font-face {

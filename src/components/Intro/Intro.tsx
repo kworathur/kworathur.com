@@ -9,21 +9,49 @@ const Intro = (): ReactElement => {
         marginLeft: `auto`,
         marginRight: `auto`,
         maxWidth: rhythm(37.5),
-        padding: '1rem 2rem',
         display: 'flex',
       }}
     >
       <div className={styles['intro']}>
         <div className={styles['tagline']}>
-          <h1>KESHAV</h1> <div className={styles['divider']}></div>{' '}
+          <h1 className="section-title">Keshav</h1>{' '}
+          <div className={styles['divider']}></div>{' '}
           <span>software engineer</span>
         </div>
+        <p>Welcome to my website! I'm a software engineer that's:</p>
+        <ul>
+          <li>
+            Built pre-processing pipelines for protein structures, trained ML
+            models to see and understand 3D structure data like a chemist, and
+            packaged predictions in to an industry leading drug discovery
+            platform at{' '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://gene2lead.com/"
+            >
+              Gene2Lead, Ltd.
+            </a>
+          </li>
+          <li>
+            Currently: developing the software infrastructure to scale{' '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.matmerize.com/"
+            >
+              Matmerize's
+            </a>{' '}
+            flagship ML platform for materials design.
+          </li>
+        </ul>
         <p>
-          Welcome to my website! I am a software engineer based in Atlanta, GA
-          with an interest in interpretable ML models and production ML systems.
+          My experience spans applied ML and distributed systems, which I've
+          been exploring further while pursuing my MS Georiga Tech. I'm also a
+          proud alum of the University of Toronto (CS '25).
         </p>
+        <p>Hobbies: swimming, public speaking, rock music</p>
       </div>
-      <div className={styles['intro']}></div>
     </div>
   );
 };

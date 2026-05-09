@@ -1,69 +1,72 @@
-import React, { ReactElement } from "react";
-import Collapsible from "react-collapsible";
-import { Link } from "gatsby";
+import React, { ReactElement } from 'react';
 
-import resume from "../../../data/resume.json";
-import cv from "../../../data/cv.json";
-import {projects} from "../../../data/cv.json";
+import * as styles from './Projects.module.scss';
+
+import resume from '../../../data/resume.json';
+import cv from '../../../data/cv.json';
+import { graphql, useStaticQuery } from 'gatsby';
+import {
+  GatsbyImage,
+  getImage,
+  IGatsbyImageData,
+  ImageDataLike,
+} from 'gatsby-plugin-image';
 
 const Projects = (): ReactElement => {
-    const projectIds = resume.projects;
-    const projects = cv.projects.filter((project) => {
-        return projectIds.includes(project.id);
-    })
+  const projectIds = resume.projects;
+  const projects = cv.projects.filter((project) => {
+    return projectIds.includes(project.id);
+  });
+  const data = useStaticQuery(graphql`
+    query {
+      allFile(
+        filter: { absolutePath: { regex: "/screens/" } }
+        sort: { absolutePath: ASC }
+      ) {
+        nodes {
+          childImageSharp {
+            gatsbyImageData(layout: FULL_WIDTH, placeholder: BLURRED)
+          }
+          absolutePath
+        }
+      }
+    }
+  `);
+  console.log('Screen data ', data);
 
-    return (
-        <>
-            <h2 className="section-title">
-                Projects
-            </h2>
-            {/* <h5 className="section-redirect" style={{ fontStyle: "oblique" }}>
-                📽️ You can view demos of the projects below on the <Link to="/projects">projects page</Link>.
-            </h5> */}
-            <div className="section">
-                {projects.map((project, i) => {
-                    const character = ``;
-                    const triggerTitle = (
-                        <>
-                            <div className="item"></div>
-                            <h3 className="entry-title">
-                                {project.name}, <i>{project.summary}</i> {character}
-                            </h3>
-                        </>
-                    );
-                    return (
-                        <Collapsible
-                            key={i}
-                            trigger={triggerTitle}
-                            transitionTime={300}
-                            easing="ease-in-out"
-                        >
-                            <div className="entry" key={i}>
-                                <h5>
-                                    {project.location}—{project.date}
-                                </h5>
-                                <ul className="description">
-                                    {project.highlights.map((bullet, i) => {
-                                        return <li key={i}>{bullet}</li>;
-                                    })}
-                                </ul>
-                                <div className="techstack">
-                                    {project.technologies.map((tech, i) => {
-                                        return (
-                                            <div key={i} className="tech">
-                                                {tech}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                                {project.demo_url && <p>📽️ View a demo of this project <a href={project.demo_url}>here</a>!</p>}
-                            </div>
-                        </Collapsible>
-                    );
-                })}
-            </div>  
-        </>
-    );
+  return (
+    <>
+      <h2 className="section-title">My Work</h2>
+
+      <div className="section">
+        {projects.map((project, i) => {
+          return (
+            <div key={i}>
+              <h3 className={styles['projectHeading']}>{project.name}</h3>
+              <p>{project.summary}</p>
+              <ul className={styles['projectScreens']}>
+                {data.allFile.nodes
+                  .filter((n: ImageDataLike & { absolutePath: string }) =>
+                    n.absolutePath.includes(project.id)
+                  )
+                  .map((n: ImageDataLike, i: number) => (
+                    <li>
+                      {/* @ts-ignore */}
+                      <GatsbyImage key={i} alt="alt" image={getImage(n)} />
+                    </li>
+                  ))}
+              </ul>
+              <div className="techstack">
+                {project.technologies.map((tech) => (
+                  <div className="tech">{tech}</div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
 };
 
 export default Projects;

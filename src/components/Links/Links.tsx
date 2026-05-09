@@ -49,7 +49,7 @@ const InnerLinks = (props: InnerLinksProps): ReactElement => {
               return d.external ? (
                 <a
                   key={index}
-                  className={`${styles[`homepageLink`]} ${styles.navLink}`}
+                  className={styles[`homepageLink`]}
                   href={d.path}
                   target="_blank"
                   rel="noreferrer"
@@ -59,7 +59,7 @@ const InnerLinks = (props: InnerLinksProps): ReactElement => {
               ) : (
                 <Link
                   key={index}
-                  className={`${styles[`homepageLink`]} ${styles.navLink}`}
+                  className={styles[`homepageLink`]}
                   to={d.path}
                 >
                   {d.name}
