@@ -1,5 +1,5 @@
 ---
-title: 'Four tips for conducting reproducible systems research'
+title: 'Four Tips for Reproducible Systems Research'
 date: '2026-04-20'
 description: '30 hours of debugging in three minutes'
 type: 'blog'
@@ -7,11 +7,13 @@ featuredImage: 'jaeger_dashboard.png'
 tags: ['Distributed Systems']
 ---
 
-The tech industry is working hard to make datacenters - the windowless buildings powering every online purchase, post, and prompt - more energy efficient. My team felt inspired to do our part for our final course project in **CS8803: Datacenter Networks and Systems** at Georgia Tech. Because [launching a datacenter into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) or [submerging one in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) was out of scope for the course, we chose to focus on a more practical approach to achieving energy efficiency: clever _load balancing algorithms_ that distribute work amongst thousands of servers.
+The tech industry is working hard to make datacenters - the windowless buildings powering every online purchase, post, and prompt - more energy efficient. My team felt inspired to do our part for our final course project in **CS8803: Datacenter Networks and Systems** at Georgia Tech. Because [dropping a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launching one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) was unfortunately out of scope for the course, we turned to a more practical approach to achieving energy efficiency: clever _load balancing algorithms_ that distribute work amongst thousands of servers.
 
-My contribution was simulating thousands of users making requests to a hotel reservation application and measuring its power consumption and latency (think: time it takes to receive a confirmation after clicking "book" on AirBnB). What I didn't know going into this project is that there are a few pitfalls to avoid to ensure your are results _reproducible_, meaning that anyone can easily re-run your experiment and get the same results in the future.
+My job was to simulate thousands of users making requests to a hotel reservation application at the same time. While this was happening, I would be taking detailed measurements of **power consumption** and **latency**. Power consumption is measured in watts and is the amount of energy consumed by a computer's CPU. Latency is measured in milliseconds, and can be thought of as the time it takes to receive a confirmation after clicking "book" on AirBnB.
 
-I believe the tips in this post are helpful not only to researchers, but anyone who is developing an application and wants to see how it will perform when thousands of users are using it. Even in industry settings, reproducible results are a pre-requisite for making strong claims like "my application takes under 5 milliseconds to load for 99% of users" (also called _service-level objectives (SLOs)_).
+> What I didn't know going into this project is that it can be tricky to make your results _reproducible_, meaning that anyone can easily re-run your experiment and get the same results in the future.
+
+I believe the tips in this post are helpful not only to researchers, but to anyone writing production code in industry. Reproducible results are a pre-requisite to making strong claims like "this page takes under 5 milliseconds to load for 99% of users" (also called _service-level objectives (SLOs)_).
 
 # How It All Started
 
