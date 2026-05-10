@@ -59,6 +59,7 @@
     "@types/react-helmet": "^6.1.11",
     "@types/typography": "^0.16.9",
     "gatsby-plugin-dark-mode": "^1.1.2",
+    "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.32",
     "stylelint": "^17.8.0",
     "stylelint-config-standard-scss": "^17.0.0"
   }

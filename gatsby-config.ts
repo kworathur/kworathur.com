@@ -89,6 +89,7 @@ const config: GatsbyConfig = {
     },
     // Enable PWA and offline functionality
     `gatsby-plugin-offline`,
+    'gatsby-plugin-webpack-bundle-analyser-v2',
   ],
 };
 
