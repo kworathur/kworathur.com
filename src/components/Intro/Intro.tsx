@@ -50,7 +50,7 @@ const Intro = (): ReactElement => {
         <p>
           My experience spans applied ML and systems, which I've been exploring
           further while pursuing my MS at Georgia Tech. I'm a proud alum of the
-          University of Toronto (CS '25).
+          University of Toronto (CS '25)!
         </p>
         <p>Hobbies: swimming, public speaking, rock music</p>
       </div>

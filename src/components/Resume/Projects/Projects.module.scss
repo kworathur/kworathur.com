@@ -3,22 +3,81 @@
   margin-top: 2rem;
 }
 
-// Carousel for project screenshots
-.projectScreens {
-  list-style: none;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
+.projectMediaCarousel {
+  --_marker-size: 75px;
+
+  display: grid;
+  width: 100%;
+  min-width: 0;
+
+  grid-template-areas:
+    'carousel'
+    'carousel-markers';
+  grid-template-rows: auto var(--_marker-size);
+
+  > .carousel {
+    grid-area: carousel;
+
+    &::scroll-marker-group {
+      grid-area: carousel-markers;
+    }
+  }
+}
+
+// Pure CSS carousel for project media
+.carousel {
+  // Arranges project screenshots/videos in a scrollable container
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 100%;
+
   gap: 2rem;
   margin: 0;
-  padding: 1rem;
+  padding: 0rem 1rem;
+
+  overflow-x: auto;
+  list-style: none;
   scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  scroll-marker-group: after;
   anchor-name: --carousel;
 
-  > li {
+  .carouselSlide {
     scroll-snap-align: center;
+
+    &::scroll-marker {
+      content: '' / attr(data-label);
+
+      inline-size: var(--_marker-size);
+      block-size: var(--_marker-size);
+
+      background-image: var(--thumbnail);
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: 50%;
+      border: 1px solid var(--text-normal);
+    }
+
+    &::scroll-marker:is(:hover, :focus-visible) {
+      border-color: var(--text-normal);
+      transform: scale(1.05);
+    }
+
+    &::scroll-marker:target-current {
+      border-color: var(--color-a);
+    }
+  }
+
+  &::scroll-marker-group {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--_marker-size);
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    block-size: var(--_marker-size);
+    margin-bottom: 1rem;
   }
 
   &::scroll-button(*) {
@@ -47,6 +106,4 @@
   &::scroll-button(*):focus-visible {
     outline-offset: 5px;
   }
-
-  margin-bottom: 2rem;
 }
