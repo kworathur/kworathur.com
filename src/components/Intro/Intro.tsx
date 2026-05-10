@@ -14,7 +14,7 @@ const Intro = (): ReactElement => {
     >
       <div className={styles['intro']}>
         <div className={styles['tagline']}>
-          <h1 className="section-title">Keshav</h1>{' '}
+          <h1 className="section-title">Keshav Worathur</h1>{' '}
           <div className={styles['divider']}></div>{' '}
           <span>software engineer</span>
         </div>
