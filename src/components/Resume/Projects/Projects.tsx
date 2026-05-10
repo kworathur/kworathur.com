@@ -44,17 +44,43 @@ const Projects = (): ReactElement => {
             <div key={i}>
               <h3 className={styles['projectHeading']}>{project.name}</h3>
               <p>{project.summary}</p>
-              <ul className={styles['projectScreens']}>
-                {data.allFile.nodes
-                  .filter((n: ImageDataLike & { absolutePath: string }) =>
-                    n.absolutePath.includes(project.id)
-                  )
-                  .map((n: ImageDataLike, i: number) => (
-                    <li>
-                      {/* @ts-ignore */}
-                      <GatsbyImage key={i} alt="alt" image={getImage(n)} />
-                    </li>
-                  ))}
+              <div className={styles['projectMediaCarousel']}>
+                <ul className={styles['carousel']}>
+                  {data.allFile.nodes
+                    .filter((n: ImageDataLike & { absolutePath: string }) =>
+                      n.absolutePath.includes(project.id)
+                    )
+                    .map(
+                      (
+                        n: ImageDataLike & { absolutePath: string },
+                        i: number
+                      ) => {
+                        const image = getImage(n);
+                        const thumb = image?.images?.fallback?.src;
+
+                        return (
+                          <li
+                            key={i}
+                            className={styles['carouselSlide']}
+                            data-label={`Slide ${i + 1}`}
+                            style={
+                              {
+                                '--thumbnail': `url(${thumb})`,
+                              } as React.CSSProperties
+                            }
+                          >
+                            <GatsbyImage alt="" image={image!} />
+                          </li>
+                        );
+                      }
+                    )}
+                </ul>
+              </div>
+
+              <ul>
+                {project.highlights.map((highlight, i) => (
+                  <li key={i}>{highlight}</li>
+                ))}
               </ul>
               <div className="techstack">
                 {project.technologies.map((tech) => (

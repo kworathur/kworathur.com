@@ -21,20 +21,22 @@ const Intro = (): ReactElement => {
         <p>Welcome to my website! I'm a software engineer that's:</p>
         <ul>
           <li>
-            Built pre-processing pipelines for protein structures, trained ML
-            models to see and understand 3D structure data like a chemist, and
-            packaged predictions in to an industry leading drug discovery
-            platform at{' '}
+            Built <strong>pre-processing pipelines</strong> in Python to ingest
+            3,000+ protein structures, trained{' '}
+            <strong>deep learning models</strong> to see and understand 3D data
+            like a chemist, and deployed models to{' '}
             <a
               target="_blank"
               rel="noopener noreferrer"
               href="https://gene2lead.com/"
             >
-              Gene2Lead, Ltd.
-            </a>
+              Gene2Lead, Ltd.'s
+            </a>{' '}
+            industry leading drug discovery platform.
           </li>
           <li>
-            Currently: developing the software infrastructure to scale{' '}
+            Currently: Optimizing the <strong>cloud infrastructure</strong> and{' '}
+            <strong>batch workflows</strong> powering{' '}
             <a
               target="_blank"
               rel="noopener noreferrer"
@@ -42,13 +44,13 @@ const Intro = (): ReactElement => {
             >
               Matmerize's
             </a>{' '}
-            flagship ML platform for materials design.
+            flagship AI platform!
           </li>
         </ul>
         <p>
-          My experience spans applied ML and distributed systems, which I've
-          been exploring further while pursuing my MS at Georgia Tech. I'm also
-          a proud alum of the University of Toronto (CS '25).
+          My experience spans applied ML and systems, which I've been exploring
+          further while pursuing my MS at Georgia Tech. I'm a proud alum of the
+          University of Toronto (CS '25)!
         </p>
         <p>Hobbies: swimming, public speaking, rock music</p>
       </div>

@@ -1,22 +1,6 @@
 {
   "experiences": [
     {
-      "id": "freedom-qa",
-      "organization": "Lenovo Testing Center of Excellence (TCOE)",
-      "position": "QA Automation Specialist",
-      "location": "Toronto, ON",
-      "website": "",
-      "startDate": "Jul 2024",
-      "endDate": "Jul 2025",
-      "summary": "Architected a framework to test tab activations, rate plan changes, home internet subscriptions, credit checks for a large telecom company",
-      "highlights": [
-        "Developed an automation framework using Typescript for end-to-end testing of Freedom Mobile’s wireless consumer applications, reducing QA regression execution time per release by 80 hours and earning a raise within 8 months.",
-        "Trained a team of ten software testers in Jenkins for automated data creation, creating scripts that automated over 100 account creations in under 30 minutes, saving the team over 40 hours of effort.",
-        "Collaborated with the director of DevOps to develop cloud CI/CD pipelines using Bitbucket pipelines and docker containers that trigger Playwright tests every time code is deployed to staging, saving approximately 10 hours per sprint."
-      ],
-      "technologies": ["Typescript", "JIRA", "Jenkins", "CI/CD"]
-    },
-    {
       "id": "g2l-research",
       "organization": "Gene2Lead Limited",
       "position": "Computational Research Assistant",
@@ -75,9 +59,8 @@
       "date": "Nov 2023",
       "summary": "Cutting-edge deep learning tools trusted by research labs and pharma giants for screening drug targets",
       "highlights": [
-        "Developed a web application for thousands of users to simultaneously paint pixels of a large canvas, broadcasting updates to all users in real-time using a WebSockets API",
-        "Leveraged AWS serverless services such as Lambda and API Gateway to scale the system to 150k+ users, achieving canvas update latency of less than one second for 95% of users.",
-        "Automated provisioning of networking, storage, and compute resources using a CloudFormation template, reducing time to launch the system by 60%"
+        "Pitched a user-friendly visualization tool developed with React, WebGL, and FastAPI for understanding proteomic data, which led to adoption by 8 Gene2Lead researchers and positive feedback on usability.",
+        "Deployed protein feature extraction, training, inference and reporting pipelines on AWS Sagemaker to facilitate greater visibility into research project progress and data sharing."
       ],
       "demo_url": "https://www.loom.com/share/099c728f2a3e435b8179c1ca1deffe71",
       "technologies": ["PyTorch", "FastAPI", "React"]
