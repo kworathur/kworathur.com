@@ -122,6 +122,11 @@ p {
   margin: 1rem 0;
 }
 
+a {
+  text-decoration: underline;
+  color: var(--text-normal);
+}
+
 a:hover {
   color: var(--text-link-hover);
 }

@@ -14,6 +14,7 @@ const Intro = (): ReactElement => {
     >
       <div className={styles['intro']}>
         <div className={styles['tagline']}>
+          {/* TODO: google shows only the h1 in the preview in online searches - can we include job title too? */}
           <h1 className="section-title">Keshav Worathur</h1>{' '}
           <div className={styles['divider']}></div>{' '}
           <span>software engineer</span>

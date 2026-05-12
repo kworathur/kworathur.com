@@ -51,7 +51,6 @@ interface PostTemplateProps {
 const PostTemplate = ({
   data,
   pageContext,
-  location,
 }: PostTemplateProps): ReactElement => {
   // Get post data, site title
   const {
