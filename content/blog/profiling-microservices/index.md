@@ -1,47 +1,57 @@
 ---
-title: 'Four Tips for Reproducible Systems Research'
+title: 'How to Trust Your Benchmark Results Again'
 date: '2026-04-20'
-description: '30 hours of debugging in three minutes'
+description: 'Three practical tips for reproducible results'
 type: 'blog'
 featuredImage: 'jaeger_dashboard.png'
 tags: ['Distributed Systems']
 ---
 
-The tech industry is working hard to make datacenters - the windowless buildings powering every online purchase, post, and prompt - more energy efficient. My team felt inspired to do our part for our final course project in **CS8803: Datacenter Networks and Systems** at Georgia Tech. Because [dropping a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launching one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) was unfortunately out of scope for the course, we turned to a more practical approach to energy efficiency: clever _load balancing algorithms_ that distribute work amongst hundreds of servers in a datacenter.
+For a few weeks this spring, I thought my team had uncovered a way to make datacenters meaningfully more energy efficient. Spoiler: we hadn't. But going down that rabbithole — trying (and failing) to reproduce our own results — taught me more about benchmarking than the original finding ever would have.
 
-My job was to simulate thousands of users searching for hotels at the same time on an AirBnB-esque application. In the background, I would be taking detailed measurements of **power consumption** and **latency** (think: time it takes to receive a confirmation message after clicking "book").
+Datacenters - the windowless buildings behind every online purchase, post, and prompt - are consuming electricity at alarming rates. Critics see datacenters as environmentally disruptive, and recent construction projects have been delayed in part due to these concerns. For our final project in **CS8803: Datacenter Networks and Systems**, we asked: could software make these facilities more energy efficient?
 
-> What I didn't know going into this project is that it can be tricky to make your results _reproducible_, meaning that anyone can easily re-run your experiment and get the same results in the future.
+Our approach: clever _load balancing algorithms_ that distribute work amongst hundreds of servers. [Sinking a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launching one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) was out of scope for the course, so software optimizations felt like the practical approach.
 
-The benefits from following tips in this post are not limited to academic research projects - I truly believe they can help anyone writing code that serves thousands of users a day. Reproducible results are a pre-requisite to making strong claims like "this social media feed takes under 5 milliseconds to load for 99% of users" (also called _service-level objectives (SLOs)_).
+My job was to simulate thousands of users concurrently searching for hotels online while taking detailed measurements of servers' _power consumption_ and _response latency_ (think: time it takes to receive a confirmation message after clicking "book" on AirBnB).
 
 # How It All Started
 
-![big if true: the one figure in our 6-page report that caught our professor's eye](the_root_of_evil.png)
+![big if true: the one figure in our 6-page report that caught our professor's eye](questionable_results.png)
 
-The figure you're seeing above is what set me on a 30-hour long mission of trying (and failing) to reproduce its findings. Simply put, the blue and orange lines in this plot represent different algorithms called _frequency governors_. These frequency governors act just like a speed limiter in a car: they intentionally limit the CPU clock rate (or top speed) to optimize for power utilization (or fuel economy/safety). In the plot on the right, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the left plot shows that `schedutil` matches `performance` in terms of latency (i.e. how fast users can book hotels) at high loads.
+The figure you're seeing above is what led me down a rabbithole of trying to reproduce its findings. Simply put, the blue and orange lines in this plot represent different algorithms called _frequency governors_. These frequency governors act similar to a speed limiter in a car: they intentionally limit the CPU clock rate (or top speed) to optimize for power utilization (or fuel economy/safety). In the plot on the right, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the left plot shows that `schedutil` matches `performance` in terms of latency (i.e. how fast users can book hotels) at high loads.
 
-Admittedly, I didn't know enough about frequency governors at the time to flag this discovery as interesting. The real-world implication of these results is that we can gain **real power savings** for certain workloads by limiting server's clock rates and running them close to maximum load. Crucially, we don't have to sacrifice precious _p99 latency_ (the dashed lines in the left plot), which is a metric datacenter operators tend to care about most.
+Admittedly, I didn't know enough about frequency governors at the time to flag this discovery as interesting. The implication of these results is that we can gain **real power savings** for certain workloads by limiting server's clock rates and running them close to maximum load. Crucially, we don't have to sacrifice precious _p99 latency_ (the dashed lines in the left plot), which is a metric datacenter operators tend to care about most.
 
-It's no surprise that our professor encouraged us to reproduce this result in other real-world settings, because this finding could help address concerns from local communities and lawmakers about data centers' power usage.
+It's no surprise that our professor encouraged us to reproduce this result in other real-world settings, because it might bring us one step closer to sustainable datacenters.
 
-# Tips for Reproducible Systems Research
+# Debugging My Experiments
 
-The tips I've compiled in this guide are based on my experience running experiments against a gRPC-based hotel reservation service, part of the larger DeathStarBench cloud microservices benchmark. Feel free to fork this [repo](https://github.com/kworathur/DeathStarBench/tree/) if you'd like to follow along in the code.
+The tips I've compiled in this guide are based on my experience running experiments against a gRPC-based hotel reservation service, part of the larger DeathStarBench cloud microservices benchmark. Feel free to fork this [repo](https://github.com/kworathur/DeathStarBench/) if you'd like to follow along in the code.
 
 I am trying to measure the median and p99 latency of the hotel reservation application while increasing the number of requests per second (RPS). The experiment finishes once the server has reached a point of _saturation_, which is the point at which all of its CPU resources are fully utilized.
 
-## 1. Establish Baselines
+I believe the tips in this post are helpful not only to researchers, but for engineers in industry too! Just as researchers make claims in papers that must be backed by reproducible results, companies make guarantees about how their services will perform in the real world through _service-level objectives (SLOs)_.
 
-Baselines matter for reproducibility because they help us sanity check our results as we add more moving pieces to our experiments. Baselines should be obtained from the same setup we plan to run experiments against, because every machine in a datacenter may not be configured the same way (which makes the datacenter environment _heterogeneous_). For example, machines may use CPUs from different vendors (AMD or Intel), have a different number of cores, or different bandwidth on their network interface cards (NICs). For my experiments, I am using two identical machines with the specs below (more on why this is important soon):
+## 1. Establishing Baselines
+
+As we add more variables to our experiments, baselines come in handy, giving us a way to sanity check our results. Baselines should be obtained from the exact same setup we plan to run real experiments against, as not every machine in a datacenter may have the same resources (which makes the datacenter environment _heterogeneous_). For example, machines may use CPUs from different vendors (AMD or Intel), have a different number of cores, or different bandwidth on their network interface cards (NICs). For my experiments, I am using two identical machines with the specs below (more on why this is important soon):
 
 ![Specs of my testbed](./cloudlab_cpu_specs.png)
 
-In general, a baseline can be a simplified version of the algorithm you are experimenting with, or an algorithm that has a well-maintained open source implementation. Since I'm comparing algorithms that limit a CPU's clock rate, a natural baseline is an algorithm that that lets the CPU use its maximum clock rate without any imposed limits. This algorithm is referred to as the `performance` governor from here on out. To obtain my baseline measurements, I cloned the DeathStarBench repo and followed the instructions in the `README.md` for deploying the app inside docker containers.
+In general, a baseline can be a simplified version of the algorithm you are experimenting with, or an algorithm that has a well-maintained open source implementation. Since I'm comparing algorithms that limit a CPU's clock rate, a natural baseline is an algorithm that that lets the CPU use its maximum clock rate without any imposed limits. This algorithm is referred to as the `performance` governor in this post. To obtain my baseline measurements, I cloned the DeathStarBench repo and followed the instructions in the `README.md` for deploying the app inside docker containers.
 
-After deploying the app, I had access to an HTTP server that I could send requests to, which would then make remote procedure calls to relevant microservices and return the result to the client. I am using the [`wrk2` HTTP load testing tool](https://github.com/giltene/wrk2) send requests to the HTTP server. This tool allows us to programmatically send thousands of requests per second, simulating production traffic. This is where the specs of the machines you use for testing can make or break your results: if the client has much fewer compute resources than the server (e.g. fewer threads), then it might not have the capacity to push the server to its true limits. In this case, we say that our load tests hit a bottleneck in the client.
+After deploying the app, I had access to an HTTP server that I could send requests to, which would then make remote procedure calls to relevant microservices and return search results to the client. To send thousands of these requests per second, I am using the [`wrk2` HTTP load testing tool](https://github.com/giltene/wrk2). For those following along, execute the `./scripts/install.sh` script in `hotelReservation` to install `wrk2`.
 
-To start, I simulated 128 users collectively making 1,000 requests/second using `wrk2`. About a minute later, I got back some useful latency measurements:
+This is where the specs of the machines you use for testing can make or break your results: if the client has much fewer compute resources than the server (e.g. fewer threads), then it might not have the capacity to push the server to its true limits. As a result, the latency measures we obtain could be unreasonably high (e.g. on the order of seconds)
+
+To start, I simulated 128 users collectively making 1,000 requests/second using `wrk2`:
+
+```bash
+../wrk2/wrk -D exp -t 4 -c 128 -d 50 -L -s ./wrk2/scripts/hotel-reservation/single-endpoint.lua 10.10.1.2 -R 1000 > schedutil_10000_hotels.txt
+```
+
+A minute later, I got back some useful latency measurements:
 
 ```
 Test Results @ http://10.10.1.2:5000
@@ -59,39 +69,79 @@ Test Results @ http://10.10.1.2:5000
 100.000%   42.91ms
 ```
 
-There's our p99 latency in the fifth row from the bottom! It looks like 99% percent of requests completed in under ~22 milliseconds. These results are already super helpful because they give us an upper limit on the latency figures we should get. Anything much larger than these numbers, and we can be sure that something might be wrong with our experimental setup.
+There's our p99 latency in the fifth row from the bottom! It looks like 99% percent of requests completed in under ~22 milliseconds. These results are already super helpful because they give us an upper limit on the latency figures we should get. Anything much larger than these numbers can suggest that something might be wrong with our experimental setup.
 
-## 2. Start out by Measuring a Single Path in Code
+## 2. Measuring a Single Path in Code
 
-With our baseline established, we can get into the _real experiments_. There is just one catch - our hotel reservation application executes multiple paths in code before returning a result. This can make debugging abnormal latency results fairly challenging, and it's why I recommend fully experimenting with one code path first before expanding experiments to the rest of the application
+With our baseline established, we can get into the _real experiments_. There is just one catch: our hotel reservation application consists of multiple microservices that exchange messages to perform a search query. At companies like Netflix, applications consist of 700+ microservices, which can make troubleshooting anomalous results difficult.
 
-To illustrate my point more clearly, we can use an observability platform called [Jaeger](https://www.jaegertracing.io/) to visualize the code paths that are exercised for a search request. Jaeger allows us to trace the path a request takes through code in a way that print statements can't; using Jaeger, we can trace applications where a request may be passed through multiple containers (as is the case here) or multiple virtual machines scattered across a datacenter.
+To illustrate my point clearly, we can use an observability tool called [Jaeger](https://www.jaegertracing.io/) to visualize the code paths that are exercised for a search request. Jaeger allows us to trace the path a request takes through code in a way that print statements can't; using Jaeger, we can trace applications where a request may be passed through multiple containers (as is the case here) or multiple virtual machines scattered across a datacenter.
 
-Opening up the Jaeger console in my browser, I am shown a summary of recent requests to the hotel reservation application:
+First, let's open the Jaeger dashboard in our browser (for those following along, run `./scripts/start_services.sh` and navigate to `http://localhost:5051`)
 
 ![The jaeger dashboard](./jaeger_dashboard.png)
 
-From this trace, we can see that search requests complete within 2 milliseconds on average. In addition, we observe that each search request touches multiple microservices (geo, profile, rate, reservation, and search denoted by the small colored boxes).
+We can see that search requests complete within 2 milliseconds on average. See those colored squares under each trace? They represent the different microservices (geo, profile, rate, reservation) that our search requests depend on.
 
-Next let's click on one of the requests to get a better understanding of how a request passes through the code.
+Next, let's click on one of the traces to get a better understanding of how a request passes through the code.
 
 ![A dependency graph in Jaeger](./jaeger_dependency_graph.png)
 
-Using the data collected in traces, Jaeger is able to construct a _dependency graph_, where an arrow from one circle to another represents a remote procedure call (RPC) in the code. From this graph, we get a sense that searching for a hotel is not as straightforward as previously thought: when a user wishes to search for a hotel, our application actually has to call three seperate microservices to determine hotels that are (1) nearby (2) within the user's price range and (3) available to book during the user's vacation. What you also don't see here is that each of the leaf microservices is typically fetching data from a database (e.g. MongoDB) or a cache (e.g. Memcache). That's already a lot of moving pieces for a relatively straightforward search query.
+The visualization above is called a _dependency graph_, where circles represent microservices and arrows capture data dependencies. From this graph, we get a sense that searching for a hotel is not as straightforward as previously thought; when a user wishes to search for a hotel, our application actually has to call three seperate microservices to determine hotels that are:
 
-Lastly, Jaeger gives us a timeline view of requests, that can help us understand how much time is spent querying the caches and databases.
+1. Close by to the user's location
+2. Within the user's price range
+3. Available to book during the user's vacation
 
-![Trace timeline view in Jaeger](./jaeger_trace_viz.png)
+What you also don't see here is that each of the leaf microservices (i.e. the circles without arrows going out) are typically fetching data from a database (e.g. MongoDB) or a cache (e.g. Memcache). That's already a lot of moving pieces for a relatively straightforward search query! Now let's take a look at the code to make it simpler to debug odd results:
 
-At this point, I could start to get a sense of what produced the elusive result in the beginning of the blog post. If you look at the golden and purple colored bars in the timeline view, you can see how much time the application is spending on fetching cached results. In particular, to fetch the hotel prices (gold bar) the application is spending significantly more time than fetching cached profile and reservation results (tiny purple bars). What this suggests is that either requests for hotel rates frequently incur cache misses (meaning the database has to be queried, significantly more time consuming), or that there is simply more rate data to fetch per request.
+```go
+func (s *Server) searchHandler(w http.ResponseWriter, r *http.Request) {
 
-I later discovered that when I ran experiments for one performance governor, the cache would be "warmed" by the requests I sent to the application and inadvertenly left warm for the second performance governor, which means the second governor may achieve lower latencies in practice due to operating almost entirely out of the cache.
+	log.Trace().Msg("starts searchHandler querying downstream")
 
-If I were to try running experiments again, here's what I would have done differently. I would comment out parts of the code so that I only see a chain of calls in my dependency graph, rather than the tree you see above. This is how you can make a similar change in the go server code. Furthermore, I would try to take the cache out of the picture entirely, or at least make sure that the cache is being cleared after every trial to facilitate a fair comparison between the performance governors.
+	searchResp, err := s.searchClient.Nearby(ctx, &search.NearbyRequest{
+		Lat:     lat,
+		Lon:     lon,
+		InDate:  inDate,
+		OutDate: outDate,
+	})
 
-## 3. Document Your Configs
 
-When your config lives in terminal commands that inevitably get buried in long slack threads, it makes you more prone to overlooking a misconfigured parameter and wasting a lot of time debugging results that don't make sense. For this reason, I recommend saving all of your config in a single file. Because I was using python for my testing scripts, it made sense to create a separate config.py file with _all_ of my experimental config in it:
+
+	reservationResp, err := s.reservationClient.CheckAvailability(ctx, &reservation.Request{
+		CustomerName: "",
+		HotelId:      searchResp.HotelIds,
+		InDate:       inDate,
+		OutDate:      outDate,
+		RoomNumber:   1,
+	})
+
+
+	profileResp, err := s.profileClient.GetProfiles(ctx, &profile.Request{
+		HotelIds: reservationResp.HotelId,
+		Locale:   locale,
+	})
+
+	json.NewEncoder(w).Encode(geoJSONResponse(profileResp.Hotels))
+}
+```
+
+In the `searchHandler` function, we can see three calls to the `rate`, `reservation` and `profile` microservices. For my debugging experiments, I temporarily removed the calls to `reservation` and `profile` , modifying the search handler to only return hotel pricing data.
+
+This modification did not seem to help however, as I could still see variance in the latency metrics between consecutive experiments. That's when I decided to go a step further and remove caching entirely from the critical path of a search request.
+
+Making this simplification of the codebase is what revealed the flaw in my experimental setup: I was not restarting the `memcache` server in between trials, which gave the `schedutil` governor an unfair advantage because its cache had been warmed by prior `performance` trials.
+
+For those unfamiliar with caches, they essentially "remember" data that an application tends to access frequently to make data accesses faster. While this sounds great, a somewhat annoying side-effect of caches for reproducibility is that they start "cold" and grdually get "warmer" over time as an application's data access patterns stabilize.
+
+That's one part of the puzzle solved: `schedutil` matches `performance` in latency measurements despite using less power because it had a warmer cache. The second part of the puzzle is figuring out why `schedutil` uses less power than `powerstat` even at high load. Read on to find out!
+
+## 3. Documenting Configs
+
+When your config lives in terminal commands that hide in long slack threads, it becomes _much_ harder to track the experiments you run. You might remember how our physics teachers in high school would be so picky about our lab notetaking:
+
+Closer to the end of the project, I saved all of my experiment parameters in a python file and tracked changes to version control:
 
 ```python
 #!/usr/bin/env python3
@@ -128,12 +178,15 @@ LOCAL_OUTPUT_DIR = str(RESULTS_ROOT)
 REMOTE_OUTPUT_BASE = os.environ.get("HOTEL_REMOTE_OUTPUT_BASE", "")
 ```
 
-Documenting my configuration helped me pinpoint a tricky timing bug. In the configuration above, you can see that we generate load for 30 seconds, however the powerstat tool I used to collect power measurements collects measurements over a minimum interval of 60 seconds. This lead to powerstat collecting some idle measurements, which acted to weight down the average power consumption of schedutil relative to performance.
+Tracking changes to my configuration helped me go back in the revision history and discover a timing bug in my experiment. In the file above, you can see that the duration of my load test (in `WRK2_DURATION`) is set to 30 seconds. However, the `powerstat` tool I'm using can only capture measurements over 60-second intervals at minimum, which is not immediately clear from the config.
 
-## 4. Version Control is Your Friend
+This discrepancy is what leads to `powerstat` collecting some power measurements while the server is idle, and because the delay in collecting measurements was not uniform across all trials, there were times where `schedutil` had more idle measurements than `performance`, giving the illusion of `schedutil` using less power on average than `performance`.
 
-If you take away one tip from this guide, it's to commit changes to version control frequently. This is good software engineering practice, and the value of having a git log with detailed commit messages when debugging is massively underrated.
+Version control is your friend! I found myself branching off versions of code to get back to states of the codebase .
 
 ## Conclusion
 
-At the end of the day, the likely root cause is out-of-sync binaries used for testing. There was a commit that changed the search functionality to do a full scan of memcached rather than filter on in and out data. While seeming insignifcant, through a lot of trial and error I see that this change decreased power usage by 4W, which is supported by the fact that the CPU is doing more work.
+By establishing baselines, starting small, and documenting my experiments, I was able to pinpoint the flaws in my setup, and fix my scripts to obtain results that myself and my colleagues could reproduce. (see below):
+
+![Final Results - Power](reproducible_power.png)
+![Final Results - Latency](reproducible_latency.png)

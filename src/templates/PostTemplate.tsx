@@ -74,7 +74,11 @@ const PostTemplate = ({
           <h1 className={styles.title}>{post.frontmatter.title}</h1>
           <p>{post.frontmatter.date}</p>
         </header>
-        <section dangerouslySetInnerHTML={{ __html: post.html }} />
+        <section
+          dangerouslySetInnerHTML={{
+            __html: post.html.replace(/<a /g, '<a target="_blank" '),
+          }}
+        />
         <hr />
         <footer>Thanks for reading!</footer>
       </article>
