@@ -1,17 +1,17 @@
 ---
 title: 'How to Trust Your Benchmark Results Again'
 date: '2026-04-20'
-description: 'Three practical tips for reproducible results'
+description: 'What a Broken Benchmark Taught me About Reproducible Experiments'
 type: 'blog'
 featuredImage: 'jaeger_dashboard.png'
 tags: ['Distributed Systems']
 ---
 
-For a few weeks this spring, I thought my team had uncovered a way to make datacenters meaningfully more energy efficient. Spoiler: we hadn't. But going down that rabbithole — trying (and failing) to reproduce our own results — taught me more about benchmarking than the original finding ever would have.
+For a few weeks this spring, I thought my team had uncovered a way to make datacenters meaningfully more energy efficient. Spoiler: we hadn't. But trying (and failing) to reproduce our initial results taught me more about repeatable performance testing than the original finding ever would have.
 
-Datacenters - the windowless buildings behind every online purchase, post, and prompt - are consuming electricity at alarming rates. Critics see datacenters as environmentally disruptive, and recent construction projects have been delayed in part due to these concerns. For our final project in **CS8803: Datacenter Networks and Systems**, we asked: could software make these facilities more energy efficient?
+Datacenters - the windowless buildings behind every online purchase, post, and prompt - are consuming electricity at alarming rates. Critics argue that datacenters as environmentally disruptive, and recent construction projects have been delayed in part due to these concerns. For our final project in **CS8803: Datacenter Networks and Systems**, we asked: could software make these facilities more energy efficient?
 
-Our approach: clever _load balancing algorithms_ that distribute work amongst hundreds of servers. [Sinking a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launching one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) was out of scope for the course, so software optimizations felt like the practical approach.
+Our approach: clever _load balancing algorithms_ that distribute work amongst hundreds of servers. [Sinking a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launching one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) was out of scope for the course, so software optimizations felt like a more practical approach.
 
 My job was to simulate thousands of users concurrently searching for hotels online while taking detailed measurements of servers' _power consumption_ and _response latency_ (think: time it takes to receive a confirmation message after clicking "book" on AirBnB).
 
@@ -19,19 +19,31 @@ My job was to simulate thousands of users concurrently searching for hotels onli
 
 ![big if true: the one figure in our 6-page report that caught our professor's eye](questionable_results.png)
 
-The figure you're seeing above is what led me down a rabbithole of trying to reproduce its findings. Simply put, the blue and orange lines in this plot represent different algorithms called _frequency governors_. These frequency governors act similar to a speed limiter in a car: they intentionally limit the CPU clock rate (or top speed) to optimize for power utilization (or fuel economy/safety). In the plot on the right, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the left plot shows that `schedutil` matches `performance` in terms of latency (i.e. how fast users can book hotels) at high loads.
+The figure above shows two plots: latency on the left, power consumption on the right, as we increase the number of queries per second (QPS). In the latency plot, solid lines represent median latency while dashed lines represent p99 latency (i.e. the latency that 99% of requests come in under). In both plots, the blue and orange lines represent different _frequency governors_. These frequency governors act similar to a speed limiter in a car: they intentionally limit the CPU clock rate (or top speed) to optimize for power utilization (or fuel economy/safety).
 
-Admittedly, I didn't know enough about frequency governors at the time to flag this discovery as interesting. The implication of these results is that we can gain **real power savings** for certain workloads by limiting server's clock rates and running them close to maximum load. Crucially, we don't have to sacrifice precious _p99 latency_ (the dashed lines in the left plot), which is a metric datacenter operators tend to care about most.
+In the power plot, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the latency plot shows that `schedutil` matches `performance` in terms of latency as we increase the QPS.
 
-It's no surprise that our professor encouraged us to reproduce this result in other real-world settings, because it might bring us one step closer to sustainable datacenters.
+If this held up, it would mean **real power savings** for some production workloads without any modifications to the applications' code\*. The best part is we don't have to sacrifice _p99 latency_, a metric datacenter operators tend to care about most, because it captures the worst experience most users will have. Admittedly, I didn't recognize the impact of this discovery at the time - but our professor did!
+
+\*A small caveat is that we need to be able to run servers close to maximum load, which is difficult since users tend overestimate how much resources they will need, leading to _underutilization_. The real challenge, however, would be reproducing these results on a larger cluster.
 
 # Debugging My Experiments
+
+- Challenges: multiple machines, tight deadlines, and a custom setup
+
+-
 
 The tips I've compiled in this guide are based on my experience running experiments against a gRPC-based hotel reservation service, part of the larger DeathStarBench cloud microservices benchmark. Feel free to fork this [repo](https://github.com/kworathur/DeathStarBench/) if you'd like to follow along in the code.
 
 I am trying to measure the median and p99 latency of the hotel reservation application while increasing the number of requests per second (RPS). The experiment finishes once the server has reached a point of _saturation_, which is the point at which all of its CPU resources are fully utilized.
 
 I believe the tips in this post are helpful not only to researchers, but for engineers in industry too! Just as researchers make claims in papers that must be backed by reproducible results, companies make guarantees about how their services will perform in the real world through _service-level objectives (SLOs)_.
+
+## Part 1: Clearing the Cache
+
+## Part 2: Hidden Timing Bugs
+
+## Part 3:
 
 ## 1. Establishing Baselines
 
