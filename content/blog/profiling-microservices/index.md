@@ -9,7 +9,7 @@ tags: ['Distributed Systems']
 
 For a few weeks this spring, I thought my team had uncovered a way to make datacenters meaningfully more energy efficient. Spoiler: we hadn't. But trying (and failing) to reproduce our initial results taught me more about repeatable performance testing than the original finding ever would have.
 
-Datacenters - the windowless buildings behind every online purchase, post, and prompt - are consuming electricity at alarming rates. Critics argue that datacenters as environmentally disruptive, and recent construction projects have been delayed in part due to these concerns. For our final project in **CS8803: Datacenter Networks and Systems**, we asked: could software make these facilities more energy efficient?
+Datacenters - the windowless buildings behind every online purchase, post, and prompt - are consuming electricity at alarming rates. Critics argue that datacenters are environmentally disruptive, and recent construction projects have been delayed in part due to these concerns. For our final project in **CS8803: Datacenter Networks and Systems**, we asked: could software make these facilities more energy efficient?
 
 Our approach: clever _load balancing algorithms_ that distribute work amongst hundreds of servers. [Sinking a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launching one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) was out of scope for the course, so software optimizations felt like a more practical approach.
 
@@ -29,29 +29,24 @@ If this held up, it would mean **real power savings** for some production worklo
 
 # Debugging My Experiments
 
-As I set out to reproduce these results, a complicated experimental setup and a three-week deadline conspired to create one of the trickiest debugging challenges I've faced so far!
+As I set out to reproduce these results, I faced one of the trickiest debugging challenges so far, spurred on by a complicated experimental setup and a three-week deadline.
 
-First, the setup - I used six intel-based machines (courtesy of Cloudlab) that have more cores than your typical PC and dedicated high-bandwidth links connecting them. Each experiment is conducted using a pair of machines, with a client machine acting as a load generator and a separate server hosting the hotel search service. Crucially, both client and server have identical specs and ample cores. This ensures that (1) clients can simulate high QPS traffic and (2) servers can serve this traffic in a reasonable amount of time before they become saturated.
+First, the setup - I used six intel-based machines (courtesy of Cloudlab) that have more cores than your typical PC and dedicated high-bandwidth links connecting them. Each experiment is conducted using a pair of machines, with a client machine acting as a load generator and a separate server hosting the hotel search service. Crucially, both client and server have identical specs and ample cores. This ensures that (1) clients can simulate high QPS traffic and (2) servers can serve this traffic in a reasonable amount of time before reaching their limits.
 
 ![specs of my testbed](./cloudlab_cpu_specs.png)
 
-Second, the tight deadlines encouraged me to run multiple experiments in parallel across pairs of machines - an effective technique that can have its pitfalls if not orchestrated carefully (read on to learn more!)
+Second, the tight deadlines encouraged me to run multiple experiments in parallel across pairs of machines - a best practice that can nonetheless have its pitfalls if not orchestrated carefully (read on to learn more!)
 
-Before we investigate **four potential flaws** in my setup, it's important to understand which quantities I am measuring and how they are being measured. In my experiments,
+Before we investigate **four potential flaws** in my setup, it's important to understand which quantities I am measuring and how they are being measured. I run my experiments on the hotel search service of the open-source [DeathStarBench](https://github.com/kworathur/DeathStarBench/) benchmarking suite, measuring three key quantities:
 
-Throughout my investigation, I share a few general tips for conducting reproducible benchmarks and building trust in your results. I believe the tips in this post are helpful not only to researchers, but for engineers in industry too! Just as researchers make claims in papers that must be backed by reproducible results, companies make guarantees about how their services will perform in the real world through _service-level objectives (SLOs)_.
+- _p50 latency_ (i.e. median latency), which is the time 50% of requests complete under.
+- _p99 latency_, which is the time 99% of requests complete under. Latency measurements are reported in milliseconds and are obtained from a tool called `wrk`, which is used for HTTP load testing.
 
-Before diving into the investigation, it's important to understand the exact quantities I am measuring, how the experiments work at a high level, and what baselines for this kind of experiment look like.
+- _power consumption_ of the server that handles search requests, measured in watts. I use the `powerstat` command-line utility, which uses hardware interfaces on Intel machines to obtain accurate running average power measurements.
 
-, I decided to run multiple experiments in parallel across a cluster of machines
+I'm measuring these quantities while increasing the number of QPS until the server reaches its _saturation point_: the point at which a server cannot take on any more requests per unit time.
 
-- para 2: elaborate on setup, emphasize why no docker and why that made things difficult (pinning processes to cores), tricky intel frequency governor behavior, etc.
-
-- what the reader can expect next, (my steps which motivate useful tips, ), why they should care
-
-The tips I've compiled in this guide are based on my experience running experiments against a gRPC-based hotel reservation service, part of the larger DeathStarBench cloud microservices benchmark. Feel free to fork this [repo](https://github.com/kworathur/DeathStarBench/) if you'd like to follow along in the code.
-
-I am trying to measure the median and p99 latency of the hotel reservation application while increasing the number of requests per second (RPS). The experiment finishes once the server has reached a point of _saturation_, which is the point at which all of its CPU resources are fully utilized.
+With that context in place, let's get into the investigation. Along the way, I'll share some general tips for reproducible benchmarking, which can be helpful not only to researchers, but for engineers in industry too! Just as researchers make claims in papers that must be backed by reproducible results, companies make guarantees about how their services will perform in the real world through _service-level objectives (SLOs)_.
 
 ## Pinning Down Noisy Results
 
