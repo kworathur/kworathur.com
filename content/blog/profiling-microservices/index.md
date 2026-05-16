@@ -75,6 +75,8 @@ I am trying to measure the median and p99 latency of the hotel reservation appli
 
 As we add more variables to our experiments, baselines come in handy, giving us a way to sanity check our results. Baselines should be obtained from the exact same setup we plan to run real experiments against, as not every machine in a datacenter may have the same resources (which makes the datacenter environment _heterogeneous_). For example, machines may use CPUs from different vendors (AMD or Intel), have a different number of cores, or different bandwidth on their network interface cards (NICs). For my experiments, I am using two identical machines with the specs below (more on why this is important soon):
 
+![Specs of my testbed](./cloudlab_cpu_specs.png)
+
 In general, a baseline can be a simplified version of the algorithm you are experimenting with, or an algorithm that has a well-maintained open source implementation. Since I'm comparing algorithms that limit a CPU's clock rate, a natural baseline is an algorithm that that lets the CPU use its maximum clock rate without any imposed limits. This algorithm is referred to as the `performance` governor in this post. To obtain my baseline measurements, I cloned the DeathStarBench repo and followed the instructions in the `README.md` for deploying the app inside docker containers.
 
 After deploying the app, I had access to an HTTP server that I could send requests to, which would then make remote procedure calls to relevant microservices and return search results to the client. To send thousands of these requests per second, I am using the [`wrk2` HTTP load testing tool](https://github.com/giltene/wrk2). For those following along, execute the `./scripts/install.sh` script in `hotelReservation` to install `wrk2`.
