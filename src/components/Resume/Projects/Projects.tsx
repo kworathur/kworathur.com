@@ -83,8 +83,10 @@ const Projects = (): ReactElement => {
                 ))}
               </ul>
               <div className="techstack">
-                {project.technologies.map((tech) => (
-                  <div className="tech">{tech}</div>
+                {project.technologies.map((tech, i) => (
+                  <div className="tech" key={i}>
+                    {tech}
+                  </div>
                 ))}
               </div>
             </div>
