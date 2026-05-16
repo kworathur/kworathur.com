@@ -1,6 +1,6 @@
 ---
 title: 'How to Trust Your Benchmark Results Again'
-date: '2026-04-20'
+date: '2026-05-04'
 description: 'What a Broken Benchmark Taught me About Reproducible Experiments'
 type: 'blog'
 featuredImage: 'jaeger_dashboard.png'
@@ -21,35 +21,59 @@ My job was to simulate thousands of users concurrently searching for hotels onli
 
 The figure above shows two plots: latency on the left, power consumption on the right, as we increase the number of queries per second (QPS). In the latency plot, solid lines represent median latency while dashed lines represent p99 latency (i.e. the latency that 99% of requests come in under). In both plots, the blue and orange lines represent different _frequency governors_. These frequency governors act similar to a speed limiter in a car: they intentionally limit the CPU clock rate (or top speed) to optimize for power utilization (or fuel economy/safety).
 
-In the power plot, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the latency plot shows that `schedutil` matches `performance` in terms of latency as we increase the QPS.
+In the power plot, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the latency plot shows that `schedutil` matches `performance` in terms of latency as we increase the QPS. Because earlier experiments did not show a power gap at high load between the two governors, this result was surprising, but certainly not impossible.
 
-If this held up, it would mean **real power savings** for some production workloads without any modifications to the applications' code\*. The best part is we don't have to sacrifice _p99 latency_, a metric datacenter operators tend to care about most, because it captures the worst experience most users will have. Admittedly, I didn't recognize the impact of this discovery at the time - but our professor did!
+If this held up, it would mean **real power savings** for some production workloads without any modifications to an application's code\*. The best part is we don't have to sacrifice _p99 latency_, a metric datacenter operators tend to care about most, because it captures the worst experience most users will have. Admittedly, I didn't recognize the impact of this discovery at the time - but our professor did!
 
 \*A small caveat is that we need to be able to run servers close to maximum load, which is difficult since users tend overestimate how much resources they will need, leading to _underutilization_. The real challenge, however, would be reproducing these results on a larger cluster.
 
 # Debugging My Experiments
 
-- Challenges: multiple machines, tight deadlines, and a custom setup
+As I set out to reproduce these results, a complicated experimental setup and a three-week deadline conspired to create one of the trickiest debugging challenges I've faced so far!
 
--
+First, the setup - I used six intel-based machines (courtesy of Cloudlab) that have more cores than your typical PC and dedicated high-bandwidth links connecting them. Each experiment is conducted using a pair of machines, with a client machine acting as a load generator and a separate server hosting the hotel search service. Crucially, both client and server have identical specs and ample cores. This ensures that (1) clients can simulate high QPS traffic and (2) servers can serve this traffic in a reasonable amount of time before they become saturated.
+
+![specs of my testbed](./cloudlab_cpu_specs.png)
+
+Second, the tight deadlines encouraged me to run multiple experiments in parallel across pairs of machines - an effective technique that can have its pitfalls if not orchestrated carefully (read on to learn more!)
+
+Before we investigate **four potential flaws** in my setup, it's important to understand which quantities I am measuring and how they are being measured. In my experiments,
+
+Throughout my investigation, I share a few general tips for conducting reproducible benchmarks and building trust in your results. I believe the tips in this post are helpful not only to researchers, but for engineers in industry too! Just as researchers make claims in papers that must be backed by reproducible results, companies make guarantees about how their services will perform in the real world through _service-level objectives (SLOs)_.
+
+Before diving into the investigation, it's important to understand the exact quantities I am measuring, how the experiments work at a high level, and what baselines for this kind of experiment look like.
+
+, I decided to run multiple experiments in parallel across a cluster of machines
+
+- para 2: elaborate on setup, emphasize why no docker and why that made things difficult (pinning processes to cores), tricky intel frequency governor behavior, etc.
+
+- what the reader can expect next, (my steps which motivate useful tips, ), why they should care
 
 The tips I've compiled in this guide are based on my experience running experiments against a gRPC-based hotel reservation service, part of the larger DeathStarBench cloud microservices benchmark. Feel free to fork this [repo](https://github.com/kworathur/DeathStarBench/) if you'd like to follow along in the code.
 
 I am trying to measure the median and p99 latency of the hotel reservation application while increasing the number of requests per second (RPS). The experiment finishes once the server has reached a point of _saturation_, which is the point at which all of its CPU resources are fully utilized.
 
-I believe the tips in this post are helpful not only to researchers, but for engineers in industry too! Just as researchers make claims in papers that must be backed by reproducible results, companies make guarantees about how their services will perform in the real world through _service-level objectives (SLOs)_.
+## Pinning Down Noisy Results
 
-## Part 1: Clearing the Cache
+- Some procs might run on the same core
 
-## Part 2: Hidden Timing Bugs
+- show taskset pgrep
 
-## Part 3:
+## Catching the Warm Cache
+
+## Measuring the Wrong Window
+
+-
+
+## Reconciling the Servers
+
+- tip: git bisect
+
+- show change that introduced a filter in the reservation cache. Show raw logs that demonstrate that power utilization is consistently 4W higher for the unfiltered cache query
 
 ## 1. Establishing Baselines
 
 As we add more variables to our experiments, baselines come in handy, giving us a way to sanity check our results. Baselines should be obtained from the exact same setup we plan to run real experiments against, as not every machine in a datacenter may have the same resources (which makes the datacenter environment _heterogeneous_). For example, machines may use CPUs from different vendors (AMD or Intel), have a different number of cores, or different bandwidth on their network interface cards (NICs). For my experiments, I am using two identical machines with the specs below (more on why this is important soon):
-
-![Specs of my testbed](./cloudlab_cpu_specs.png)
 
 In general, a baseline can be a simplified version of the algorithm you are experimenting with, or an algorithm that has a well-maintained open source implementation. Since I'm comparing algorithms that limit a CPU's clock rate, a natural baseline is an algorithm that that lets the CPU use its maximum clock rate without any imposed limits. This algorithm is referred to as the `performance` governor in this post. To obtain my baseline measurements, I cloned the DeathStarBench repo and followed the instructions in the `README.md` for deploying the app inside docker containers.
 
