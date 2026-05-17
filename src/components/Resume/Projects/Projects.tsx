@@ -5,12 +5,7 @@ import * as styles from './Projects.module.scss';
 import resume from '../../../data/resume.json';
 import cv from '../../../data/cv.json';
 import { graphql, useStaticQuery } from 'gatsby';
-import {
-  GatsbyImage,
-  getImage,
-  IGatsbyImageData,
-  ImageDataLike,
-} from 'gatsby-plugin-image';
+import { GatsbyImage, getImage, ImageDataLike } from 'gatsby-plugin-image';
 
 const Projects = (): ReactElement => {
   const projectIds = resume.projects;
@@ -32,7 +27,6 @@ const Projects = (): ReactElement => {
       }
     }
   `);
-  console.log('Screen data ', data);
 
   return (
     <>

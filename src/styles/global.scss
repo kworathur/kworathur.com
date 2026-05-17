@@ -87,14 +87,6 @@ h6,
   letter-spacing: -0.035em;
 }
 
-a {
-  color: var(--text-link);
-  text-underline-offset: 0.2em;
-  transition:
-    color 0.2s ease,
-    opacity 0.2s ease;
-}
-
 // <code> override
 code,
 pre {
@@ -123,6 +115,10 @@ p {
 }
 
 a {
+  text-underline-offset: 0.2em;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
   text-decoration: underline;
   color: var(--text-link);
 }
