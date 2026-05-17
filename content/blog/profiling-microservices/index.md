@@ -89,7 +89,7 @@ pid 223302's current affinity list: 0
 
 Controlling for task placement helped me stabilize my power measurements in between runs. Now, I could notice a convergence in power usage between `schedutil` and `performance` governors at high load:
 
-![now we can see a clear convergence in power consumption](./power_consumption_converges.png)
+![new power plots show a clear convergence in power usage between the two governors](./power_consumption_converges.png)
 
 ## Catching the Warm Cache
 
@@ -111,54 +111,262 @@ As a follow up, I decided to switch the order of my experiments - I would run `s
 
 I turned to my attention to the power measurements, the ones that showed a gap between `schedutil` and `performance`.
 
-## Measuring the Wrong Window
-
-To reproduce the power results from the initial report, I honed in on `schedutil`'s consumption of ~84 W of power at 12,000 QPS.
-
-```python
-#!/usr/bin/env python3
-import os
-from pathlib import Path
-
-
-# Default workload assignment and governor order.
-DEFAULT_TARGETS = ["hotels", "recommendations", "reservation", "user"]
-DEFAULT_GOVERNORS = ["performance", "schedutil"]
-
-...
-
-# Experiment defaults.
-HOST_URL = os.environ.get("HOTEL_REMOTE_HOST_URL_TEMPLATE", "http://%h:5000")
-THREADS = 4
-CONNECTIONS = 128
-RATES_SPEC = "1000:20000:1000"
-WRK2_DURATION=30
-POWERSTAT_INTERVAL = 0.5
-POWERSTAT_SOURCE = "auto"
-SETTLE_SECONDS = 5
-```
-
-The duration of my load test (in `WRK2_DURATION`) is set to 30 seconds. However, the `powerstat` tool I used can only capture measurements over 60-second intervals at minimum, which is not immediately clear from the man pages.
-
-This discrepancy is what leads to `powerstat` collecting some power measurements while the server is idle, weighing down the average power usage.
-
 ## Reconciling the Servers
 
-- tip: git bisect
+After making my experiments reproducible, I started digging into my `git` commit history to find a version of the codebase that produced those peculiar power results at the start of this post. In the week leading up to the initial results, I had about **50 commits** to sift through to find a regresson:
+
+```
+git log --oneline --pretty=fuller --all | grep 'Keshav' | wc -l
+      50
+```
+
+Fortunately, I don't have to check all of these commits one by one, thanks to `git bisect`. This powerful command performs a binary search over a commit history to find a breaking change that introduced a bug or broke a benchmark. When I ran `git bisect start`, I was prompted to give a reference to a known "bad" commit - a version of the codebase where I _couldn't_ reproduce my results. Next, I was prompted to give a known "good" commit - a version of the codebase where I _could_ reproduce my results - I gave my first commit here.
+
+For a few iterations, `git bisect` would
+
+- checkout a commit in my specified commit range
+- I would compile the search service binaries, run my experiments, and spot-check the power results.
+- If the power results were closer to what the initial report presented, I would mark the commit as "good" usign `git bisect good`. Otherwise, I would mark the commit as "bad" using `git bisect bad`.
+
+Finally, git was able to point me to the commit that broke my benchmark:
+
+```
+first bad commit:
+```
+
+```
+commit c712651cda3c39bf4464ad46e076e0dce73cbc73
+Author: worathur <worathur@node-0.worathur-297467.gt-8803-dns-pg0.utah.cloudlab.us>
+Date:   Mon Mar 30 18:12:20 2026 -0600
+
+    Squashed commit of the following:
+
+    commit ad50bc9fce7f2e5cfcdcb4003507207aa00efc2d
+    Author: worathur <worathur@node-0.worathur-297467.gt-8803-dns-pg0.utah.cloudlab.us>
+    Date:   Mon Mar 30 18:12:01 2026 -0600
+
+        chore: add pycache to gitignore
+
+    commit b52c1fb2756ecb7289932d56fadbfa95cfe5a11d
+    Author: worathur <worathur@node-0.worathur-297467.gt-8803-dns-pg0.utah.cloudlab.us>
+    Date:   Mon Mar 30 18:08:01 2026 -0600
+
+        chore: add bootstrap scripts
+
+    commit f1d4fc95776b45727377721fee1e1aa8b1925b72
+    Author: worathur <worathur@node-0.worathur-297467.gt-8803-dns-pg0.utah.cloudlab.us>
+    Date:   Mon Mar 30 15:55:50 2026 -0600
+
+        feat: add scripts for testing a single rquest type at a time
+
+    commit ddaa0a63a40b407b0b7c217bc2677f2ce30bcf5a
+    Author: worathur <worathur@node-0.worathur-297467.gt-8803-dns-pg0.utah.cloudlab.us>
+    Date:   Mon Mar 30 15:54:42 2026 -0600
+
+        docs: add instructions for installing frequency governors
+
+    commit 6cf281faab308de21fb62582c80f3d98c9b70145
+    Author: worathur <worathur@node-0.worathur-297467.gt-8803-dns-pg0.utah.cloudlab.us>
+    Date:   Mon Mar 30 10:10:23 2026 -0600
+
+        docs: install governors
+
+    commit e6fbad5903de1bd5c31997c2f72895c6ca465bfd
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Fri Mar 27 09:04:58 2026 -0500
+
+        docs: add steps for running app
+
+    commit 417bf497f0c27ed5e2970c19a213927977fd19be
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Fri Mar 27 09:01:58 2026 -0500
+
+        docs: refer to install scripts in docs
+
+    commit 6e73c3fdca85259e7b45f74867392596e9889b11
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Wed Mar 25 18:49:30 2026 -0500
+
+        feat: add scripts for testing hotels only workload
+
+    commit 014b7bfa7798f3a5a8102479c130f9acc58a0c30
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Wed Mar 25 12:40:22 2026 -0500
+
+        fix: install luasocket in install script
+
+    commit db99ba3efd2be6e126fa09f2722ec33b0be8b297
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Wed Mar 25 10:29:54 2026 -0500
+
+        fix: too many pings errors
+
+    commit c5b6b16981a67578258989107baf8ddf4f7aa8d3
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Wed Mar 25 09:55:31 2026 -0500
+
+        fix: avoid hardcoded local config in go scripts
+
+    commit 92c59d46ef63d8b0320d7655a1e6eac175d603b8
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Wed Mar 25 08:51:18 2026 -0500
+
+        fix: background jaeger process
+
+    commit 90871ef0098aac70efff8eda3b7b93f9a4ac13d0
+    Author: worathur <worathur@node-1.worathur-296542.gt-8803-dns-pg0.utah.cloudlab.us>
+    Date:   Tue Mar 24 17:14:49 2026 -0600
+
+        docs: do not start mongod in install
+
+    commit ef95707a03b81bc6079cd90d0c4943c085bc1b26
+    Merge: c1f168d 5d42310
+    Author: worathur <worathur@node-1.worathur-296542.gt-8803-dns-pg0.utah.cloudlab.us>
+    Date:   Tue Mar 24 17:11:34 2026 -0600
+
+        Merge branch 'feat/deploy-processes' of github.com:kworathur/DeathStarBench into feat/deploy-processes
+
+    commit c1f168df17ce0655026487bdf862e569cc8c4e7d
+    Author: worathur <worathur@node-1.worathur-296542.gt-8803-dns-pg0.utah.cloudlab.us>
+    Date:   Tue Mar 24 17:10:50 2026 -0600
+
+        docs: fix jaeger version
+
+    commit 5d42310e1361a919737dc8a0a245c50344e16364
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Tue Mar 24 18:10:19 2026 -0500
+
+        chore: fix incorrect tar file url
+
+    commit 74b7efb944e3030ddbbca84d3264e8f478bdbd5a
+    Merge: bd5a89a 95d82a6
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Tue Mar 24 18:01:34 2026 -0500
+
+        fix merge conflicts
+
+    commit bd5a89a28a9458ee3c00e0ba9a468dd595cbfe4f
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Tue Mar 24 18:00:00 2026 -0500
+
+        docs: add jaeger install cmds
+
+    commit 95d82a634429f990bfd8ea0b88a61dd5c9c26138
+    Author: worathur <worathur@node-1.worathur-296542.gt-8803-dns-pg0.utah.cloudlab.us>
+    Date:   Tue Mar 24 16:41:23 2026 -0600
+
+        fix: make scripts executable
+
+    commit fa3458c0ed34bfe752e2421ff95f18bdd5c495b3
+    Author: worathur <worathur@node-1.worathur-296542.gt-8803-dns-pg0.utah.cloudlab.us>
+    Date:   Tue Mar 24 16:38:26 2026 -0600
+
+        fix: missing installs and perms
+
+    commit 08d3f2443eb523f0b5f46c24248eb82013e02626
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Tue Mar 24 17:05:45 2026 -0500
+
+        feat: add script for installing deps
+
+    commit 82c8647974b236d08b4833bf9a0fcd016151c483
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Tue Mar 24 16:58:09 2026 -0500
+
+        docs: add instructions for cloudlab setup
+
+    commit 984d2585eb96284e094229a0dc504ae14b3b832c
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Tue Mar 24 12:48:02 2026 -0500
+
+        feat: add orchestration scripts
+
+    commit 232f83c7d69e026162c1dc83719cc41fe3d96601
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Tue Mar 24 12:47:41 2026 -0500
+
+        feat: add SIGINT handling to go servers
+
+    commit 574134d4f3a266901bbd325b1bf00cbd224b945f
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Tue Mar 24 12:47:15 2026 -0500
+
+        fix: avoid re-seed when creating multiple instances of a microservice
+
+diff --git a/hotelReservation/services/rate/server.go b/hotelReservation/services/rate/server.go
+index 6aadd8a..09a1559 100644
+--- a/hotelReservation/services/rate/server.go
++++ b/hotelReservation/services/rate/server.go
+@@ -132,22 +132,28 @@ func (s *Server) GetRates(ctx context.Context, req *pb.Request) (*pb.Result, err
+                for hotelId := range rateMap {
+                        go func(id string) {
+                                log.Trace().Msgf("memc miss, hotelId = %s", id)
+-                               log.Trace().Msg("memcached miss, set up mongo connection")
++                               log.Trace().Msg("memcached miss, querying mongo for the request
+ed hotel and date range")
+    Date:   Tue Mar 24 12:47:41 2026 -0500
+
+        feat: add SIGINT handling to go servers
+
+    commit 574134d4f3a266901bbd325b1bf00cbd224b945f
+    Author: Keshav Worathur <keshavworathur@gmail.com>
+    Date:   Tue Mar 24 12:47:15 2026 -0500
+
+        fix: avoid re-seed when creating multiple instances of a microservice
+
+diff --git a/hotelReservation/services/rate/server.go b/hotelReservation/services/rate/server.g
+o
+index 6aadd8a..09a1559 100644
+--- a/hotelReservation/services/rate/server.go
++++ b/hotelReservation/services/rate/server.go
+@@ -132,22 +132,28 @@ func (s *Server) GetRates(ctx context.Context, req *pb.Request) (*pb.Resu
+lt, err
+                for hotelId := range rateMap {
+                        go func(id string) {
+                                log.Trace().Msgf("memc miss, hotelId = %s", id)
+-                               log.Trace().Msg("memcached miss, set up mongo connection")
++                               log.Trace().Msg("memcached miss, querying mongo for the request
+ed hotel and date range")
+
+                                mongoSpan, _ := opentracing.StartSpanFromContext(ctx, "mongo_rate")
+                                mongoSpan.SetTag("span.kind", "client")
+
+-                               // memcached miss, set up mongo connection
+                                collection := s.MongoClient.Database("rate-db").Collection("inventory")
+-                               curr, err := collection.Find(context.TODO(), bson.D{})
++                               filter := bson.D{
++                                       {"hotelId", id},
++                                       {"inDate", bson.D{{"$lte", req.InDate}}},
++                                       {"outDate", bson.D{{"$gte", req.OutDate}}},
++                               }
++                               curr, err := collection.Find(context.TODO(), filter)
+                                if err != nil {
+-                                       log.Error().Msgf("Failed get rate data: ", err)
++                                       log.Error().Msgf("Failed to get rate data for hotel %s: %v", id, err)
+                                }
+
+                                tmpRatePlans := make(RatePlans, 0)
+-                               curr.All(context.TODO(), &tmpRatePlans)
+-                               if err != nil {
+-                                       log.Error().Msgf("Failed get rate data: ", err)
++                               if curr != nil {
++                                       if err := curr.All(context.TODO(), &tmpRatePlans); err != nil {
++                                               log.Error().Msgf("Failed to decode rate data for hotel %s: %v", id, err)
++                                               tmpRatePlans = nil
++                                       }
+                                }
+
+                                mongoSpan.Finish()
+
+```
 
 - show change that introduced a filter in the reservation cache. Show raw logs that demonstrate that power utilization is consistently 4W higher for the unfiltered cache query
 
-## 3. Documenting Configs
-
-When your config lives in terminal commands that hide in long slack threads, it becomes _much_ harder to track the experiments you run. You might remember how our physics teachers in high school would be so picky about our lab notetaking:
-
-Closer to the end of the project, I saved all of my experiment parameters in a python file and tracked changes to version control:
-
-Version control is your friend! I found myself branching off versions of code to get back to states of the codebase .
-
 ## Conclusion
 
-By establishing baselines, starting small, and documenting my experiments, I was able to pinpoint the flaws in my setup, and fix my scripts to obtain results that myself and my colleagues could reproduce. (see below):
+By fixing the out-of-sync server binaries, I able to reproduce results that consistently show `schedutil` and `performance` converging in their power usage at high load.
 
 ![Final Results - Power](reproducible_power.png)
 ![Final Results - Latency](reproducible_latency.png)
+
+These results suggest that the advantage of frequency-limiting servers are not as apparent as they were in the initial report results. Regardless, I learned a great deal of what it takes to reproducible research and I hope you did too!
