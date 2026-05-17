@@ -13,12 +13,10 @@ const Intro = (): ReactElement => {
       }}
     >
       <div className={styles['intro']}>
-        <div className={styles['tagline']}>
-          {/* TODO: google shows only the h1 in the preview in online searches - can we include job title too? */}
-          <h1 className="section-title">Keshav Worathur</h1>{' '}
-          <div className={styles['divider']}></div>{' '}
-          <span>software engineer</span>
-        </div>
+        <h1 className="section-title">
+          Keshav Worathur |{' '}
+          <span className={styles['position']}>software engineer</span>
+        </h1>
         <p>Welcome to my website! I'm a software engineer that's:</p>
         <ul>
           <li>
@@ -45,15 +43,15 @@ const Intro = (): ReactElement => {
             >
               Matmerize's
             </a>{' '}
-            flagship AI platform!
+            flagship AI tools for polymer informatics!
           </li>
         </ul>
         <p>
-          My experience spans applied ML and systems, which I've been exploring
-          further while pursuing my MS at Georgia Tech. I'm a proud alum of the
-          University of Toronto (CS '25)!
+          Commercial ML research and product development is where I do my best
+          work and push myself to be better. I'm a proud alum of the University
+          of Toronto (CS '25) and a current student at Georgia Tech (graduating
+          in december)!
         </p>
-        <p>Hobbies: swimming, public speaking, rock music</p>
       </div>
     </div>
   );

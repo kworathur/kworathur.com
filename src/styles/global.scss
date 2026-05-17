@@ -11,7 +11,8 @@ $font-sans:
   blinkmacsystemfont,
   'Segoe UI',
   sans-serif;
-$font-mono: 'JetBrains Mono', 'SFMono-Regular', consolas, 'Liberation Mono', monospace;
+$font-mono:
+  'JetBrains Mono', 'SFMono-Regular', consolas, 'Liberation Mono', monospace;
 
 // font face for logo
 @font-face {
@@ -39,7 +40,7 @@ body.light {
   --text-background: #{$light-bg1};
   --code: #{$light-purple};
   --code-background: #{$light-bg2};
-  --hr: #{$light-yellow};
+  --hr: #{$light-blue};
   --logo-shadow: #{$light-fg4};
   --color-a: #{$light-blue};
   --color-b: #{$light-purple};
@@ -55,7 +56,7 @@ body.dark {
   --text-background: #{$dark-bg1};
   --code: #{$dark-aqua};
   --code-background: #{$dark-bg2};
-  --hr: #{$dark-yellow};
+  --hr: #{$dark-blue};
   --logo-shadow: #{$dark-fg4};
   --color-a: #{$dark-blue};
   --color-b: #{$dark-purple};
