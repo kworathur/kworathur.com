@@ -12,23 +12,20 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     // Get all posts by date
     const response = await graphql(
         `
-            {
-                allMarkdownRemark(
-                    sort: { fields: [frontmatter___date], order: DESC }
-                    limit: 1000
-                ) {
-                    edges {
-                        node {
-                            fields {
-                                slug
-                            }
-                            frontmatter {
-                                title
-                                type
-                            }
-                        }
+                        {
+            allMarkdownRemark(sort: {frontmatter: {date: DESC}}, limit: 1000) {
+                edges {
+                node {
+                    fields {
+                    slug
+                    }
+                    frontmatter {
+                    title
+                    type
                     }
                 }
+                }
+            }
             }
         `
     );
@@ -129,4 +126,20 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
             value,
         });
     }
+};
+
+exports.createSchemaCustomization = ({ actions }) => {
+    const { createTypes } = actions;
+    createTypes(`
+    type MarkdownRemark implements Node {
+      frontmatter: Frontmatter
+    }
+    type Frontmatter {
+      title: String
+      date: Date @dateformat
+      description: String
+      type: String
+      featuredImage: File @fileByRelativePath
+    }
+  `);
 };

@@ -3,7 +3,7 @@ title: 'How to Trust Your Benchmark Results Again'
 date: '2026-05-04'
 description: 'What a Broken Benchmark Taught me About Reproducible Experiments'
 type: 'blog'
-featuredImage: 'jaeger_dashboard.png'
+featuredImage: 'jaeger_dependency_graph.png'
 tags: ['Performance Engineering']
 ---
 
@@ -31,7 +31,7 @@ As I set out to reproduce these results, I faced one of the trickiest debugging 
 
 First, the setup - I used six intel-based machines (courtesy of Cloudlab) that have more cores than your typical PC and dedicated high-bandwidth links connecting them. Each experiment is conducted using a pair of machines, with a client machine acting as a load generator and a separate server hosting the hotel search service. Crucially, both client and server have identical specs and ample cores. This ensures that (1) clients can simulate high QPS traffic and (2) servers can serve this traffic in a reasonable amount of time before reaching their limits.
 
-![Specs of my testbed](./cloudlab_cpu_specs.png)
+![Specs of my testbed](./testbed_specs.png)
 
 Second, the tight deadlines encouraged me to run multiple experiments in parallel across pairs of machines - a best practice that can nonetheless have its pitfalls if not orchestrated carefully.
 
@@ -72,7 +72,7 @@ Along the way, I'll share some general tips for reproducible benchmarking, which
 
 Re-running my experiments without any changes, I found that power measurements varied between runs, with a standard deviation in power measurements of roughly **~2 watts**. This variability sometimes made it look like `schedutil` provided worse energy efficiency at high load than `performance`; in some runs, the opposite was true.
 
-![in some runs, schedutil actually *fared worse* than performance on power usage](./schedutil_worse_than_performance.png)
+![In some runs, schedutil actually *fared worse* than performance on power usage](./schedutil_worse_than_performance.png)
 
 So which of these conclusions should we trust? Prior to starting my experiments, I wrote some custom scripts to deploy the search service without docker, in order to push the server with the highest QPS possible. I revisited the scripts I wrote earlier and noticed a subtle flaw: the placement of tasks on the server was left entirely up to the CPU.
 
