@@ -101,7 +101,7 @@ We can see that when a user searches for a hotel, our application actually has t
 
 In particular, the reservation service queries reservations for a given hotel using an in-memory cache called `memcached`. To see if caching biased the experiment results, I first tried removing the cache reads from the reservation microservice and measuring the latency of requests. My reasoning was that if a warm cache had a tangible benefit to reducing latency for schedutil, then taking the cache out of the picture should take away this unfair advantage.
 
-![Without caching, tail latency exploded to 40ms at only 5,000 QPS. At the previous saturation point of 12,000 QPS, latency measurements are now on the order of seconds](./no_cache_experiment_results.png)
+![Without caching, tail latency exploded to 40ms at only 5,000 QPS. At the previous saturation point of 12,000 QPS, latency measurements are now on the order of seconds.](./no_cache_experiment_results.png)
 
 Without caching, the application became bottlenecked on MongoDB database reads, which caused p99 tail latency to explode at low load. Despite expecting `schedutil` to look worse without the cache advantage, the two governors stayed roughly matched in latency.
 
