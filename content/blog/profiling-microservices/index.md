@@ -37,7 +37,7 @@ First, the setup - I used six intel-based machines (courtesy of Cloudlab) that h
 
 Second, the tight deadlines encouraged me to run multiple experiments in parallel across pairs of machines - a best practice that can nonetheless have its pitfalls if not orchestrated carefully.
 
-Before I detail my debugging approach, it's important to understand which quantities I am measuring and how they are being measured. I ran my experiments on the hotel search service of the open-source [DeathStarBench](https://github.com/kworathur/DeathStarBench/) benchmarking suite, measuring three key quantities:
+Before I explain my debugging approach, it's important to understand which quantities I am measuring and how they are being measured. I ran my experiments on the hotel search service of the open-source [DeathStarBench](https://github.com/kworathur/DeathStarBench/) benchmarking suite, measuring three key quantities:
 
 - _p50 latency_ (i.e. median latency), which is the time 50% of requests complete under.
 
@@ -78,16 +78,18 @@ Re-running my experiments without any changes, I found that power measurements v
 
 So which of these conclusions should we trust? Prior to starting my experiments, I wrote some custom scripts to deploy the search service without docker, in order to push the server with the highest QPS possible. I revisited the scripts I wrote earlier and noticed a subtle flaw: the placement of tasks on the server was left entirely up to the CPU.
 
-Schedulers, the part of the CPU that makes these placement decisions, are generally good at spreading tasks across a CPU's cores to minimize resource conflicts. Sometimes, however, they may schedule sub-optimally, placing two compute-bound tasks on the same core while others remain idle. I chose to **pin processes to run on separate cores**, preventing such collisions and making my experimental results more deterministic
+Schedulers, the part of the CPU that makes these placement decisions, are generally good at spreading tasks across a CPU's cores to minimize resource conflicts. Sometimes, however, they may schedule sub-optimally, placing two compute-bound tasks on the same core while others remain idle. I chose to **pin processes to run on separate cores**, preventing such collisions and making my experimental results more deterministic.
 
-To do this, I used the taskset utility to set affinity of processes to cores. `taskset` lets you specify a list of cores a process should run on, which let me fix the affinity of the cache to have its own dedicated core on the machine, which is reasonable since this machine has 32 virtual cores.
+To do this, I used the `taskset` utility to set affinity of processes to cores. `taskset` lets you specify a list of cores a process should run on, which let me fix the application's cache to run on a core separate from all other processes. I did this specifically because the cache is a shared dependency of all requests, and giving it its own core to run on avoids spikes in power/latency measurements from the cache randomly being de-scheduled.
 
 ```
 $ pgrep -f memcached | xargs -I{} taskset -cp {}
 pid 223302's current affinity list: 0
 ```
 
-Despite controlling for task placement, the noisy, seemingly random fluctuations in measurements in between runs persisted, which led me to look for other flaws in the experimental setup.
+Controlling for task placement helped me stabilize my power measurements in between runs. Now, I could notice a convergence in power usage between `schedutil` and `performance` governors at high load:
+
+![now we can see a clear convergence in power consumption](./power_consumption_converges.png)
 
 ## Catching the Warm Cache
 
@@ -99,15 +101,42 @@ To visualize how caches are used by a search query, I used an observability tool
 
 We can see that when a user searches for a hotel, our application actually has to call three seperate microservices to determine hotels that are (1) close by to the user's location (2) within the user's price range and (3) available to book during the user's vacation.
 
-In particular, the reservation service queries reservations for a given hotel using an in-memory cache called `memcached`. To see if caching biased the experiment results, I first tried removing the cache reads from the reservation microservice and measuring the latency of requests. My reasoning was that if the `performance` governor s
+In particular, the reservation service queries reservations for a given hotel using an in-memory cache called `memcached`. To see if caching biased the experiment results, I first tried removing the cache reads from the reservation microservice and measuring the latency of requests. My reasoning was that if a warm cache had a tangible benefit to reducing latency for schedutil, then taking the cache out of the picture should take away this unfair advantage.
 
-![without caching, tail latency exploded to 40ms at only 5,000 QPS](./no_cache_experiment_results.png)
+![without caching, tail latency exploded to 40ms at only 5,000 QPS. At the previous saturation point of 12,000 QPS, latency measurements were now on the order of seconds](./no_cache_experiment_results.png)
 
-Without caching, the application became bottlenecked on MongoDB database reads, which caused p99 tail latency to explode at low load. To rule out shared cache state, I decided to switch the order of my experiments - I would run `schedutil` trials first, then `performance` trials.
+Without caching, the application became bottlenecked on MongoDB database reads, which caused p99 tail latency to explode at low load. When I expected `schedutil` to have higher latency than `performance`, we can see that they were roughly matched.
 
-After doing this, I still saw the same behavior - `schedutil` closely matching `performance` in latency at high loads. At this point, I determined that the latency figures were indeed accurate. I turned to my power measurements, which showed a gap between `schedutil` and `performance`.
+As a follow up, I decided to switch the order of my experiments - I would run `schedutil` trials first, then `performance` trials, effectively flipping the experiments in `performance`'s favor. After doing this, I still saw the same behavior - `schedutil` closely matching `performance` in latency at high loads. This made me convinced that they latency figures from our initial tests were indeed accurate.
+
+I turned to my attention to the power measurements, the ones that showed a gap between `schedutil` and `performance`.
 
 ## Measuring the Wrong Window
+
+To reproduce the power results from the initial report, I honed in on `schedutil`'s consumption of ~84 W of power at 12,000 QPS.
+
+```python
+#!/usr/bin/env python3
+import os
+from pathlib import Path
+
+
+# Default workload assignment and governor order.
+DEFAULT_TARGETS = ["hotels", "recommendations", "reservation", "user"]
+DEFAULT_GOVERNORS = ["performance", "schedutil"]
+
+...
+
+# Experiment defaults.
+HOST_URL = os.environ.get("HOTEL_REMOTE_HOST_URL_TEMPLATE", "http://%h:5000")
+THREADS = 4
+CONNECTIONS = 128
+RATES_SPEC = "1000:20000:1000"
+WRK2_DURATION=30
+POWERSTAT_INTERVAL = 0.5
+POWERSTAT_SOURCE = "auto"
+SETTLE_SECONDS = 5
+```
 
 The duration of my load test (in `WRK2_DURATION`) is set to 30 seconds. However, the `powerstat` tool I used can only capture measurements over 60-second intervals at minimum, which is not immediately clear from the man pages.
 
@@ -124,41 +153,6 @@ This discrepancy is what leads to `powerstat` collecting some power measurements
 When your config lives in terminal commands that hide in long slack threads, it becomes _much_ harder to track the experiments you run. You might remember how our physics teachers in high school would be so picky about our lab notetaking:
 
 Closer to the end of the project, I saved all of my experiment parameters in a python file and tracked changes to version control:
-
-```python
-#!/usr/bin/env python3
-import os
-from pathlib import Path
-
-
-# Default workload assignment and governor order.
-DEFAULT_TARGETS = ["hotels", "recommendations", "reservation", "user"]
-DEFAULT_GOVERNORS = ["performance", "schedutil"]
-
-# SSH configuration for connecting to experiment nodes.
-SSH_USER = os.environ.get("HOTEL_REMOTE_SSH_USER", "")
-SSH_KEY_PATH = os.path.expanduser(os.environ.get("HOTEL_REMOTE_SSH_KEY", ""))
-
-# Repository and artifact layout on the remote hosts.
-REPO_ROOT = Path(__file__).resolve().parents[2]
-REMOTE_REPO_ROOT = os.environ.get("HOTEL_REMOTE_REPO_ROOT", str(REPO_ROOT))
-REMOTE_SCRIPT = "hotelReservation/scripts/run_power_sweep.sh"
-
-# Experiment defaults.
-HOST_URL = os.environ.get("HOTEL_REMOTE_HOST_URL_TEMPLATE", "http://%h:5000")
-THREADS = 4
-CONNECTIONS = 128
-RATES_SPEC = "1000:20000:1000"
-WRK2_DURATION=30
-POWERSTAT_INTERVAL = 0.5
-POWERSTAT_SOURCE = "auto"
-SETTLE_SECONDS = 5
-
-# Result locations.
-RESULTS_ROOT = REPO_ROOT / "results" / "distributed_power_sweeps"
-LOCAL_OUTPUT_DIR = str(RESULTS_ROOT)
-REMOTE_OUTPUT_BASE = os.environ.get("HOTEL_REMOTE_OUTPUT_BASE", "")
-```
 
 Version control is your friend! I found myself branching off versions of code to get back to states of the codebase .
 
