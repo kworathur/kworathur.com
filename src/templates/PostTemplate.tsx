@@ -1,5 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { graphql, Link } from 'gatsby';
+import { GatsbyImage, getImage } from 'gatsby-plugin-image';
 
 import Format from '../components/Format/Format';
 import SEO from '../components/SEO/SEO';
@@ -21,6 +22,12 @@ interface PostTemplateProps {
         title: string;
         description: string;
         date: string;
+        featuredImage?: {
+          publicURL: string;
+          childImageSharp?: {
+            gatsbyImageData: import('gatsby-plugin-image').IGatsbyImageData;
+          };
+        };
       };
     };
   };
@@ -63,16 +70,28 @@ const PostTemplate = ({
   // Get previous page, next page from context
   const { previous, next } = pageContext;
 
+  const featuredImage = post.frontmatter.featuredImage?.childImageSharp
+    ? getImage(post.frontmatter.featuredImage.childImageSharp.gatsbyImageData)
+    : undefined;
+
   return (
     <Format title={title}>
       <SEO
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
+        image={post.frontmatter.featuredImage?.publicURL}
       />
       <article className={styles.post}>
         <header>
           <h1 className={styles.title}>{post.frontmatter.title}</h1>
           <p>{post.frontmatter.date}</p>
+          {featuredImage && (
+            <GatsbyImage
+              image={featuredImage}
+              alt={post.frontmatter.title}
+              className={styles.featuredImage}
+            />
+          )}
         </header>
         <section
           dangerouslySetInnerHTML={{
@@ -138,6 +157,12 @@ export const pageQuery = graphql`
         title
         date(formatString: "MMMM DD, YYYY")
         description
+        featuredImage {
+          publicURL
+          childImageSharp {
+            gatsbyImageData(width: 900, layout: CONSTRAINED)
+          }
+        }
       }
     }
   }
