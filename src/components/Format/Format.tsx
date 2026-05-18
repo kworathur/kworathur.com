@@ -15,7 +15,7 @@ const Format = ({ children }: FormatProps): ReactElement => {
       style={{
         marginLeft: `auto`,
         marginRight: `auto`,
-        maxWidth: rhythm(36),
+        maxWidth: rhythm(37.5),
         padding: `${rhythm(3 / 4)} ${rhythm(3 / 4)}`,
       }}
     >

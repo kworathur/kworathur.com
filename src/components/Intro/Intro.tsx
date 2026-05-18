@@ -14,8 +14,7 @@ const Intro = (): ReactElement => {
     >
       <div className={styles['intro']}>
         <h1 className="section-title">
-          Keshav Worathur |{' '}
-          <span className={styles['position']}>software engineer</span>
+          Keshav Worathur | <span className="detail">software engineer</span>
         </h1>
         <p>Welcome to my website! I'm a software engineer that's:</p>
         <ul>
