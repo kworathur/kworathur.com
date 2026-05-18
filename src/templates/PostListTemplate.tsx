@@ -56,7 +56,7 @@ const PostListTemplate = ({
         <h1 className="section-title">
           Blog |{' '}
           <span className="detail">
-            featuring technical writing i'm proud of
+            featuring technical writing i'm proud of!
           </span>
         </h1>
         <div className={styles.posts}>

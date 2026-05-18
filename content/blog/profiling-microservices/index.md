@@ -3,7 +3,7 @@ title: 'How to Trust Your Benchmark Results Again'
 date: '2026-05-04'
 description: 'What a Broken Benchmark Taught Me About Reproducible Experiments'
 type: 'blog'
-featuredImage: 'jaeger_dependency_graph.png'
+featuredImage: 'questionable_results.png'
 tags: ['Performance Engineering']
 ---
 
