@@ -119,7 +119,7 @@ git log --oneline --pretty=fuller --all | grep 'Keshav' | wc -l
       50
 ```
 
-Rather than check all of these commits one by one, I chose to use `git bisect`. This command essentially reduces my O(N) search for a breaking change to O(log\_2(N)), where N is the number of commits to inspect. `git bisect` does this by asking users for "good" and "bad" commits, which it uses to filter out roughly half of all commits on each iteration.
+Rather than check all of these commits one by one, I chose to use `git bisect`. This command essentially reduces my O(N) search for a breaking change to O(log\_2(N)), where N is the number of commits to inspect. 
 
 When I ran `git bisect start`, I was prompted to give a reference to a known "bad" commit - a version of the codebase where I _couldn't_ reproduce my results. Next, I was prompted to give a known "good" commit - a version of the codebase where I _could_ reproduce my results:
 
@@ -127,9 +127,9 @@ The process of using `git bisect` to find the breaking change in my code looked 
 
 - I would let git bisect pick a commit roughly in the middle of the good–bad range
 - I would compile the search service binaries, run my experiments, and spot-check the power results.
-- I would mark the commit good or bad with `git bisect good` or `git bisect bad`, then let bisect pick the next candidate.
+- I would mark the commit good or bad with `git bisect good` or `git bisect bad`, then let bisect pick the next candidate, filtering out roughly half of all remaining commits on each pass.
 
-Finally, git was able to point me to the commit that broke my benchmark:
+Finally, `git bisect` was able to point me to the commit that broke my benchmark:
 
 ```text
 first bad commit: c712651cda3c39bf4464ad46e076e0dce73cbc73
