@@ -1,0 +1,195 @@
+---
+/**
+ * blog/[...slug].astro
+ * Dual-purpose catch-all route handling:
+ *   - Numeric slugs ("2", "3", ...): render paginated blog list pages
+ *   - Named slugs ("profiling-microservices"): render individual blog post pages
+ *
+ * getStaticPaths generates all valid paths at build time.
+ */
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import listStyles from './PostListTemplate.module.scss';
+import postStyles from './PostTemplate.module.scss';
+
+export async function getStaticPaths() {
+  // Number of posts shown per list page
+  const POSTS_PER_PAGE = 6;
+
+  // Fetch all posts sorted by date descending (newest first)
+  const posts = (await getCollection('blog')).sort(
+    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+  );
+
+  const numPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+
+  // Generate paginated list paths for pages 2+ (page 1 is handled by index.astro)
+  const listPaths = Array.from({ length: Math.max(0, numPages - 1) }, (_, i) => ({
+    params: { slug: String(i + 2) },
+    props: { kind: 'list' as const, page: i + 2, posts, numPages, POSTS_PER_PAGE },
+  }));
+
+  // Generate individual post paths
+  const postPaths = posts.map((post, i) => {
+    // Derive slug: strip /index.md or .md from the collection entry id
+    const slug = post.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
+    return {
+      params: { slug },
+      props: {
+        kind: 'post' as const,
+        post,
+        // Previous post (older, higher index in sorted-desc array)
+        previous: i < posts.length - 1 ? posts[i + 1] : null,
+        // Next post (newer, lower index in sorted-desc array)
+        next: i > 0 ? posts[i - 1] : null,
+        POSTS_PER_PAGE,
+      },
+    };
+  });
+
+  return [...listPaths, ...postPaths];
+}
+
+// Union type for the two rendering modes
+type ListProps = {
+  kind: 'list';
+  page: number;
+  posts: CollectionEntry<'blog'>[];
+  numPages: number;
+  POSTS_PER_PAGE: number;
+};
+
+type PostProps = {
+  kind: 'post';
+  post: CollectionEntry<'blog'>;
+  previous: CollectionEntry<'blog'> | null;
+  next: CollectionEntry<'blog'> | null;
+  POSTS_PER_PAGE: number;
+};
+
+type Props = ListProps | PostProps;
+
+const props = Astro.props as Props;
+
+// Render the post body only for individual post pages
+let Content: ((_props: Record<string, unknown>) => unknown) | undefined;
+if (props.kind === 'post') {
+  const rendered = await render(props.post);
+  Content = rendered.Content as ((_props: Record<string, unknown>) => unknown);
+}
+---
+{props.kind === 'list' ? (
+  (() => {
+    const { page, posts, numPages, POSTS_PER_PAGE: PPP } = props as ListProps;
+    const start = (page - 1) * PPP;
+    const pagePosts = posts.slice(start, start + PPP);
+    const prev = page - 1;
+    const next = page + 1;
+
+    return (
+      <BaseLayout title="Blog">
+        <div class={listStyles.blog}>
+          <h1 class="section-title">
+            Blog | <span class="detail">featuring technical writing i'm proud of</span>
+          </h1>
+          <div class={listStyles.posts}>
+            {pagePosts.map((post) => {
+              const slug = post.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
+              return (
+                <PostCard
+                  title={post.data.title}
+                  slug={slug}
+                  description={post.data.description}
+                  date={post.data.date}
+                  featuredImage={post.data.featuredImage}
+                />
+              );
+            })}
+          </div>
+          <div class={listStyles.redirects}>
+            {page > 1 && (
+              <a href={prev === 1 ? '/blog' : `/blog/${prev}`}>Back</a>
+            )}
+            {page > 1 && page < numPages && <span>•</span>}
+            {page < numPages && (
+              <a href={`/blog/${next}`}>Next</a>
+            )}
+          </div>
+        </div>
+      </BaseLayout>
+    );
+  })()
+) : (
+  (() => {
+    const { post, previous, next } = props as PostProps;
+    const { title, date, description, featuredImage, featuredImageCaption } = post.data;
+
+    // Derive previous/next slugs for navigation links
+    const prevSlug = previous
+      ? previous.id.replace(/\/index\.md$/, '').replace(/\.md$/, '')
+      : null;
+    const nextSlug = next
+      ? next.id.replace(/\/index\.md$/, '').replace(/\.md$/, '')
+      : null;
+
+    return (
+      <BaseLayout title={title} description={description}>
+        <article class={postStyles.post}>
+          <header>
+            <h1 class={postStyles.title}>{title}</h1>
+            <p>{date}</p>
+            {featuredImage && (
+              <figure>
+                <Image
+                  src={featuredImage}
+                  alt={title}
+                  width={900}
+                  class={postStyles.featuredImage}
+                />
+                {featuredImageCaption && (
+                  <figcaption>{featuredImageCaption}</figcaption>
+                )}
+              </figure>
+            )}
+          </header>
+          {Content && <Content />}
+          <hr />
+          <footer>Thanks for reading!</footer>
+        </article>
+        <script is:inline>
+          document.querySelectorAll('article img').forEach(function(img) {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', function() {
+              window.open(img.src, '_blank', 'noopener,noreferrer');
+            });
+          });
+        </script>
+
+        {/* Previous/Next post navigation */}
+        {(next || previous) && (
+          <nav>
+            <ul style="display: flex; flex-wrap: wrap; justify-content: space-between; list-style: none; padding: 0;">
+              {previous && prevSlug && (
+                <li>
+                  <a href={`/blog/${prevSlug}`} rel="prev">
+                    ← {previous.data.title}
+                  </a>
+                </li>
+              )}
+              {next && nextSlug && (
+                <li>
+                  <a href={`/blog/${nextSlug}`} rel="next">
+                    {next.data.title} →
+                  </a>
+                </li>
+              )}
+            </ul>
+          </nav>
+        )}
+      </BaseLayout>
+    );
+  })()
+)}

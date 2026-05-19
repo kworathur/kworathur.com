@@ -3,6 +3,7 @@
 @import 'Dark';
 @import 'Light';
 
+/* stylelint-disable scss/dollar-variable-colon-space-after -- multi-line variable values require newline */
 $font-sans:
   inter,
   ui-sans-serif,
@@ -13,6 +14,7 @@ $font-sans:
   sans-serif;
 $font-mono:
   'JetBrains Mono', 'SFMono-Regular', consolas, 'Liberation Mono', monospace;
+/* stylelint-enable scss/dollar-variable-colon-space-after */
 
 // font face for logo
 @font-face {
@@ -27,11 +29,27 @@ $font-mono:
   box-sizing: border-box;
 }
 
+// Typography baseline replacing gatsby-plugin-typography
 html {
+  font-size: 18px;
+  line-height: 1.666;
   scroll-behavior: smooth;
 }
 
-body.light {
+// Base body styles defined first (lowest specificity)
+body {
+  -ms-overflow-style: none;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--background);
+  color: var(--text-normal);
+  font-family: $font-sans;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+}
+
+// Theme variables applied when :root (html element) has dark/light class
+// These selectors have higher specificity than bare body and must come after
+:root.light body {
   --background: #{$light-bg};
   --text-normal: #{$light-fg1}; // same as light-fg!
   --text-title: #{$light-fg0};
@@ -47,7 +65,7 @@ body.light {
   --shadow: #{$light-gray}1a;
 }
 
-body.dark {
+:root.dark body {
   --background: #{$dark-bg};
   --text-normal: #{$dark-fg1}; // same as dark-fg!
   --text-title: #{$dark-fg0};
@@ -63,16 +81,6 @@ body.dark {
   --shadow: #{$dark-gray}1a;
 }
 
-body {
-  -ms-overflow-style: none;
-  -webkit-font-smoothing: antialiased;
-  background-color: var(--background);
-  color: var(--text-normal);
-  font-family: $font-sans;
-  line-height: 1.65;
-  letter-spacing: -0.01em;
-}
-
 h1,
 h2,
 h3,
@@ -85,6 +93,7 @@ h6,
   font-family: $font-sans;
   font-weight: 700;
   letter-spacing: -0.035em;
+  line-height: 1.1;
 }
 
 // <code> override
@@ -129,6 +138,44 @@ a:hover {
 
 article {
   margin: 1rem 0;
+}
+
+// Inline images in blog post bodies: constrain width and center horizontally,
+// matching the old gatsby-remark-images maxWidth:590 + wrapperStyle margin:0 auto.
+// rehypeFigureCaption wraps each standalone image in <figure>, so we target that.
+// The p > img rule is a fallback for any image that slips through unwrapped.
+article p > img {
+  display: block;
+  max-width: 80%;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+}
+
+article figure {
+  margin: 1rem auto;
+  max-width: 80%;
+  text-align: center;
+}
+
+article figure img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+}
+
+article figcaption {
+  font-style: italic;
+  font-size: 0.9em;
+  margin-top: 0.4rem;
+  color: var(--text-normal);
+}
+
+// List item spacing to replace what gatsby-plugin-typography generated
+li {
+  margin-bottom: 0.5rem;
 }
 
 .shadow {
@@ -348,12 +395,4 @@ article {
 ::selection {
   background: var(--color-a);
   color: var(--background);
-}
-
-.gatsby-image-wrapper [data-main-image] {
-  /* stylelint-disable declaration-no-important -- override Gatsby image plugin defaults */
-  transition: none !important;
-  will-change: unset !important;
-  opacity: 1 !important;
-  /* stylelint-enable declaration-no-important */
 }

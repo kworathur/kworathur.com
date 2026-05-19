@@ -1,0 +1,16 @@
+---
+/**
+ * index.astro
+ * Homepage route (/).
+ * Renders Intro and Projects sections inside the BaseLayout.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Intro from '../components/Intro.astro';
+import Projects from '../components/Projects.astro';
+---
+<BaseLayout title="Home">
+  <div class="resume">
+    <Intro />
+    <Projects />
+  </div>
+</BaseLayout>
