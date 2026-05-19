@@ -75,7 +75,7 @@ Re-running my experiments without any changes, I found that power measurements v
 
 ![In some runs, schedutil actually *fared worse* than performance on power usage](./schedutil_worse_than_performance.png)
 
-So which of these conclusions should we trust? Prior to starting my experiments, I wrote some custom scripts to deploy the search service without docker, in order to push the server with the highest QPS possible. I revisited the scripts I wrote earlier and noticed a subtle flaw: the placement of tasks on the server was left entirely up to the CPU.
+So which of these conclusions should we trust? Prior to starting my experiments, I wrote some custom scripts to deploy the search service without docker, in order to push the server with the highest QPS possible. I revisited the scripts I wrote earlier and noticed a subtle flaw: the placement of tasks on the server was left entirely up to the OS scheduler.
 
 The OS scheduler — the kernel component that decides which task runs on which core — is generally good at spreading tasks across a CPU's cores to minimize resource conflicts. Sometimes, however, they may schedule sub-optimally, placing two compute-bound tasks on the same core while others remain idle. I chose to **pin processes to run on separate cores**, preventing such collisions and making my experimental results more deterministic.
 
@@ -94,13 +94,13 @@ Controlling for task placement helped me stabilize my power measurements in betw
 
 Remember how I said I ran all `performance` governor trials before `schedutil` trials? That seemingly benign detail might have biased the `schedutil` results in its favor due to shared cache state between trials. Caches provide faster accesses to frequently used application data than your standard database query. In the hotel search service, cache reads are included in the critical path to help the server maximize its response throughput.
 
-To understand where caching fits into a search request, I used an observability tool called [Jaeger](https://www.jaegertracing.io/) to trace the path requests take through the system. Jaeger allows us to trace the path a request takes through code in a way that print statements can't; using Jaeger, we can trace requests that are passed through multiple containers, as is the case here:
+To understand where caching fits into a search request, I used an observability tool called [Jaeger](https://www.jaegertracing.io/) to trace the path requests take through the system. Jaeger allows us to trace the path a request takes through code in a way that print statements can't; using Jaeger, we can trace requests that are passed through multiple servers in a datacenter:
 
 ![Jaeger's dependency graph for search queries](./jaeger_dependency_graph.png)
 
 We can see that when a user searches for a hotel, our application actually has to call three separate microservices to determine hotels that are (1) close by to the user's location (2) within the user's price range and (3) available to book during the user's vacation.
 
-In particular, the reservation service queries reservations for a given hotel using an in-memory cache called `memcached`. To see if caching biased the experiment results, I first tried removing the cache reads from the reservation microservice and measuring the latency of requests. My reasoning was that if a warm cache had a tangible benefit to reducing latency for schedutil, then taking the cache out of the picture should take away this unfair advantage.
+In particular, the reservation service queries reservations for a given hotel using an in-memory cache called `memcached`. To see if caching biased the experiment results, I first tried removing the cache reads from the reservation microservice and measuring the latency of requests. My reasoning was that if a warm cache had a tangible benefit to reducing latency for `schedutil`, then taking the cache out of the picture should take away this unfair advantage.
 
 ![Without caching, tail latency exploded to 40ms at only 5,000 QPS. At the previous saturation point of 12,000 QPS, latency measurements are now on the order of seconds.](./no_cache_experiment_results.png)
 
@@ -119,7 +119,9 @@ git log --oneline --pretty=fuller --all | grep 'Keshav' | wc -l
       50
 ```
 
-Rather than check all of these commits one by one, I chose to use `git bisect`. This command performs a binary search over a commit history to find a breaking change that introduced a bug or broke a benchmark. When I ran `git bisect start`, I was prompted to give a reference to a known "bad" commit - a version of the codebase where I _couldn't_ reproduce my results. Next, I was prompted to give a known "good" commit - a version of the codebase where I _could_ reproduce my results:
+Rather than check all of these commits one by one, I chose to use `git bisect`. This command essentially reduces my O(N) search for a breaking change to O(log\_2(N)), where N is the number of commits to inspect. `git bisect` does this by asking users for "good" and "bad" commits, which it uses to filter out roughly half of all commits on each iteration.
+
+When I ran `git bisect start`, I was prompted to give a reference to a known "bad" commit - a version of the codebase where I _couldn't_ reproduce my results. Next, I was prompted to give a known "good" commit - a version of the codebase where I _could_ reproduce my results:
 
 The process of using `git bisect` to find the breaking change in my code looked something like this:
 
