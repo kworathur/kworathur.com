@@ -10,21 +10,34 @@ interface SEOProps {
   lang?: string;
   meta: Meta[];
   title: string;
+  image?: string;
 }
 
-const SEO = ({ description, lang, meta, title }: SEOProps): ReactElement => {
+const SEO = ({ description, lang, meta, title, image }: SEOProps): ReactElement => {
   const { site } = useStaticQuery(graphql`
     query {
       site {
         siteMetadata {
           title
           description
+          siteUrl
         }
       }
     }
   `);
 
   const metaDescription: string = description || site.siteMetadata.description;
+  const absoluteImage = image
+    ? `${site.siteMetadata.siteUrl}${image}`
+    : undefined;
+
+  const imageMeta: Meta[] = absoluteImage
+    ? [
+        { property: `og:image`, content: absoluteImage },
+        { name: `twitter:card`, content: `summary_large_image` },
+        { name: `twitter:image`, content: absoluteImage },
+      ]
+    : [];
 
   return (
     <Helmet
@@ -50,6 +63,7 @@ const SEO = ({ description, lang, meta, title }: SEOProps): ReactElement => {
           property: `og:type`,
           content: `website`,
         },
+        ...imageMeta,
       ].concat(meta as ConcatArray<Meta>)}
     />
   );

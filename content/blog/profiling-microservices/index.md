@@ -1,9 +1,9 @@
 ---
 title: 'How to Trust Your Benchmark Results Again'
 date: '2026-05-04'
-description: 'What a Broken Benchmark Taught me About Reproducible Experiments'
+description: 'What a Broken Benchmark Taught Me About Reproducible Experiments'
 type: 'blog'
-featuredImage: 'jaeger_dependency_graph.png'
+featuredImage: 'questionable_results.png'
 tags: ['Performance Engineering']
 ---
 
@@ -156,7 +156,7 @@ Based on this investigation, I could start to piece together what happened to pr
 
 The result was **out-of-sync binaries** across the three servers, which made power usage appear higher on one server than the others, despite identical hardware specs and experimental parameters. Ensuring that binaries were built from the same application code confirmed my results from the previous two debugging experiments, showing that `schedutil` and `performance` governors converged in their power utilization at high load.
 
-## Conclusion
+# Conclusion
 
 ![Final Results - Power](reproducible_power.png)
 ![Final Results - Latency](reproducible_latency.png)

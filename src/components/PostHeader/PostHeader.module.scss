@@ -32,11 +32,6 @@
   margin: 0 20px;
 }
 
-.more {
-  text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: 2px;
-  text-align: right;
-
-  // margin: 0;
+.title a {
+  color: var(--text-normal);
 }

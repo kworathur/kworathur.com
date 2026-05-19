@@ -252,6 +252,12 @@ h2.section-title {
   margin-top: 2rem;
 }
 
+.section-title .detail {
+  font-size: large;
+  color: var(--text-normal);
+  vertical-align: middle;
+}
+
 .resume {
   margin: 0 auto;
   max-width: 60rem;

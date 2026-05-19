@@ -1,28 +1,32 @@
+.blog {
+  padding: 1rem 2rem;
+}
+
 // On a small-screen, default to a single column display
 .posts {
-    display: flex;
-    flex-flow: column wrap;
-    gap: 2rem;
+  display: flex;
+  flex-flow: column wrap;
+  gap: 2rem;
 }
 
 // On a large-screen, display in a grid
 @media only screen and (width >= 954px) {
-    .posts {
-        display: grid;
-        grid-template-columns: 33% 33% 33%;
-        grid-auto-rows: auto;
-        gap: 2rem;
-    }
+  .posts {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    grid-auto-rows: auto;
+    gap: 2rem;
+  }
 }
 
 .redirects {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  padding: 1rem;
 }
 
 .redirects > span {
-    margin: 0 1em;
+  margin: 0 1em;
 }

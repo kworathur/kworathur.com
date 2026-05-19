@@ -52,21 +52,28 @@ const PostListTemplate = ({
   return (
     <Format title={title}>
       <SEO title={type} />
-
-      <div className={styles.posts}>
-        {posts.map(({ node }: { node: unknown }, i: number) => {
-          // @ts-ignore
-          return <PostHeader key={i} type={type} node={node} />;
-        })}
-      </div>
-      <div className={styles.redirects}>
-        {currentPage > 1 && (
-          <Link to={`/${type}${prev === 1 ? '' : `/${prev}`}`}>{`Back`}</Link>
-        )}
-        {currentPage > 1 && currentPage < numPages && <span>{`•`}</span>}
-        {currentPage < numPages && (
-          <Link to={`/${type}/${next}`}>{`Next`}</Link>
-        )}
+      <div className={styles['blog']}>
+        <h1 className="section-title">
+          Blog |{' '}
+          <span className="detail">
+            featuring technical writing i'm proud of!
+          </span>
+        </h1>
+        <div className={styles.posts}>
+          {posts.map(({ node }: { node: unknown }, i: number) => {
+            // @ts-ignore
+            return <PostHeader key={i} type={type} node={node} />;
+          })}
+        </div>
+        <div className={styles.redirects}>
+          {currentPage > 1 && (
+            <Link to={`/${type}${prev === 1 ? '' : `/${prev}`}`}>{`Back`}</Link>
+          )}
+          {currentPage > 1 && currentPage < numPages && <span>{`•`}</span>}
+          {currentPage < numPages && (
+            <Link to={`/${type}/${next}`}>{`Next`}</Link>
+          )}
+        </div>
       </div>
     </Format>
   );

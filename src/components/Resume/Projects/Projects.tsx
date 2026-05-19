@@ -30,7 +30,9 @@ const Projects = (): ReactElement => {
 
   return (
     <>
-      <h2 className="section-title">My Work</h2>
+      <h2 className="section-title">
+        My Work | <span className="detail">work experiences and projects</span>
+      </h2>
 
       <div className="section">
         {projects.map((project, i) => {
