@@ -1,0 +1,43 @@
+---
+/**
+ * PostCard.astro
+ * Replaces PostHeader.tsx. Renders a blog list card with featured image, title, excerpt, and date.
+ * Uses Astro's <Image> component for optimized image output.
+ * Applies existing PostHeader.module.scss styles unchanged.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import styles from './PostCard.module.scss';
+
+interface Props {
+  title: string;
+  slug: string;
+  description: string;
+  date: string;
+  featuredImage: ImageMetadata;
+}
+
+const { title, slug, description, date, featuredImage } = Astro.props;
+const link = `/blog/${slug}`;
+---
+<article class={styles.post}>
+  <header>
+    <a href={link} class={styles.imageLink} aria-label={`Read ${title}`}>
+      <Image
+        src={featuredImage}
+        alt={`${title} header`}
+        width={600}
+        height={150}
+        class={styles.image}
+        style="object-fit: cover;"
+      />
+    </a>
+    <h3 class={styles.title}>
+      <a style="box-shadow: none;" href={link}>{title}</a>
+    </h3>
+  </header>
+  <section class={styles.excerpt}>
+    <p>{description}</p>
+  </section>
+  <p class={styles.date}>{date}</p>
+</article>

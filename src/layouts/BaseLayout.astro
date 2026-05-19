@@ -1,0 +1,65 @@
+---
+/**
+ * BaseLayout.astro
+ * Main page layout replacing Format.tsx and SEO.tsx.
+ * Renders the full HTML shell with head metadata, header, slot content, and footer.
+ */
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.scss';
+// Prism base theme — token colors are overridden by the CSS custom properties
+// (--code, --code-background) defined in global.scss for theme-aware syntax highlighting
+import 'prismjs/themes/prism-tomorrow.css';
+
+interface Props {
+  /** Page-specific title; combined as "{title} | kworathur.com" */
+  title: string;
+  /** Optional meta description */
+  description?: string;
+  /** Optional absolute URL for og:image */
+  ogImage?: string;
+}
+
+const { title, description, ogImage } = Astro.props;
+const pageTitle = `${title} | kworathur.com`;
+const metaDescription = description ?? "Keshav Worathur's developer portfolio.";
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={metaDescription} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/kw-favicon.svg" />
+    <link rel="preload" href="/fonts/AlbertusMTStd.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <!-- Umami analytics loaded with defer to avoid blocking rendering -->
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="debd09d3-019b-4a83-98c8-78e3b844df35"
+    ></script>
+    <!-- Inline theme-init script: apply dark/light class before body renders to prevent FOUC -->
+    <script is:inline>
+      (function () {
+        var stored = localStorage.getItem('theme');
+        var preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.classList.add(stored != null ? stored : preferred);
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Page wrapper: max-width centering and padding matching the original Format component -->
+    <div class="resume">
+      <Header />
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

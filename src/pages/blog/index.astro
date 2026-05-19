@@ -1,0 +1,51 @@
+---
+/**
+ * blog/index.astro
+ * Blog list page 1 (/blog).
+ * Fetches all blog posts, sorts by date descending, and renders the first 6 as PostCards.
+ * Shows "Next" pagination link to /blog/2 if more than 6 posts exist.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import styles from './PostListTemplate.module.scss';
+
+const POSTS_PER_PAGE = 6;
+
+// Get all blog posts sorted by date descending
+const allPosts = (await getCollection('blog')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const currentPage = 1;
+const numPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+// Slice to the first page of posts
+const posts = allPosts.slice(0, POSTS_PER_PAGE);
+---
+<BaseLayout title="Blog">
+  <div class={styles.blog}>
+    <h1 class="section-title">
+      Blog | <span class="detail">featuring technical writing i'm proud of</span>
+    </h1>
+    <div class={styles.posts}>
+      {posts.map((post) => {
+        // Derive slug: strip /index.md or .md suffix from the entry id
+        const slug = post.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
+        return (
+          <PostCard
+            title={post.data.title}
+            slug={slug}
+            description={post.data.description}
+            date={post.data.date}
+            featuredImage={post.data.featuredImage}
+          />
+        );
+      })}
+    </div>
+    <div class={styles.redirects}>
+      {currentPage < numPages && (
+        <a href={`/blog/2`}>Next</a>
+      )}
+    </div>
+  </div>
+</BaseLayout>
