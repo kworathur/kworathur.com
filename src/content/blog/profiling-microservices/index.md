@@ -1,10 +1,10 @@
 ---
-title: 'How to Trust Your Benchmark Results Again'
+title: 'What a Broken Benchmark Taught Me About Reproducible Experiments'
 date: '2026-05-04'
-description: 'What a Broken Benchmark Taught Me About Reproducible Experiments'
+description: 'Lessons Learned from Debugging Abnormal Power Results'
 type: 'blog'
 featuredImage: './jaeger_dependency_graph.png'
-featuredImageCaption: "Jaeger's dependency graph for a hotel search query, showing all microservices involved"
+featuredImageCaption: "A search request touches more services than you'd think — and each one is a place benchmarks can lie."
 tags: ['Performance Engineering']
 ---
 
@@ -22,7 +22,7 @@ My job was to simulate thousands of users concurrently searching for hotels onli
 
 The figure above shows two plots: latency on the left, power consumption on the right, as we increase the number of queries per second (QPS). In the latency plot, solid lines represent median latency while dashed lines represent p99 latency (i.e. the latency that 99% of requests come in under). In both plots, the blue and orange lines represent different _frequency governors_. These frequency governors act similar to a speed limiter in a car: they intentionally limit the CPU clock rate (or top speed) to optimize for power utilization (or fuel economy/safety).
 
-In the power plot, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the latency plot shows that `schedutil` matches `performance` in terms of latency as we increase the QPS. `schedutil` dynamically adjusts clock rate based on demand; `performance` pins it at maximum. This made this result feasible, but nonetheless surprising, since earlier experiments hadn't shown such a clear power gap between the two. At high load you'd expect schedutil's dynamic adjustment to push the clock rate near maximum anyway, which should close the gap — but it didn't.
+In the power plot, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the latency plot shows that `schedutil` matches `performance` in terms of latency as we increase the QPS. `schedutil` dynamically adjusts clock rate based on demand; `performance` pins it at maximum. This made the result feasible, but nonetheless surprising, since earlier experiments hadn't shown such a clear power gap between the two. At high load you'd expect schedutil's dynamic adjustment to push the clock rate near maximum anyway, which should close the gap - but it didn't.
 
 If this held up, it would mean **real power savings** for some production workloads without any modifications to an application's code. The best part is we don't have to sacrifice _p99 latency_, a metric datacenter operators tend to care about most, because it captures the worst experience most users will have. Admittedly, I didn't recognize the impact of this discovery at the time - but our professor did!
 
@@ -77,7 +77,7 @@ Re-running my experiments without any changes, I found that power measurements v
 
 So which of these conclusions should we trust? Prior to starting my experiments, I wrote some custom scripts to deploy the search service without docker, in order to push the server with the highest QPS possible. I revisited the scripts I wrote earlier and noticed a subtle flaw: the placement of tasks on the server was left entirely up to the OS scheduler.
 
-The OS scheduler — the kernel component that decides which task runs on which core — is generally good at spreading tasks across a CPU's cores to minimize resource conflicts. Sometimes, however, they may schedule sub-optimally, placing two compute-bound tasks on the same core while others remain idle. I chose to **pin processes to run on separate cores**, preventing such collisions and making my experimental results more deterministic.
+The OS scheduler - the kernel component that decides which task runs on which core - is generally good at spreading tasks across a CPU's cores to minimize resource conflicts. Sometimes, however, it may schedule sub-optimally, placing two compute-bound tasks on the same core while others remain idle. I chose to **pin processes to run on separate cores**, preventing such collisions and making my experimental results more deterministic.
 
 To do this, I used the `taskset` utility to set affinity of processes to cores. `taskset` lets you specify a list of cores a process should run on, which let me fix the application's cache to run on a core separate from all other processes. I did this specifically because the cache is a shared dependency of all requests, and giving it its own core to run on avoids spikes in power/latency measurements from the cache randomly being de-scheduled.
 
@@ -165,4 +165,4 @@ The result was **out-of-sync binaries** across the three servers, which made pow
 
 ![Final Results - Latency](reproducible_latency.png)
 
-In all three follow-up experiments, the bug was in my measurement, not in the system I was measuring. Once I controlled for task placement, caching, and binary mismatch, the original power savings from frequency-limiting **largely disappeared** (see power plot above). The latency story held up — both governors still converge at high load (see latency plot above). The 'big if true' result didn't survive contact with rigor, which makes for a less exciting conclusion but better science.
+In all three follow-up experiments, the bug was in my measurement, not in the system I was measuring. Once I controlled for task placement, caching, and binary mismatch, the original power savings from frequency-limiting **largely disappeared** (see power plot above). The latency story held up - both governors still converge at high load (see latency plot above). The 'big if true' result didn't survive contact with rigor, which makes for a less exciting conclusion but better science.
