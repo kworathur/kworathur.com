@@ -10,7 +10,7 @@ tags: ['Performance Engineering']
 
 For a few weeks this spring, I thought my team had uncovered a way to make datacenters more energy efficient. Spoiler: we hadn't. But trying (and failing) to reproduce our initial results taught me more about repeatable performance testing than the original finding ever would have.
 
-Datacenters - the windowless buildings behind every online purchase, post, and prompt - are consuming electricity at alarming rates. Critics argue that datacenters are environmentally disruptive, and recent construction projects have been delayed in part due to these concerns. For our final project in **CS8803: Datacenter Networks and Systems**, we asked: could software make these facilities more energy efficient?
+Datacenters — the windowless buildings behind every online purchase, post, and prompt — are consuming electricity at alarming rates. Critics argue that datacenters are environmentally disruptive, and recent construction projects have been delayed in part due to these concerns. For our final project in **CS8803: Datacenter Networks and Systems**, we asked: could software make these facilities more energy efficient?
 
 Our approach: clever _load balancing algorithms_ that distribute work amongst hundreds of servers. [Sinking a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launching one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) was out of scope for the course, so software optimizations felt like a more practical approach.
 
@@ -22,15 +22,15 @@ My job was to simulate thousands of users concurrently searching for hotels onli
 
 The figure above shows two plots: latency on the left, power consumption on the right, as we increase the number of queries per second (QPS). In the latency plot, solid lines represent median latency while dashed lines represent p99 latency (i.e. the latency that 99% of requests come in under). In both plots, the blue and orange lines represent different _frequency governors_. These frequency governors act similar to a speed limiter in a car: they intentionally limit the CPU clock rate (or top speed) to optimize for power utilization (or fuel economy/safety).
 
-In the power plot, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the latency plot shows that `schedutil` matches `performance` in terms of latency as we increase the QPS. `schedutil` dynamically adjusts clock rate based on demand; `performance` pins it at maximum. This made the result feasible, but nonetheless surprising, since earlier experiments hadn't shown such a clear power gap between the two. At high load you'd expect schedutil's dynamic adjustment to push the clock rate near maximum anyway, which should close the gap - but it didn't.
+In the power plot, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the latency plot shows that `schedutil` matches `performance` in terms of latency as we increase the QPS. `schedutil` dynamically adjusts clock rate based on demand; `performance` pins it at maximum. This made the result feasible, but nonetheless surprising, since earlier experiments hadn't shown such a clear power gap between the two. At high load you'd expect schedutil's dynamic adjustment to push the clock rate near maximum anyway, which should close the gap — but it didn't.
 
-If this held up, it would mean **real power savings** for some production workloads without any modifications to an application's code. The best part is we don't have to sacrifice _p99 latency_, a metric datacenter operators tend to care about most, because it captures the worst experience most users will have. Admittedly, I didn't recognize the impact of this discovery at the time - but our professor did!
+If this held up, it would mean **real power savings** for some production workloads without any modifications to an application's code. The best part is we don't have to sacrifice _p99 latency_, a metric datacenter operators tend to care about most, because it captures the worst experience most users will have. Admittedly, I didn't recognize the impact of this discovery at the time — but our professor did!
 
 # Debugging My Experiments
 
 As I set out to reproduce these results, I faced one of the trickiest debugging challenges so far, spurred on by a complicated experimental setup and a three-week deadline.
 
-First, the setup - I used six intel-based machines (courtesy of Cloudlab) that have more cores than your typical PC and dedicated high-bandwidth links connecting them. Each experiment is conducted using a pair of machines, with a client machine acting as a load generator and a separate server hosting the hotel search service. Crucially, both client and server have identical specs and ample cores. This ensures that (1) clients can simulate high QPS traffic and (2) servers can serve this traffic in a reasonable amount of time before reaching their limits.
+First, the setup — I used six intel-based machines (courtesy of Cloudlab) that have more cores than your typical PC and dedicated high-bandwidth links connecting them. Each experiment is conducted using a pair of machines, with a client machine acting as a load generator and a separate server hosting the hotel search service. Crucially, both client and server have identical specs and ample cores. This ensures that (1) clients can simulate high QPS traffic and (2) servers can serve this traffic in a reasonable amount of time before reaching their limits.
 
 ![Specs of my testbed](./testbed_specs.png)
 
@@ -77,7 +77,7 @@ Re-running my experiments without any changes, I found that power measurements v
 
 So which of these conclusions should we trust? Prior to starting my experiments, I wrote some custom scripts to deploy the search service without docker, in order to push the server with the highest QPS possible. I revisited the scripts I wrote earlier and noticed a subtle flaw: the placement of tasks on the server was left entirely up to the OS scheduler.
 
-The OS scheduler - the kernel component that decides which task runs on which core - is generally good at spreading tasks across a CPU's cores to minimize resource conflicts. Sometimes, however, it may schedule sub-optimally, placing two compute-bound tasks on the same core while others remain idle. I chose to **pin processes to run on separate cores**, preventing such collisions and making my experimental results more deterministic.
+The OS scheduler — the kernel component that decides which task runs on which core — is generally good at spreading tasks across a CPU's cores to minimize resource conflicts. Sometimes, however, it may schedule sub-optimally, placing two compute-bound tasks on the same core while others remain idle. I chose to **pin processes to run on separate cores**, preventing such collisions and making my experimental results more deterministic.
 
 To do this, I used the `taskset` utility to set affinity of processes to cores. `taskset` lets you specify a list of cores a process should run on, which let me fix the application's cache to run on a core separate from all other processes. I did this specifically because the cache is a shared dependency of all requests, and giving it its own core to run on avoids spikes in power/latency measurements from the cache randomly being de-scheduled.
 
@@ -106,7 +106,7 @@ In particular, the reservation service queries reservations for a given hotel us
 
 Without caching, the application became bottlenecked on MongoDB database reads, which caused p99 tail latency to explode at low load. Despite expecting `schedutil` to look worse without the cache advantage, the two governors stayed roughly matched in latency.
 
-As a follow up, I decided to switch the order of my experiments - I would run `schedutil` trials first, then `performance` trials, effectively flipping the experiments in `performance`'s favor. After doing this, I still saw the same behavior - `schedutil` closely matching `performance` in latency at high loads. This convinced me that the latency figures from our initial tests were indeed accurate.
+As a follow up, I decided to switch the order of my experiments - I would run `schedutil` trials first, then `performance` trials, effectively flipping the experiments in `performance`'s favor. After doing this, I still saw the same behavior — `schedutil` closely matching `performance` in latency at high loads. This convinced me that the latency figures from our initial tests were indeed accurate.
 
 I turned my attention to the power measurements, the ones that showed a gap between `schedutil` and `performance`.
 
@@ -121,7 +121,7 @@ git log --oneline --pretty=fuller --all | grep 'Keshav' | wc -l
 
 Rather than check all of these commits one by one, I chose to use `git bisect`. This command essentially reduces my O(N) search for a breaking change to O(log\_2(N)), where N is the number of commits to inspect. 
 
-When I ran `git bisect start`, I was prompted to give a reference to a known "bad" commit - a version of the codebase where I _couldn't_ reproduce my results. Next, I was prompted to give a known "good" commit - a version of the codebase where I _could_ reproduce my results:
+When I ran `git bisect start`, I was prompted to give a reference to a known "bad" commit — a version of the codebase where I _couldn't_ reproduce my results. Next, I was prompted to give a known "good" commit — a version of the codebase where I _could_ reproduce my results:
 
 The process of using `git bisect` to find the breaking change in my code looked something like this:
 
