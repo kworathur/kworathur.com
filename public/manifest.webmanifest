@@ -1,0 +1,15 @@
+{
+  "name": "Keshav Worathur's Blog",
+  "short_name": "Keshav's Blog",
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#202020",
+  "display": "minimal-ui",
+  "icons": [
+    {
+      "src": "/kw-favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

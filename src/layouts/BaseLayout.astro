@@ -51,6 +51,14 @@ const metaDescription = description ?? "Keshav Worathur's developer portfolio.";
         document.documentElement.classList.add(stored != null ? stored : preferred);
       })();
     </script>
+    <!-- Unregister any service workers left over from the old Gatsby/offline-plugin build -->
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (regs) {
+          regs.forEach(function (r) { r.unregister(); });
+        });
+      }
+    </script>
   </head>
   <body>
     <!-- Page wrapper: max-width centering and padding matching the original Format component -->
