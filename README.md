@@ -4,7 +4,7 @@
   kworathur.com
 </h1>
 
-kworathur.com is my developer portfolio, built to display content from my blog, resume, and project demos using a unified graphql interface.
+kworathur.com is my developer portfolio, built to showcase my blog, resume, and project demos.
 
 ## 🚀 Quick start
 
@@ -12,7 +12,7 @@ From the project root, issue the commands below to launch the dev server:
 
 ```bash
 npm install
-gatsby develop
+astro dev
 ```
 
-The application will become available at `http://localhost:8000`.
+The application will become available at `http://localhost:4321`.
