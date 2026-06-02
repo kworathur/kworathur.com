@@ -57,7 +57,7 @@
       "website": "https://kworathur.dev",
       "github": "https://github.com/kworathur/pixel-party/tree/main",
       "date": "Nov 2023",
-      "summary": "Cutting-edge deep learning tools trusted by research labs and pharma giants for screening drug targets",
+      "summary": "Deep learning tools trusted by research labs and pharma giants for screening drug targets.",
       "highlights": [
         "Pitched a user-friendly visualization tool developed with React, WebGL, and FastAPI for understanding proteomic data, which led to adoption by 8 Gene2Lead researchers and positive feedback on usability.",
         "Deployed protein feature extraction, training, inference and reporting pipelines on AWS Sagemaker to facilitate greater visibility into research project progress and data sharing."
