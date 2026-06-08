@@ -45,6 +45,7 @@ body {
   font-family: $font-sans;
   line-height: 1.65;
   letter-spacing: -0.01em;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 // Theme variables applied when :root (html element) has dark/light class
