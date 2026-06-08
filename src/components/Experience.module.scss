@@ -1,11 +1,11 @@
 /* stylelint-disable custom-property-pattern, selector-pseudo-class-no-unknown, selector-type-no-unknown, no-descending-specificity -- experimental CSS scroll marker API uses non-standard naming conventions and draft pseudo-class/type selectors */
 
-.projectHeading {
+.experienceHeading {
   margin-bottom: 0.5rem;
   margin-top: 2rem;
 }
 
-.projectMediaCarousel {
+.experienceMediaCarousel {
   --_marker-size: 75px;
 
   display: grid;
