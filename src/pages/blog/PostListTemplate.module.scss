@@ -2,21 +2,10 @@
   padding: 1rem 2rem;
 }
 
-// On a small-screen, default to a single column display
 .posts {
   display: flex;
-  flex-flow: column wrap;
-  gap: 2rem;
-}
-
-// On a large-screen, display in a grid
-@media only screen and (width >= 954px) {
-  .posts {
-    display: grid;
-    grid-template-columns: 33% 33% 33%;
-    grid-auto-rows: auto;
-    gap: 2rem;
-  }
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .redirects {
