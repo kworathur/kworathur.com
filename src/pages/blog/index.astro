@@ -25,7 +25,7 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
 <BaseLayout title="Blog">
   <div class={styles.blog}>
     <h1 class="section-title">
-      Blog | <span class="detail">featuring technical writing i'm proud of</span>
+      Blog | <span class="detail">deep dives on ML systems</span>
     </h1>
     <div class={styles.posts}>
       {posts.map((post) => {
@@ -38,6 +38,7 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
             description={post.data.description}
             date={post.data.date}
             featuredImage={post.data.featuredImage}
+            tags={post.data.tags}
           />
         );
       })}
