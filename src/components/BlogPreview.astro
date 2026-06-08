@@ -6,7 +6,7 @@ const allPosts = (await getCollection('blog')).sort(
 );
 ---
 <>
-  <h2 class="section-title">Blog</h2>
+  <h2 class="section-title">Blog | <span class="detail">featuring technical writing i'm proud of</span></h2>
   <div class="section">
     <ul>
       {allPosts.map((post) => {
