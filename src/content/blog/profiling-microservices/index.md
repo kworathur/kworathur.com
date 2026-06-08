@@ -1,11 +1,11 @@
 ---
 title: 'What a Broken Benchmark Taught Me About Reproducible Experiments'
 date: '2026-05-04'
-description: 'Lessons Learned from Debugging Abnormal Power Results'
+description: 'A story about chasing a "too good to be true" datacenter power result, unraveling it with CPU pinning, cache removal, and git commands, and tips for reproducible benchmarking.'
 type: 'blog'
 featuredImage: './jaeger_dependency_graph.png'
 featuredImageCaption: "A search request touches more services than you'd think — and each one is a place benchmarks can lie."
-tags: ['Performance Engineering']
+tags: ['Performance', 'Distributed Tracing', 'Jaeger', 'Linux']
 ---
 
 For a few weeks this spring, I thought my team had uncovered a way to make datacenters more energy efficient. Spoiler: we hadn't. But trying (and failing) to reproduce our initial results taught me more about repeatable performance testing than the original finding ever would have.
