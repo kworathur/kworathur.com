@@ -1,19 +1,35 @@
 ---
 import { getCollection } from 'astro:content';
+import styles from './BlogPreview.module.scss';
 
 const allPosts = (await getCollection('blog')).sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
+
+function formatDate(dateStr: string): string {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
 ---
 <>
-  <h2 class="section-title">Blog | <span class="detail">featuring technical writing i'm proud of</span></h2>
+  <h2 class="section-title">Blog | <span class="detail">deep dives on ML systems</span></h2>
   <div class="section">
-    <ul>
+    <ul class={styles.list}>
       {allPosts.map((post) => {
         const slug = post.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
+        const link = `/blog/${slug}`;
         return (
-          <li>
-            <a href={`/blog/${slug}`}>{post.data.title}</a>
+          <li class={styles.card}>
+            <div class={styles.titleLine}>
+              <a href={link} class={styles.title}>{post.data.title}</a>
+              <span class={styles.date}>&mdash; {formatDate(post.data.date)}</span>
+            </div>
+            {post.data.description && <p class={styles.description}>{post.data.description}</p>}
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div class={styles.tags}>
+                {post.data.tags.map((tag) => <div class="tech">{tag}</div>)}
+              </div>
+            )}
           </li>
         );
       })}
