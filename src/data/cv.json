@@ -1,6 +1,21 @@
 {
   "experiences": [
     {
+      "id": "matmerize",
+      "position": "Software Engineer",
+      "company": "Matmerize",
+      "location": "Atlanta, GA",
+      "website": "https://www.matmerize.com/",
+      "images": ["/assets/screens/g2l-screen1.png", "/assets/screens/g2l-screen2.png"],
+      "summary": "SaaS platform with hundreds of active users for property prediction and polymer formulation.",
+      "highlights": [
+        "Refactored prediction engine to consume jobs from SQS queues, improving job throughput in production by 43% and eliminating unmaintained dependencies from production builds.",
+        "Integrating LangFuse observability tool into AskPOLY, Matmerize's conversational AI platform for Polymer informatics.",
+        "Automated production backup testing and restoration using Python scripts and Terraform, increasing testing coverage from less than 1% of platform data to >80% and ensuring SOC-2 compliance."
+      ],
+      "technologies": ["Terraform", "Python", "AWS"]
+    },
+    {
       "id": "g2l",
       "position": "Software Engineer",
       "company": "Gene2Lead",
