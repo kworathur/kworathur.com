@@ -8,7 +8,7 @@ kworathur.com is my developer portfolio, built to showcase my blog, resume, and 
 
 ## 🚀 Quick start
 
-From the project root, issue the commands below to launch the dev server:
+Issue the commands below from the project root to launch the dev server:
 
 ```bash
 npm install
