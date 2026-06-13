@@ -24,6 +24,7 @@ const { title, description, ogImage } = Astro.props;
 const pageTitle = `${title} | kworathur.com`;
 const metaDescription = description ?? "Keshav Worathur's developer portfolio.";
 ---
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -35,27 +36,39 @@ const metaDescription = description ?? "Keshav Worathur's developer portfolio.";
     <meta property="og:description" content={metaDescription} />
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preload" href="/fonts/AlbertusMTStd.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/AlbertusMTStd.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link rel="manifest" href="/manifest.webmanifest" />
     <!-- Umami analytics loaded with defer to avoid blocking rendering -->
     <script
       defer
       src="https://cloud.umami.is/script.js"
-      data-website-id="debd09d3-019b-4a83-98c8-78e3b844df35"
-    ></script>
+      data-website-id="debd09d3-019b-4a83-98c8-78e3b844df35"></script>
     <!-- Inline theme-init script: apply dark/light class before body renders to prevent FOUC -->
     <script is:inline>
       (function () {
-        var stored = localStorage.getItem('theme');
-        var preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        document.documentElement.classList.add(stored != null ? stored : preferred);
+        const stored = localStorage.getItem('theme');
+        const preferred = window.matchMedia('(prefers-color-scheme: dark)')
+          .matches
+          ? 'dark'
+          : 'light';
+        document.documentElement.classList.add(
+          stored != null ? stored : preferred
+        );
       })();
     </script>
     <!-- Unregister any service workers left over from the old Gatsby/offline-plugin build -->
     <script is:inline>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function (regs) {
-          regs.forEach(function (r) { r.unregister(); });
+          regs.forEach(function (r) {
+            r.unregister();
+          });
         });
       }
     </script>
