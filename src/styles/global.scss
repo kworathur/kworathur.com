@@ -308,7 +308,13 @@ h2.section-title {
 .resume {
   margin: 0 auto;
   max-width: 60rem;
-  padding: 1rem 2rem;
+  padding: 1rem;
+}
+
+@media only screen and (width >= 600px) {
+  .resume {
+    padding: 1rem 2rem;
+  }
 }
 
 .entry-title {
