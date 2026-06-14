@@ -3,8 +3,7 @@ title: 'What a Broken Benchmark Taught Me About Reproducible Experiments'
 date: '2026-05-04'
 description: 'A story about chasing a "too good to be true" datacenter power result, unraveling it with CPU pinning, cache removal, and git commands, and tips for reproducible benchmarking.'
 type: 'blog'
-featuredImage: './jaeger_dependency_graph.png'
-featuredImageCaption: "A search request touches more services than you'd think — and each one is a place benchmarks can lie."
+featuredImage: './thumbnail.jpg'
 tags: ['Performance', 'Distributed Tracing', 'Jaeger', 'Linux']
 ---
 

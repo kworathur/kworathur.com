@@ -141,19 +141,6 @@ if (props.kind === 'post') {
           <header>
             <h1 class={postStyles.title}>{title}</h1>
             <p>{date}</p>
-            {featuredImage && (
-              <figure>
-                <Image
-                  src={featuredImage}
-                  alt={title}
-                  width={900}
-                  class={postStyles.featuredImage}
-                />
-                {featuredImageCaption && (
-                  <figcaption>{featuredImageCaption}</figcaption>
-                )}
-              </figure>
-            )}
           </header>
           {Content && <Content />}
           <hr />
