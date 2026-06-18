@@ -1,17 +1,17 @@
 ---
 title: 'What a Broken Benchmark Taught Me About Reproducible Experiments'
 date: '2026-05-04'
-description: 'A story about chasing a "too good to be true" datacenter power result, unraveling it with CPU pinning, cache removal, and git commands, and tips for reproducible benchmarking.'
+description: "A story about chasing datacenter energy savings that seemed to good to be true."
 type: 'blog'
 featuredImage: './thumbnail.jpg'
 tags: ['Performance', 'Distributed Tracing', 'Jaeger', 'Linux']
 ---
 
-For a few weeks this spring, I thought my team had uncovered a way to make datacenters more energy efficient. Spoiler: we hadn't. But trying (and failing) to reproduce our initial results taught me more about repeatable performance testing than the original finding ever would have.
+For a few weeks this spring, I thought my team had uncovered a way to make datacenters more energy efficient. Spoiler: we hadn't. This post is a story of how I tried (and failed) to reproduce our initial results, sprinkled with tips for building more robust benchmarks.
 
 Datacenters — the windowless buildings behind every online purchase, post, and prompt — are consuming electricity at alarming rates. Critics argue that datacenters are environmentally disruptive, and recent construction projects have been delayed in part due to these concerns. For our final project in **CS8803: Datacenter Networks and Systems**, we asked: could software make these facilities more energy efficient?
 
-Our approach: clever _load balancing algorithms_ that distribute work amongst hundreds of servers. [Sinking a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launching one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) was out of scope for the course, so software optimizations felt like a more practical approach.
+Our approach: clever _load balancing algorithms_ that distribute work amongst hundreds of servers. After being told we couldn't [sink a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launch one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) we were dead set on making our software technique a winner.
 
 My job was to simulate thousands of users concurrently searching for hotels online while taking detailed measurements of servers' _power consumption_ and _response latency_ (think: time it takes to receive a confirmation message after clicking "book" on AirBnB).
 
@@ -21,9 +21,9 @@ My job was to simulate thousands of users concurrently searching for hotels onli
 
 The figure above shows two plots: latency on the left, power consumption on the right, as we increase the number of queries per second (QPS). In the latency plot, solid lines represent median latency while dashed lines represent p99 latency (i.e. the latency that 99% of requests come in under). In both plots, the blue and orange lines represent different _frequency governors_. These frequency governors act similar to a speed limiter in a car: they intentionally limit the CPU clock rate (or top speed) to optimize for power utilization (or fuel economy/safety).
 
-In the power plot, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the latency plot shows that `schedutil` matches `performance` in terms of latency as we increase the QPS. `schedutil` dynamically adjusts clock rate based on demand; `performance` pins it at maximum. This made the result feasible, but nonetheless surprising, since earlier experiments hadn't shown such a clear power gap between the two. At high load you'd expect schedutil's dynamic adjustment to push the clock rate near maximum anyway, which should close the gap — but it didn't.
+In the power plot, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the latency plot shows that `schedutil` matches `performance` in terms of latency as we increase the QPS. `schedutil` dynamically adjusts clock rate based on demand; `performance` pins it at maximum. This made the result feasible, but nonetheless surprising, since earlier experiments hadn't shown such a clear power gap between the two. Intuitively, `schedutil` should have pushed the clock rate near maximum at high load to close the power gap, which was not the case here.  
 
-If this held up, it would mean **real power savings** for some production workloads without any modifications to an application's code. The best part is we don't have to sacrifice _p99 latency_, a metric datacenter operators tend to care about most, because it captures the worst experience most users will have. Admittedly, I didn't recognize the impact of this discovery at the time — but our professor did!
+If this result held up, it would mean **real power savings** for some production workloads without any modifications to an application's code. The best part is we don't have to sacrifice _p99 latency_, a metric datacenter operators tend to care about most, because it captures the worst experience most users will have. Admittedly, I didn't recognize the impact of this discovery at the time — but our professor did!
 
 # Debugging My Experiments
 
@@ -115,7 +115,7 @@ After making my experiments reproducible, I started digging into my `git` commit
 
 ```bash
 git log --oneline --pretty=fuller --all | grep 'Keshav' | wc -l
-      50
+      53
 ```
 
 Rather than check all of these commits one by one, I chose to use `git bisect`. This command essentially reduces my O(N) search for a breaking change to O(log\_2(N)), where N is the number of commits to inspect. 
@@ -164,4 +164,4 @@ The result was **out-of-sync binaries** across the three servers, which made pow
 
 ![Final Results - Latency](reproducible_latency.png)
 
-In all three follow-up experiments, the bug was in my measurement, not in the system I was measuring. Once I controlled for task placement, caching, and binary mismatch, the original power savings from frequency-limiting **largely disappeared** (see power plot above). The latency story held up - both governors still converge at high load (see latency plot above). The 'big if true' result didn't survive contact with rigor, which makes for a less exciting conclusion but better science.
+In all three follow-up experiments, the bug was in my experiments rather than the application I was experimenting with. Once I controlled for task placement, caching, and binary mismatch, the original power savings from frequency-limiting **largely disappeared** (see power plot above). Both governors still converge in latency at high load (see latency plot above). Our 'big if true' result evaporated with rigor - although a less exciting conclusion, we could feel satisfied that our experiments were rigorous.
