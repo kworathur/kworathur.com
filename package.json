@@ -11,8 +11,12 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "lint:css": "stylelint \"src/**/*.{css,scss}\"",
-    "lint:css:fix": "stylelint \"src/**/*.{css,scss}\" --fix"
+    "lint:css:fix": "stylelint \"src/**/*.{css,scss}\" --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,astro,js,mjs}\"",
+    "prepare": "husky"
   },
   "dependencies": {
     "@astrojs/react": "^4.0.0",
@@ -26,9 +30,27 @@
     "sharp": "^0.34.5",
     "typescript": "^6.0.3"
   },
+  "lint-staged": {
+    "src/**/*.{ts,tsx,astro,js,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "src/**/*.{css,scss}": [
+      "stylelint --fix",
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.6.0",
+    "eslint": "^10.5.0",
+    "eslint-plugin-astro": "^1.7.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.4",
+    "prettier-plugin-astro": "^0.14.1",
     "stylelint": "^17.8.0",
-    "stylelint-config-standard-scss": "^17.0.0"
+    "stylelint-config-standard-scss": "^17.0.0",
+    "typescript-eslint": "^8.61.0"
   }
 }

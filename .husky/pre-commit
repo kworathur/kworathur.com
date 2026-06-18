@@ -1,0 +1,7 @@
+branch=$(git symbolic-ref --short HEAD)
+if [ "$branch" = "main" ]; then
+  echo "Direct commits to main are not allowed. Please use a feature branch."
+  exit 1
+fi
+
+npx lint-staged
