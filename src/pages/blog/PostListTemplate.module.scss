@@ -1,5 +1,17 @@
 .blog {
-  padding: 1rem 2rem;
+  // No horizontal padding — the parent .resume container provides side insets,
+  // keeping content flush with the homepage sections.
+  padding: 0;
+}
+
+.heading {
+  font-family: 'Albertus var', serif;
+  font-weight: 400;
+  font-size: 2rem;
+  color: var(--text-title);
+  margin: 0 0 1rem;
+  letter-spacing: 0;
+  line-height: 1.1;
 }
 
 .posts {

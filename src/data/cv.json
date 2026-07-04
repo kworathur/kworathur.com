@@ -1,85 +1,130 @@
 {
   "experiences": [
     {
-      "id": "g2l-research",
-      "organization": "Gene2Lead Limited",
-      "position": "Computational Research Assistant",
-      "location": "Toronto, ON",
-      "website": "",
-      "startDate": "Aug 2024",
+      "id": "matmerize",
+      "company": "Matmerize",
+      "logo": "/assets/logos/matmerize.png",
+      "role": "Software Engineer",
+      "startDate": "May 2026",
+      "endDate": "Present",
+      "tech": ["AWS", "Terraform", "Python"],
+      "highlights": [
+        "Refactored the prediction engine to use SQS, increasing hourly job throughput by 43%.",
+        "Optimizing cloud infrastructure and batch workflows powering Matmerize's AI tools for polymer informatics."
+      ],
+      "images": [
+        { "src": "/assets/matmerize-architecture.png", "alt": "Matmerize pull-based architecture diagram" }
+      ]
+    },
+    {
+      "id": "gene2lead",
+      "company": "Gene2Lead",
+      "logo": "/assets/logos/gene2lead.png",
+      "role": "Software Engineer",
+      "startDate": "Sep 2024",
       "endDate": "Jul 2025",
-      "summary": "Deep learning tooling for a biotechnology startup",
+      "tech": ["PyTorch", "FastAPI", "React"],
       "highlights": [
-        "Developed a machine learning pipeline using Python (PyTorch) to analyze the human proteome, enabling researchers to process datasets of up to 7 million protein-drug interactions, accelerating drug discovery.",
-        "Pitched a user-friendly visualization tool developed with React, WebGL, and FastAPI for understanding proteomic data, which led to adoption by 8 Gene2Lead researchers and positive feedback on usability.",
-        "Deployed protein feature extraction, training, inference and reporting pipelines on AWS Sagemaker to facilitate greater visibility into research project progress and data sharing."
+        "Deployed protein feature extraction, training, inference and reporting pipelines on AWS SageMaker.",
+        "Built pre-processing pipelines ingesting 16,000+ protein structures for drug discovery research.",
+        "Pitched a visualization tool for proteomic data adopted by 8 Gene2Lead researchers."
       ],
-      "technologies": ["PyTorch", "FastAPI", "React"]
-    },
-    {
-      "id": "simple-it-cloud",
-      "organization": "Simple IT Firm",
-      "position": "Cloud Developer",
-      "location": "Toronto, ON",
-      "website": "",
-      "startDate": "Jan 2024",
-      "endDate": "Jul 2024",
-      "summary": "Early stage startup focused on managed services",
-      "highlights": [
-        "Automated the extraction of information from personal and corporate tax returns using AWS Lambda and Textract, decreasing manual loan review time by 8% and accelerating the overall loan approval workflow.",
-        "Released custom web scraping tools to extract FAQ data from eight company websites and store the data in a vector database for fine tuning AI chatbot applications."
-      ],
-      "technologies": ["AWS", "FastAPI", "React"]
-    },
-    {
-      "id": "uoft-ta",
-      "organization": "University of Toronto",
-      "position": "Undergraduate Teaching Assistant",
-      "location": "Mississauga, ON",
-      "website": "https://www.utm.utoronto.ca/math-cs-stats/",
-      "startDate": "Sep 2023",
-      "endDate": "present",
-      "summary": "Teaching assistant for Operating Systems in Fall 2023.",
-      "highlights": [
-        "Facilitated interactive tutorials for upper-year CS courses (ML, Databases, OS), leveraging deep ML and systems knowledge.",
-        "Developed an automated test suite for marking assignments, resulting in an 8-hour reduction in grading time per TA.",
-        "Promptly answered student questions on course discussion boards, making 300+ contributions."
-      ],
-      "technologies": ["GNU/Linux", "C", "git"]
+      "images": [
+        { "src": "/assets/screens/g2l-screen1.png", "alt": "Gene2Lead app screenshot 1" },
+        { "src": "/assets/screens/g2l-screen2.png", "alt": "Gene2Lead app screenshot 2" }
+      ]
     }
   ],
-  "projects": [
+  "github_projects": [
     {
-      "id": "g2l",
-      "name": "ML Engineering @ Gene2Lead",
-      "position": "Software Engineer",
-      "location": "Toronto, ON",
-      "website": "https://kworathur.dev",
-      "github": "https://github.com/kworathur/pixel-party/tree/main",
-      "date": "Nov 2023",
-      "summary": "Deep learning tools trusted by research labs and pharma giants for screening drug targets.",
-      "highlights": [
-        "Pitched a user-friendly visualization tool developed with React, WebGL, and FastAPI for understanding proteomic data, which led to adoption by 8 Gene2Lead researchers and positive feedback on usability.",
-        "Deployed protein feature extraction, training, inference and reporting pipelines on AWS Sagemaker to facilitate greater visibility into research project progress and data sharing."
-      ],
-      "demo_url": "https://www.loom.com/share/099c728f2a3e435b8179c1ca1deffe71",
-      "technologies": ["PyTorch", "FastAPI", "React"]
+      "name": "kworathur",
+      "description": "Config files for my GitHub profile.",
+      "html_url": "https://github.com/kworathur/kworathur",
+      "language": null,
+      "stargazers_count": 0,
+      "topics": ["config", "github-config"],
+      "pushed_at": "2026-07-03T18:20:16Z",
+      "homepage": "https://github.com/kworathur"
     },
     {
-      "id": "dl-tumor-classifier",
-      "name": "Deep Learning-Based Brain Tumor Classification",
-      "position": "ML Model Developer",
-      "location": "Toronto, ON",
-      "website": "https://kworathur.dev",
-      "github": "https://github.com/kworathur/CV-Capstone",
-      "date": "Sep 2023",
-      "summary": "A lightweight CNN architecture for brain tumor classification with novel visualizations",
-      "highlights": [
-        "Collaborated with a team of three researchers to develop an automatic tool for brain tumor classification using a custom CNN architecture.",
-        "Engineered a custom data processing pipeline in Tensorflow for processing 2D slices of MRI scans in batches.",
-        "Explored approaches for visualizing the model’s decision-making processes using state-of-the-art techniques such as GradCAM."
-      ],
-      "technologies": []
+      "name": "CV-Capstone",
+      "description": "Our Computer Vision project for CSC490H5 : Capstone Design Course",
+      "html_url": "https://github.com/kworathur/CV-Capstone",
+      "language": "Jupyter Notebook",
+      "stargazers_count": 0,
+      "topics": [],
+      "pushed_at": "2026-06-30T00:06:05Z",
+      "homepage": null
+    },
+    {
+      "name": "kworathur.com",
+      "description": "My developer portfolio!",
+      "html_url": "https://github.com/kworathur/kworathur.com",
+      "language": "Astro",
+      "stargazers_count": 0,
+      "topics": [],
+      "pushed_at": "2026-06-18T21:06:38Z",
+      "homepage": "https://kworathur.com"
+    },
+    {
+      "name": "fraud-detection-legacy-sis",
+      "description": "Financial aid fraud detection inside your student information systems (SIS)",
+      "html_url": "https://github.com/kworathur/fraud-detection-legacy-sis",
+      "language": "TypeScript",
+      "stargazers_count": 0,
+      "topics": ["saas"],
+      "pushed_at": "2026-06-15T23:39:04Z",
+      "homepage": "https://demo.quaid-ai.com"
+    },
+    {
+      "name": "quaid-backend",
+      "description": "Background checks API for quaid.ai - verify legitimacy of admissions and financial aid applications.",
+      "html_url": "https://github.com/kworathur/quaid-backend",
+      "language": "TypeScript",
+      "stargazers_count": 0,
+      "topics": [],
+      "pushed_at": "2026-04-22T23:53:26Z",
+      "homepage": "https://www.docs.quaid-ai.com"
+    },
+    {
+      "name": "kanbanflow-reporter",
+      "description": "Custom email reporting script for KanbanFlow",
+      "html_url": "https://github.com/kworathur/kanbanflow-reporter",
+      "language": "Python",
+      "stargazers_count": 0,
+      "topics": [],
+      "pushed_at": "2026-02-28T18:46:38Z",
+      "homepage": null
+    },
+    {
+      "name": "pixel-party",
+      "description": "A scalable, real-time collaborative painting app built with javascript, websockets, and AWS services",
+      "html_url": "https://github.com/kworathur/pixel-party",
+      "language": "JavaScript",
+      "stargazers_count": 0,
+      "topics": ["infrastructure-as-code", "scalable-architecture"],
+      "pushed_at": "2026-01-15T23:47:48Z",
+      "homepage": "https://www.loom.com/share/099c728f2a3e435b8179c1ca1deffe71"
+    },
+    {
+      "name": "easy-chef",
+      "description": "A full-stack recipe sharing application built with React and Django.",
+      "html_url": "https://github.com/kworathur/easy-chef",
+      "language": "Python",
+      "stargazers_count": 0,
+      "topics": [],
+      "pushed_at": "2023-09-19T18:09:35Z",
+      "homepage": null
+    },
+    {
+      "name": "node-docker-ecs",
+      "description": "Learning CircleCI and terraform by implementing CI/CD for a simple node application.",
+      "html_url": "https://github.com/kworathur/node-docker-ecs",
+      "language": "HCL",
+      "stargazers_count": 0,
+      "topics": [],
+      "pushed_at": "2023-07-28T02:40:21Z",
+      "homepage": null
     }
   ],
   "education": [
@@ -104,7 +149,7 @@
       "location": "Mississauga, ON",
       "website": "https://www.utm.utoronto.ca/math-cs-stats/",
       "startDate": "Sep 2020",
-      "endDate": "Apr 2024",
+      "endDate": "Apr 2025",
       "gpa": "3.94/4",
       "courses": [
         "Machine Learning",

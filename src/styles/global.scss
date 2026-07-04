@@ -403,3 +403,12 @@ article {
   background: var(--color-a);
   color: var(--background);
 }
+
+.dot-grid {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-a) 25%, transparent) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 22px 22px;
+}

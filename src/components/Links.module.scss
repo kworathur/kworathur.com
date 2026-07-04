@@ -1,6 +1,4 @@
 .homepageWrapper {
-  margin: 1rem 0;
-
   // Align nav-bar in a wrap-able row on homepage
   display: flex;
   flex-direction: row;
@@ -10,10 +8,9 @@
 
 .homepageLinks {
   width: 100%;
-  max-width: 62.475rem;
-  padding: 1rem 2rem;
-  margin-right: auto;
-  margin-left: auto;
+  // No horizontal padding — the parent .resume container provides the side insets,
+  // keeping the logo and links flush with the main page content.
+  padding: 1.5rem 0;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;

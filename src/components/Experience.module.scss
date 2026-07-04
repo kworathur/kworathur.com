@@ -1,0 +1,173 @@
+/* stylelint-disable custom-property-pattern, selector-pseudo-class-no-unknown, selector-type-no-unknown, no-descending-specificity */
+
+// ── Section ───────────────────────────────────────────────────────────────────
+.section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--text-normal);
+}
+
+.heading {
+  font-family: 'Albertus var', serif;
+  font-weight: 400;
+  font-size: 2rem;
+  color: var(--text-title);
+  margin: 0 0 1rem;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
+
+// ── Entry zone ────────────────────────────────────────────────────────────────
+// No forced min-height — natural content height is the scroll distance.
+// Each entry sticks at top:3.5rem within its zone; once the zone exits,
+// the next entry slides up and stacks over it.
+.entryZone {}
+
+// ── Entry card ────────────────────────────────────────────────────────────────
+// Each entry is sticky below the heading. Later entries (higher z-index) slide
+// up and cover earlier ones as the user scrolls through their entryZone.
+// A top shadow reinforces the "card stacking" depth cue.
+.entry {
+  position: sticky;
+  top: 0;
+  background-color: var(--background);
+  padding: 1.25rem 0 1.5rem;
+}
+
+// ── Entry layout ──────────────────────────────────────────────────────────────
+.entryInner {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.entryInfo {
+  flex: 0 0 auto;
+  width: 22rem;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.logo {
+  max-height: 3.5rem;
+  width: auto;
+  max-width: 14rem;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.role {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-normal);
+}
+
+.tech {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-normal);
+}
+
+.highlights {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  li {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-normal);
+    line-height: 1.5;
+  }
+}
+
+// ── Carousel ──────────────────────────────────────────────────────────────────
+.carouselContainer {
+  --_marker-size: 64px;
+
+  flex: 1;
+  min-width: 200px;
+  display: grid;
+  grid-template-areas: 'carousel';
+  grid-template-rows: auto;
+
+  &.hasMarkers {
+    grid-template-areas:
+      'carousel'
+      'carousel-markers';
+    grid-template-rows: auto var(--_marker-size);
+
+    > .carousel::scroll-marker-group {
+      grid-area: carousel-markers;
+    }
+  }
+
+  > .carousel {
+    grid-area: carousel;
+  }
+}
+
+.carousel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  scroll-marker-group: after;
+  border-radius: 4px;
+
+  .carouselSlide {
+    scroll-snap-align: center;
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--text-background);
+      border-radius: 4px;
+    }
+
+    &::scroll-marker {
+      content: '' / attr(data-label);
+      inline-size: var(--_marker-size);
+      block-size: var(--_marker-size);
+      background-image: var(--thumbnail);
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: 50%;
+      border: 1px solid var(--text-normal);
+    }
+
+    &::scroll-marker:is(:hover, :focus-visible) {
+      transform: scale(1.05);
+    }
+
+    &::scroll-marker:target-current {
+      border-color: var(--color-a);
+    }
+  }
+
+  &::scroll-marker-group {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--_marker-size);
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    block-size: var(--_marker-size);
+    margin-top: 0.5rem;
+  }
+}
+
+/* stylelint-enable custom-property-pattern, selector-pseudo-class-no-unknown, selector-type-no-unknown, no-descending-specificity */

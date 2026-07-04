@@ -1,0 +1,40 @@
+---
+import cv from '../data/cv.json';
+import resume from '../data/resume.json';
+import styles from './Education.module.scss';
+
+const educationIds: string[] = resume.education;
+const education = cv.education.filter((e) => educationIds.includes(e.id));
+
+const logoMap: Record<string, string> = {
+  uoft: '/assets/logos/uoft.svg',
+  gatech: '/assets/logos/gatech.svg',
+};
+---
+
+<section class={styles.section}>
+  <h2 class={styles.heading}>Education</h2>
+  <div class={styles.grid}>
+    {education.map((edu) => (
+      <div class={styles.card}>
+        <div class={styles.cardHeader}>
+          <img
+            src={logoMap[edu.id]}
+            alt={`${edu.institution} logo`}
+            class={styles.logo}
+          />
+          <div>
+            <p class={styles.institution}>{edu.institution}</p>
+            <p class={styles.degree}>{edu.degree}</p>
+          </div>
+        </div>
+        <p class={styles.meta}>{edu.startDate} – {edu.endDate} · GPA {edu.gpa}</p>
+        {edu.courses && edu.courses.length > 0 && (
+          <div class={styles.courses}>
+            {edu.courses.map((c) => <div class="tech">{c}</div>)}
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</section>
