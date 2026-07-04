@@ -133,8 +133,7 @@
 
 .statBlue {
   background-color: var(--color-a);
-  border-bottom-color: var(--color-a);
-  border-right-color: var(--color-a);
+
 
   .statNumber { color: #fff; }
   .statLabel  { color: #fff; opacity: 0.9; }
@@ -164,7 +163,9 @@
 .statsGrid > *:nth-child(2)[data-visible] { animation-delay: 80ms; }
 .statsGrid > *:nth-child(3)[data-visible] { animation-delay: 160ms; }
 .statsGrid > *:nth-child(4)[data-visible] { animation-delay: 240ms; }
-
+.statsGrid > *:nth-child(4) {
+  border: 1px dashed var(--text-title);
+}
 .statCta {
   text-decoration: none;
   gap: 0.4rem;
