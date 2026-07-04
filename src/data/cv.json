@@ -4,13 +4,13 @@
       "id": "matmerize",
       "company": "Matmerize",
       "logo": "/assets/logos/matmerize.png",
-      "role": "Software Engineer",
+      "role": "Software Engineer Intern",
       "startDate": "May 2026",
       "endDate": "Present",
       "tech": ["AWS", "Terraform", "Python"],
       "highlights": [
         "Refactored the prediction engine to use SQS, increasing hourly job throughput by 43%.",
-        "Optimizing cloud infrastructure and batch workflows powering Matmerize's AI tools for polymer informatics."
+        "Automated production backup testing and restoration using Python scripts and Terraform, increasing testing coverage from less than 1% of platform data to >80% and ensuring SOC-2 compliance."
       ],
       "images": [
         { "src": "/assets/matmerize-architecture.png", "alt": "Matmerize pull-based architecture diagram" }
@@ -20,14 +20,13 @@
       "id": "gene2lead",
       "company": "Gene2Lead",
       "logo": "/assets/logos/gene2lead.png",
-      "role": "Software Engineer",
+      "role": "Software Engineer Intern",
       "startDate": "Sep 2024",
       "endDate": "Jul 2025",
       "tech": ["PyTorch", "FastAPI", "React"],
       "highlights": [
-        "Deployed protein feature extraction, training, inference and reporting pipelines on AWS SageMaker.",
-        "Built pre-processing pipelines ingesting 16,000+ protein structures for drug discovery research.",
-        "Pitched a visualization tool for proteomic data adopted by 8 Gene2Lead researchers."
+        "Deployed inference endpoints on AWS SageMaker, saving roughly 8 hours each month in coordination overhead.",
+        "Built pre-processing pipelines ingesting 16,000+ protein structures for drug discovery research."
       ],
       "images": [
         { "src": "/assets/screens/g2l-screen1.png", "alt": "Gene2Lead app screenshot 1" },
@@ -36,15 +35,15 @@
     }
   ],
   "github_projects": [
-    {
-      "name": "kworathur",
-      "description": "Config files for my GitHub profile.",
-      "html_url": "https://github.com/kworathur/kworathur",
-      "language": null,
+     {
+      "name": "DeathStarBench",
+      "description": "Fork of DeathStarBench for Frequency Governor Benchmarking",
+      "html_url": "https://github.com/kworathur/DeathStarBench",
+      "language": "Go",
       "stargazers_count": 0,
-      "topics": ["config", "github-config"],
-      "pushed_at": "2026-07-03T18:20:16Z",
-      "homepage": "https://github.com/kworathur"
+      "topics": ["profiling"],
+      "pushed_at": "2026-06-30T00:06:05Z",
+      "homepage": null
     },
     {
       "name": "CV-Capstone",
@@ -52,48 +51,8 @@
       "html_url": "https://github.com/kworathur/CV-Capstone",
       "language": "Jupyter Notebook",
       "stargazers_count": 0,
-      "topics": [],
+      "topics": ["computer-vision"],
       "pushed_at": "2026-06-30T00:06:05Z",
-      "homepage": null
-    },
-    {
-      "name": "kworathur.com",
-      "description": "My developer portfolio!",
-      "html_url": "https://github.com/kworathur/kworathur.com",
-      "language": "Astro",
-      "stargazers_count": 0,
-      "topics": [],
-      "pushed_at": "2026-06-18T21:06:38Z",
-      "homepage": "https://kworathur.com"
-    },
-    {
-      "name": "fraud-detection-legacy-sis",
-      "description": "Financial aid fraud detection inside your student information systems (SIS)",
-      "html_url": "https://github.com/kworathur/fraud-detection-legacy-sis",
-      "language": "TypeScript",
-      "stargazers_count": 0,
-      "topics": ["saas"],
-      "pushed_at": "2026-06-15T23:39:04Z",
-      "homepage": "https://demo.quaid-ai.com"
-    },
-    {
-      "name": "quaid-backend",
-      "description": "Background checks API for quaid.ai - verify legitimacy of admissions and financial aid applications.",
-      "html_url": "https://github.com/kworathur/quaid-backend",
-      "language": "TypeScript",
-      "stargazers_count": 0,
-      "topics": [],
-      "pushed_at": "2026-04-22T23:53:26Z",
-      "homepage": "https://www.docs.quaid-ai.com"
-    },
-    {
-      "name": "kanbanflow-reporter",
-      "description": "Custom email reporting script for KanbanFlow",
-      "html_url": "https://github.com/kworathur/kanbanflow-reporter",
-      "language": "Python",
-      "stargazers_count": 0,
-      "topics": [],
-      "pushed_at": "2026-02-28T18:46:38Z",
       "homepage": null
     },
     {
@@ -105,26 +64,6 @@
       "topics": ["infrastructure-as-code", "scalable-architecture"],
       "pushed_at": "2026-01-15T23:47:48Z",
       "homepage": "https://www.loom.com/share/099c728f2a3e435b8179c1ca1deffe71"
-    },
-    {
-      "name": "easy-chef",
-      "description": "A full-stack recipe sharing application built with React and Django.",
-      "html_url": "https://github.com/kworathur/easy-chef",
-      "language": "Python",
-      "stargazers_count": 0,
-      "topics": [],
-      "pushed_at": "2023-09-19T18:09:35Z",
-      "homepage": null
-    },
-    {
-      "name": "node-docker-ecs",
-      "description": "Learning CircleCI and terraform by implementing CI/CD for a simple node application.",
-      "html_url": "https://github.com/kworathur/node-docker-ecs",
-      "language": "HCL",
-      "stargazers_count": 0,
-      "topics": [],
-      "pushed_at": "2023-07-28T02:40:21Z",
-      "homepage": null
     }
   ],
   "education": [
