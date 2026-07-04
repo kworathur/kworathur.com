@@ -11,28 +11,26 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 }
 ---
-<>
-  <h2 class="section-title">Blog | <span class="detail">deep dives on ML systems</span></h2>
-  <div class="section">
-    <ul class={styles.list}>
-      {allPosts.map((post) => {
-        const slug = post.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
-        const link = `/blog/${slug}`;
-        return (
-          <li class={styles.card}>
-            <div class={styles.titleLine}>
-              <a href={link} class={styles.title}>{post.data.title}</a>
-              <span class={styles.date}>&mdash; {formatDate(post.data.date)}</span>
+<section class={`${styles.section} dot-grid`}>
+  <h2 class={styles.heading}>Writing</h2>
+  <ul class={styles.list}>
+    {allPosts.map((post) => {
+      const slug = post.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
+      const link = `/blog/${slug}`;
+      return (
+        <li class={styles.card}>
+          <div class={styles.titleLine}>
+            <a href={link} class={styles.title}>{post.data.title}</a>
+            <span class={styles.date}>{formatDate(post.data.date)}</span>
+          </div>
+          {post.data.description && <p class={styles.description}>{post.data.description}</p>}
+          {post.data.tags && post.data.tags.length > 0 && (
+            <div class={styles.tags}>
+              {post.data.tags.map((tag) => <div class="tech">{tag}</div>)}
             </div>
-            {post.data.description && <p class={styles.description}>{post.data.description}</p>}
-            {post.data.tags && post.data.tags.length > 0 && (
-              <div class={styles.tags}>
-                {post.data.tags.map((tag) => <div class="tech">{tag}</div>)}
-              </div>
-            )}
-          </li>
-        );
-      })}
-    </ul>
-  </div>
-</>
+          )}
+        </li>
+      );
+    })}
+  </ul>
+</section>

@@ -1,13 +1,6 @@
 ---
-/**
- * Footer.astro
- * Replaces Footer.tsx. Static Astro component rendering copyright and social links.
- * Applies existing Footer.module.scss styles.
- */
-import Socials from './Socials.astro';
 import styles from './Footer.module.scss';
 ---
 <footer class={styles.footer}>
   <p>© Keshav Worathur {new Date().getFullYear()}</p>
-  <Socials />
 </footer>

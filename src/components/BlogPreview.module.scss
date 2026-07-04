@@ -1,3 +1,19 @@
+.section {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--text-normal);
+  margin-bottom: 2rem;
+}
+
+.heading {
+  font-family: 'Albertus var', serif;
+  font-weight: 400;
+  font-size: 2rem;
+  color: var(--text-title);
+  margin: 0 0 1rem;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
+
 .list {
   list-style: none;
   padding: 0;
@@ -8,24 +24,25 @@
 }
 
 .card {
-  background-color: var(--text-background);
-  border-radius: 0.75rem;
-  padding: 1rem 1.25rem;
+  border: 1px solid var(--text-title);
+  padding: 0.75rem 1rem;
 }
 
 .titleLine {
   display: flex;
   align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 0.4rem;
 }
 
 .title {
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-title);
-  box-shadow: none;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 
   &:hover {
     color: var(--color-b);
@@ -37,6 +54,7 @@
   font-size: 0.85rem;
   color: var(--text-normal);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .description {
@@ -48,4 +66,5 @@
 .tags {
   display: flex;
   flex-wrap: wrap;
+  gap: 0.25rem;
 }

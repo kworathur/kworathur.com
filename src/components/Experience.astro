@@ -1,0 +1,43 @@
+---
+import cv from '../data/cv.json';
+import styles from './Experience.module.scss';
+
+const experiences = cv.experiences;
+---
+
+<section class={styles.section}>
+  <h2 class={styles.heading}>Experience</h2>
+
+  {experiences.map((exp, i) => (
+    <div class={styles.entryZone}>
+      <div class={styles.entry} style={`z-index: ${i + 1}`}>
+        <div class={styles.entryInner}>
+          <div class={styles.entryInfo}>
+            <img src={exp.logo} alt={exp.company} class={styles.logo} />
+            <p class={styles.role}>
+              <strong>{exp.role}</strong>{' '}| {exp.startDate} – {exp.endDate}
+            </p>
+            <p class={styles.tech}>Technologies: {exp.tech.join(', ')}</p>
+            <ul class={styles.highlights}>
+              {exp.highlights.map((h) => <li>{h}</li>)}
+            </ul>
+          </div>
+
+          <div class={`${styles.carouselContainer} ${exp.images.length > 1 ? styles.hasMarkers : ''}`}>
+            <ul class={styles.carousel}>
+              {exp.images.map((img, j) => (
+                <li
+                  class={styles.carouselSlide}
+                  data-label={`Slide ${j + 1}`}
+                  style={`--thumbnail: url(${img.src})`}
+                >
+                  <img src={img.src} alt={img.alt} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</section>

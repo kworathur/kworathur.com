@@ -1,66 +1,29 @@
 ---
-/**
- * Projects.astro
- * Replaces Projects.tsx, removing the useStaticQuery/gatsby-plugin-image dependency.
- * Loads project data from resume.json (IDs to display) and cv.json (full details).
- * Project carousel images are served as static files from /assets/screens/.
- */
-import resume from '../data/resume.json';
 import cv from '../data/cv.json';
 import styles from './Projects.module.scss';
 
-// Filter the full project list to only those listed in resume.json
-const projectIds: string[] = resume.projects;
-const projects = cv.projects.filter((p) => projectIds.includes(p.id));
-
-// Map of known project image counts; images follow {projectId}-screen{n}.png naming
-// Only include images known to exist in public/assets/screens/
-const projectImages: Record<string, string[]> = {
-  g2l: ['/assets/screens/g2l-screen1.png', '/assets/screens/g2l-screen2.png'],
-};
+const githubProjects = cv.github_projects;
 ---
-<>
-  <h2 class="section-title">
-    My Work | <span class="detail">work experiences</span>
-  </h2>
 
-  <div class="section">
-    {projects.map((project) => {
-      const images = projectImages[project.id] ?? [];
-      return (
-        <div>
-          <h3 class={styles.projectHeading}>{project.name}</h3>
-          <p>{project.summary}</p>
-
-          {/* Carousel: only rendered when images exist for this project */}
-          {images.length > 0 && (
-            <div class={styles.projectMediaCarousel}>
-              <ul class={styles.carousel}>
-                {images.map((src, i) => (
-                  <li
-                    class={styles.carouselSlide}
-                    data-label={`Slide ${i + 1}`}
-                    style={`--thumbnail: url(${src})`}
-                  >
-                    <img src={src} alt={`${project.name} screenshot ${i + 1}`} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <ul>
-            {project.highlights.map((highlight) => (
-              <li>{highlight}</li>
-            ))}
-          </ul>
-          <div class="techstack">
-            {project.technologies.map((tech) => (
-              <div class="tech">{tech}</div>
-            ))}
-          </div>
+<section class={`${styles.section} dot-grid`}>
+  <h2 class={styles.heading}>Projects</h2>
+  <div class={styles.grid}>
+    {githubProjects.map((project) => (
+      <a
+        href={project.html_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={styles.card}
+      >
+        <p class={styles.cardTitle}>{project.name}</p>
+        <p class={styles.cardDesc}>{project.description}</p>
+        <div class={styles.cardMeta}>
+          {project.language && <div class="tech">{project.language}</div>}
+          {project.topics.slice(0, 3).map((t) => (
+            <div class="tech">{t}</div>
+          ))}
         </div>
-      );
-    })}
+      </a>
+    ))}
   </div>
-</>
+</section>
