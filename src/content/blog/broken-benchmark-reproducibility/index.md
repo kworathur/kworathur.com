@@ -1,7 +1,7 @@
 ---
 title: 'What a Broken Benchmark Taught Me About Reproducible Experiments'
 date: '2026-05-04'
-description: "A story about chasing datacenter energy savings that seemed to good to be true."
+description: "A story about chasing datacenter energy savings that seemed too good to be true."
 type: 'blog'
 featuredImage: './thumbnail.jpg'
 tags: ['Performance', 'Distributed Tracing', 'Jaeger', 'Linux']
