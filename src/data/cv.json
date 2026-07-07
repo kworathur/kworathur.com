@@ -77,8 +77,7 @@
       "endDate": "Apr 2027",
       "gpa": "4.0/4.0",
       "courses": [
-        "Advanced Operating Systems",
-        "Big Data Systems and Analytics"
+        "CS6220: Advanced OS"
       ]
     },
     {
@@ -91,9 +90,7 @@
       "endDate": "Apr 2025",
       "gpa": "3.94/4",
       "courses": [
-        "Machine Learning",
-        "Scalable Computing",
-        "Intro to Databases"
+        "CSC367: Parallel Programming",
       ]
     }
   ]
