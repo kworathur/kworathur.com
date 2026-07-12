@@ -13,7 +13,10 @@
         "Automated production backup testing and restoration using Python scripts and Terraform, increasing testing coverage from less than 1% of platform data to >80% and ensuring SOC-2 compliance."
       ],
       "images": [
-        { "src": "/assets/matmerize-architecture.png", "alt": "Matmerize pull-based architecture diagram" }
+        {
+          "src": "/assets/matmerize-architecture.png",
+          "alt": "Matmerize pull-based architecture diagram"
+        }
       ]
     },
     {
@@ -29,13 +32,19 @@
         "Built pre-processing pipelines ingesting 16,000+ protein structures for drug discovery research."
       ],
       "images": [
-        { "src": "/assets/screens/g2l-screen1.png", "alt": "Gene2Lead app screenshot 1" },
-        { "src": "/assets/screens/g2l-screen2.png", "alt": "Gene2Lead app screenshot 2" }
+        {
+          "src": "/assets/screens/g2l-screen1.png",
+          "alt": "Gene2Lead app screenshot 1"
+        },
+        {
+          "src": "/assets/screens/g2l-screen2.png",
+          "alt": "Gene2Lead app screenshot 2"
+        }
       ]
     }
   ],
   "github_projects": [
-     {
+    {
       "name": "DeathStarBench",
       "description": "Fork of DeathStarBench for Frequency Governor Benchmarking",
       "html_url": "https://github.com/kworathur/DeathStarBench",
@@ -74,12 +83,9 @@
       "location": "Atlanta, GA",
       "website": "https://www.cc.gatech.edu/",
       "startDate": "Aug 2025",
-      "endDate": "Apr 2027",
+      "endDate": "Dec 2026",
       "gpa": "4.0/4.0",
-      "courses": [
-        "Advanced Operating Systems",
-        "Big Data Systems and Analytics"
-      ]
+      "courses": ["CS6220: Advanced OS"]
     },
     {
       "id": "uoft",
@@ -90,11 +96,7 @@
       "startDate": "Sep 2020",
       "endDate": "Apr 2025",
       "gpa": "3.94/4",
-      "courses": [
-        "Machine Learning",
-        "Scalable Computing",
-        "Intro to Databases"
-      ]
+      "courses": ["CSC367: Parallel Programming"]
     }
   ]
 }
