@@ -22,29 +22,27 @@ const numPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
 // Slice to the first page of posts
 const posts = allPosts.slice(0, POSTS_PER_PAGE);
 ---
+
 <BaseLayout title="Blog">
   <div class={styles.blog}>
     <h2 class={styles.heading}>Writing</h2>
     <div class={styles.posts}>
-      {posts.map((post) => {
-        // Derive slug: strip /index.md or .md suffix from the entry id
-        const slug = post.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
-        return (
-          <PostCard
-            title={post.data.title}
-            slug={slug}
-            description={post.data.description}
-            date={post.data.date}
-            featuredImage={post.data.featuredImage}
-            tags={post.data.tags}
-          />
-        );
-      })}
+      {
+        posts.map((post) => {
+          // Derive slug: strip /index.md or .md suffix from the entry id
+          const slug = post.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
+          return (
+            <PostCard
+              title={post.data.title}
+              slug={slug}
+              date={post.data.date}
+            />
+          );
+        })
+      }
     </div>
     <div class={styles.redirects}>
-      {currentPage < numPages && (
-        <a href={`/blog/2`}>Next</a>
-      )}
+      {currentPage < numPages && <a href={`/blog/2`}>Next</a>}
     </div>
   </div>
 </BaseLayout>

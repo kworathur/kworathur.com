@@ -3,26 +3,24 @@
  * Header.astro
  * Navigation header replacing Links.tsx.
  * Renders the kW logo, nav links, and the ThemeToggle React island.
- * Applies existing Links.module.scss styles with identical class names.
  */
 import ThemeToggle from './ThemeToggle.tsx';
 import styles from '../components/Links.module.scss';
 ---
-<div class={styles.homepageWrapper}>
-  <nav class={styles.homepageLinks}>
-    <a href="/" class={styles.headerLink}>
-      <h1 class={styles.logo}>kW</h1>
-    </a>
-    <div class={styles.linksAndLights}>
-      <a class={styles.homepageLink} href="/">home</a>
-      <a
-        class={styles.homepageLink}
-        href="https://uploads.kworathur.com/keshav_worathur_resume.pdf"
-        target="_blank"
-        rel="noreferrer"
-      >resume</a>
-      <a class={styles.homepageLink} href="/blog">blog</a>
-      <ThemeToggle client:load />
-    </div>
-  </nav>
-</div>
+
+<nav class={styles.homepageLinks}>
+  <a href="/" class={styles.headerLink} aria-label="Keshav Worathur home">
+    <span class={styles.logo}>kW</span>
+  </a>
+  <div class={styles.linksAndLights}>
+    <a class={styles.homepageLink} href="/">home</a>
+    <a
+      class={styles.homepageLink}
+      href="https://uploads.kworathur.com/keshav_worathur_resume.pdf"
+      target="_blank"
+      rel="noreferrer">resume</a
+    >
+    <a class={styles.homepageLink} href="/blog">blog</a>
+    <ThemeToggle client:load />
+  </div>
+</nav>

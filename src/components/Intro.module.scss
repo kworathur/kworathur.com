@@ -1,10 +1,10 @@
 .about {
   display: flex;
   align-items: stretch;
-  gap: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--text-normal);
-  margin-bottom: 2rem;
+  gap: 2.25rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2.5rem;
   flex-wrap: wrap;
 }
 
@@ -13,80 +13,76 @@
   min-width: 260px;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 .niches {
-  font-size: 0.78rem;
-  color: var(--text-normal);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
   margin: 0;
-  letter-spacing: 0;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .headline {
-  font-family: 'Albertus var', serif;
-  font-weight: 400;
-  font-size: 2rem;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.85rem;
   line-height: 1.2;
   color: var(--text-title);
   margin: 0;
-  letter-spacing: 0;
+  letter-spacing: -0.03em;
 }
 
 .intro {
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--text-normal);
   margin: 0;
 }
 
 .social {
   margin-top: auto;
-  padding-top: 0.75rem;
+  padding-top: 0.5rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .socialBtn {
   display: inline-flex;
-  align-items: stretch;
+  align-items: center;
+  gap: 0.4rem;
   text-decoration: none;
-  border: 1px solid var(--text-title);
-  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 0.85rem;
 
   &:hover {
-    opacity: 0.75;
-    color: inherit;
+    color: var(--text-title);
+    text-decoration: none;
+    opacity: 1;
   }
 }
 
 .socialIcon {
-  color: #fff;
-  width: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  color: inherit;
 }
 
-.socialIconLinkedIn { background-color: #0a66c2; }
-.socialIconGitHub   { background-color: #24292f; }
-.socialIconEmail    { background-color: #c0392b; }
-
 .socialHandle {
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8rem;
-  color: var(--text-title);
   display: flex;
   align-items: center;
 }
 
-// ── Stats animations ──────────────────────────────────────────────────────────
 @keyframes statIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
 
   to {
@@ -95,77 +91,67 @@
   }
 }
 
-// ── Stats grid ────────────────────────────────────────────────────────────────
-// 2×2 grid, top-left highlighted blue, bottom-right empty.
-// Collapsed-border effect: container provides top+left edges,
-// each cell provides bottom+right edges.
-// Equal-dimension cells: explicit width + height on the grid + 1fr rows/cols.
 .statsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  border-top: 1px solid var(--text-title);
-  border-left: 1px solid var(--text-title);
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
   flex-shrink: 0;
 
   @media only screen and (width >= 600px) {
     width: 17rem;
-    height: 17rem; // square grid → square cells
+    height: 17rem;
   }
 
   @media only screen and (width < 600px) {
     width: 100%;
-    aspect-ratio: 1; // square grid on mobile too
+    aspect-ratio: 1;
   }
 }
 
 .stat {
-  border-bottom: 1px solid var(--text-title);
-  border-right: 1px solid var(--text-title);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 0.75rem;
   text-align: center;
-  min-height: 0; // let grid control height via 1fr rows
-}
-
-.statBlue {
-  background-color: var(--color-a);
-
-
-  .statNumber { color: #fff; }
-  .statLabel  { color: #fff; opacity: 0.9; }
+  min-height: 0;
 }
 
 .statNumber {
-  font-size: 1.6rem;
-  font-weight: 400;
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  font-weight: 600;
   color: var(--text-title);
   line-height: 1.2;
+  letter-spacing: -0.03em;
 }
 
 .statLabel {
   font-size: 0.72rem;
-  color: var(--text-normal);
+  color: var(--text-muted);
   line-height: 1.4;
   margin-top: 0.4rem;
 }
 
-// Trigger: JS sets data-visible on each tile when the grid enters the viewport.
-// animation-fill-mode: both keeps the 'from' state during the stagger delay
-// so tiles don't flash visible before their slot arrives.
 .stat[data-visible] {
   animation: statIn 0.45s ease both;
 }
 
-.statsGrid > *:nth-child(2)[data-visible] { animation-delay: 80ms; }
-.statsGrid > *:nth-child(3)[data-visible] { animation-delay: 160ms; }
-.statsGrid > *:nth-child(4)[data-visible] { animation-delay: 240ms; }
-.statsGrid > *:nth-child(4) {
-  border: 1px dashed var(--text-title);
+.statsGrid > *:nth-child(2)[data-visible] {
+  animation-delay: 80ms;
 }
+.statsGrid > *:nth-child(3)[data-visible] {
+  animation-delay: 160ms;
+}
+.statsGrid > *:nth-child(4)[data-visible] {
+  animation-delay: 240ms;
+}
+
 .statCta {
   text-decoration: none;
   gap: 0.4rem;
@@ -175,6 +161,7 @@
     background-color: var(--text-background);
     color: inherit;
     opacity: 1;
+    text-decoration: none;
   }
 }
 
@@ -188,6 +175,12 @@
 
 .statCtaLink {
   font-size: 0.75rem;
-  color: var(--color-a);
+  color: var(--text-muted);
   margin-top: 0.3rem;
+}
+
+@media only screen and (width >= 600px) {
+  .headline {
+    font-size: 2.15rem;
+  }
 }

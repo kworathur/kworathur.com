@@ -1,33 +1,32 @@
 .blog {
-  // No horizontal padding — the parent .resume container provides side insets,
-  // keeping content flush with the homepage sections.
   padding: 0;
 }
 
 .heading {
-  font-family: 'Albertus var', serif;
-  font-weight: 400;
-  font-size: 2rem;
-  color: var(--text-title);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   margin: 0 0 1rem;
-  letter-spacing: 0;
-  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 .posts {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.35rem;
 }
 
 .redirects {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: row;
-  padding: 1rem;
+  padding: 1.5rem 0 0;
+  gap: 0.75rem;
 }
 
 .redirects > span {
-  margin: 0 1em;
+  color: var(--text-muted);
 }

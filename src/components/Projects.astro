@@ -5,25 +5,27 @@ import styles from './Projects.module.scss';
 const githubProjects = cv.github_projects;
 ---
 
-<section class={`${styles.section} dot-grid`}>
-  <h2 class={styles.heading}>Projects</h2>
+<section>
+  <h2 class="section-label">Projects</h2>
   <div class={styles.grid}>
-    {githubProjects.map((project) => (
-      <a
-        href={project.html_url}
-        target="_blank"
-        rel="noopener noreferrer"
-        class={styles.card}
-      >
-        <p class={styles.cardTitle}>{project.name}</p>
-        <p class={styles.cardDesc}>{project.description}</p>
-        <div class={styles.cardMeta}>
-          {project.language && <div class="tech">{project.language}</div>}
-          {project.topics.slice(0, 3).map((t) => (
-            <div class="tech">{t}</div>
-          ))}
-        </div>
-      </a>
-    ))}
+    {
+      githubProjects.map((project) => (
+        <a
+          href={project.html_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={styles.card}
+        >
+          <p class={styles.cardTitle}>{project.name}</p>
+          <p class={styles.cardDesc}>{project.description}</p>
+          <div class={styles.cardMeta}>
+            {project.language && <div class="tech">{project.language}</div>}
+            {project.topics.slice(0, 3).map((t) => (
+              <div class="tech">{t}</div>
+            ))}
+          </div>
+        </a>
+      ))
+    }
   </div>
 </section>

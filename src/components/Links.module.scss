@@ -1,80 +1,49 @@
-.homepageWrapper {
-  // Align nav-bar in a wrap-able row on homepage
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
 .homepageLinks {
   width: 100%;
-  // No horizontal padding — the parent .resume container provides the side insets,
-  // keeping the logo and links flush with the main page content.
-  padding: 1.5rem 0;
+  padding: 1.75rem 0 2.25rem;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
 }
 
-.Links {
+.headerLink {
+  color: var(--text-title);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  max-width: 60rem;
-  margin-right: auto;
-  margin-left: auto;
-  padding: 1rem 2rem;
+  margin: 0;
+  text-decoration: none;
 }
 
-.Title {
-  font-size: clamp(1em, 5vw, 3em);
-  padding: 0 0 0.25em;
-  line-height: 1.5;
+.headerLink:hover {
+  opacity: 0.7;
+  text-decoration: none;
+}
+
+.logo {
   color: var(--text-title);
+  font-family: 'Albertus var', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0;
 }
 
-.homepageTitle {
-  padding: 0 1em;
-  line-height: 1.5;
-  color: var(--text-title);
-  text-align: center;
-  display: inline-block;
-}
-
-.Link,
 .homepageLink {
   text-decoration: none;
-  box-shadow: none;
-  color: var(--text-title);
-  margin: 0 0.5em 0 0;
-}
-
-.headerLink {
-  text-decoration: none;
-  box-shadow: none;
-  color: var(--text-title);
+  color: var(--text-muted);
   margin: 0;
-  display: flex;
-  align-items: center;
+  font-size: 0.9rem;
 }
 
-.Title:hover,
-.homepageTitle:hover,
-.Link:hover,
 .homepageLink:hover {
-  transition: 0.2s ease-in-out;
+  color: var(--text-title);
+  text-decoration: none;
 }
 
 .linksAndLights {
   display: flex;
   align-items: center;
-  gap: 0.5em;
+  gap: 1.1rem;
   line-height: 1;
-}
-
-.logo {
-  margin: 0;
-  line-height: 1;
-  font-family: 'Albertus var', serif;
 }

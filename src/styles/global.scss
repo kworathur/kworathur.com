@@ -3,20 +3,6 @@
 @import 'Dark';
 @import 'Light';
 
-/* stylelint-disable scss/dollar-variable-colon-space-after -- multi-line variable values require newline */
-$font-sans:
-  inter,
-  ui-sans-serif,
-  system-ui,
-  -apple-system,
-  blinkmacsystemfont,
-  'Segoe UI',
-  sans-serif;
-$font-mono:
-  'JetBrains Mono', 'SFMono-Regular', consolas, 'Liberation Mono', monospace;
-/* stylelint-enable scss/dollar-variable-colon-space-after */
-
-// font face for logo
 @font-face {
   font-family: 'Albertus var';
   font-weight: 100 900;
@@ -25,14 +11,39 @@ $font-mono:
   src: url('/fonts/AlbertusMTStd.woff2') format('woff2');
 }
 
+/* stylelint-disable scss/dollar-variable-colon-space-after -- multi-line variable values require newline */
+$font-sans:
+  'Inter',
+  ui-sans-serif,
+  system-ui,
+  -apple-system,
+  blinkmacsystemfont,
+  'Segoe UI',
+  sans-serif;
+$font-serif:
+  'Source Serif 4', 'Iowan Old Style', 'Palatino Linotype', palatino, georgia,
+  serif;
+$font-mono:
+  'JetBrains Mono', 'SFMono-Regular', consolas, 'Liberation Mono', monospace;
+/* stylelint-enable scss/dollar-variable-colon-space-after */
+
+:root {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif:
+    'Source Serif 4', 'Iowan Old Style', 'Palatino Linotype', palatino, georgia,
+    serif;
+  --font-mono:
+    'JetBrains Mono', 'SFMono-Regular', consolas, 'Liberation Mono', monospace;
+}
+
 * {
   box-sizing: border-box;
 }
 
 // Typography baseline replacing gatsby-plugin-typography
 html {
-  font-size: 18px;
-  line-height: 1.666;
+  font-size: 17px;
+  line-height: 1.6;
   scroll-behavior: smooth;
 }
 
@@ -43,23 +54,31 @@ body {
   background-color: var(--background);
   color: var(--text-normal);
   font-family: $font-sans;
+  font-optical-sizing: auto;
   line-height: 1.65;
-  letter-spacing: -0.01em;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  letter-spacing: -0.011em;
+  margin: 0;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 // Theme variables applied when :root (html element) has dark/light class
 // These selectors have higher specificity than bare body and must come after
 :root.light body {
   --background: #{$light-bg};
-  --text-normal: #{$light-fg1}; // same as light-fg!
+  --text-normal: #{$light-fg-body};
   --text-title: #{$light-fg0};
-  --text-link: #{$light-blue};
-  --text-link-hover: #{$light-purple};
+  --text-muted: #{$light-gray2};
+  --text-link: #{$light-fg0};
+  --text-link-hover: #{$light-fg0};
+  --border: #{$light-gray};
   --text-background: #{$light-bg1};
-  --code: #{$light-purple};
-  --code-background: #{$light-bg2};
-  --hr: #{$light-blue};
+  --code: #{$light-code};
+  --code-background: #{$light-code-bg};
+  --code-block-fg: #{$light-code-block-fg};
+  --code-block-bg: #{$light-code-block-bg};
+  --hr: #{$light-gray};
   --logo-shadow: #{$light-fg4};
   --color-a: #{$light-blue};
   --color-b: #{$light-purple};
@@ -68,14 +87,18 @@ body {
 
 :root.dark body {
   --background: #{$dark-bg};
-  --text-normal: #{$dark-fg1}; // same as dark-fg!
+  --text-normal: #{$dark-fg4};
   --text-title: #{$dark-fg0};
-  --text-link: #{$dark-blue};
-  --text-link-hover: #{$dark-purple};
+  --text-muted: #{$dark-gray2};
+  --text-link: #{$dark-fg0};
+  --text-link-hover: #{$dark-fg0};
+  --border: #{$dark-gray};
   --text-background: #{$dark-bg1};
-  --code: #{$dark-aqua};
-  --code-background: #{$dark-bg2};
-  --hr: #{$dark-blue};
+  --code: #{$dark-code};
+  --code-background: #{$dark-code-bg};
+  --code-block-fg: #{$dark-code-block-fg};
+  --code-block-bg: #{$dark-code-block-bg};
+  --hr: #{$dark-gray};
   --logo-shadow: #{$dark-fg4};
   --color-a: #{$dark-blue};
   --color-b: #{$dark-purple};
@@ -92,20 +115,52 @@ h6,
 .redirects-title {
   color: var(--text-title);
   font-family: $font-sans;
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
 }
 
-// <code> override
-code,
-pre {
-  /* stylelint-disable declaration-no-important -- override Prism.js theme defaults */
-  color: var(--code) !important;
-  font-family: $font-mono;
-  text-shadow: none !important;
-  background: var(--code-background) !important;
-  /* stylelint-enable declaration-no-important */
+// Inline code: high-contrast chip. Fenced blocks keep Prism token colors
+// on a dark panel so light and dark pages both stay readable.
+:not(pre) > code {
+  color: var(--code);
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.12em 0.35em;
+  text-shadow: none;
+  background: var(--code-background);
+  border: 1px solid var(--border);
+}
+
+pre,
+pre[class*='language-'] {
+  color: var(--code-block-fg);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin: 1.25rem 0;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  text-shadow: none;
+  background: var(--code-block-bg);
+  border: 1px solid var(--border);
+}
+
+code[class*='language-'] {
+  color: var(--code-block-fg);
+  font-family: var(--font-mono);
+  text-shadow: none;
+  background: var(--code-block-bg);
+}
+
+pre code,
+pre[class*='language-'] code,
+pre code[class*='language-'] {
+  color: inherit;
+  font-size: inherit;
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
 hr {
@@ -125,20 +180,24 @@ p {
 }
 
 a {
-  text-underline-offset: 0.2em;
-  transition:
-    color 0.2s ease,
-    opacity 0.2s ease;
-  text-decoration: underline;
   color: var(--text-link);
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 0.18em;
+  transition:
+    text-decoration-color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 a:hover {
-  color: var(--text-link-hover);
+  text-decoration-color: var(--text-title);
 }
 
 article {
   margin: 1rem 0;
+  color: var(--text-normal);
+  line-height: 1.75;
+  letter-spacing: 0;
 }
 
 // Inline images in blog post bodies: constrain width and center horizontally,
@@ -308,14 +367,25 @@ h2.section-title {
 
 .resume {
   margin: 0 auto;
-  max-width: 60rem;
-  padding: 1rem;
+  max-width: 52rem;
+  padding: 0 1.25rem 3rem;
+  color: var(--text-normal);
 }
 
 @media only screen and (width >= 600px) {
   .resume {
-    padding: 1rem 2rem;
+    padding: 0 1.5rem 4rem;
   }
+}
+
+.section-label {
+  color: var(--text-muted);
+  font-family: $font-mono;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  margin: 0 0 1rem;
+  text-transform: uppercase;
 }
 
 .entry-title {
@@ -337,20 +407,14 @@ h2.section-title {
 div.tech,
 div.course {
   display: inline-block;
-  color: var(--text-title);
-  background-color: var(--text-background);
-  padding: 0.2rem;
-  border-radius: 0.45rem;
-  opacity: 0.82;
-  margin-right: 5px;
-  margin-top: 5px;
-  cursor: pointer;
-}
-
-div.tech:hover,
-div.course:hover {
-  opacity: 1;
-  cursor: pointer;
+  color: var(--text-muted);
+  background: transparent;
+  padding: 0.1rem 0;
+  margin-right: 0.85rem;
+  margin-top: 0.25rem;
+  font-family: $font-mono;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
 }
 
 ul.description {
@@ -394,13 +458,8 @@ h4 {
 }
 /* stylelint-enable selector-class-pattern */
 
-.resume,
-article {
-  color: var(--text-normal);
-}
-
 ::selection {
-  background: var(--color-a);
+  background: var(--text-title);
   color: var(--background);
 }
 

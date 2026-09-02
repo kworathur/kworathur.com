@@ -1,0 +1,30 @@
+---
+import cv from '../data/cv.json';
+import styles from './OpenSource.module.scss';
+
+const items = cv.open_source;
+---
+
+<section>
+  <h2 class="section-label">Open source</h2>
+  <ul class={styles.list}>
+    {
+      items.map((item) => (
+        <li class={styles.item}>
+          <div class={styles.titleLine}>
+            <a
+              href={item.url}
+              class={styles.title}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {item.name}
+            </a>
+            <span class={styles.date}>{item.date}</span>
+          </div>
+          <p class={styles.description}>{item.description}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>

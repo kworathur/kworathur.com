@@ -6,11 +6,12 @@
       "logo": "/assets/logos/matmerize.png",
       "role": "Software Engineer Intern",
       "startDate": "May 2026",
-      "endDate": "Present",
-      "tech": ["AWS", "Terraform", "Python"],
+      "endDate": "Aug 2026",
+      "tech": ["AWS", "Terraform", "Python", "C++"],
       "highlights": [
-        "Refactored the prediction engine to use SQS, increasing hourly job throughput by 43%.",
-        "Automated production backup testing and restoration using Python scripts and Terraform, increasing testing coverage from less than 1% of platform data to >80% and ensuring SOC-2 compliance."
+        "Transpiled Python-based prediction scripts into C++ and distributable binaries, achieving a speedup of 1.6X for property predictions made using on-premises infrastructure.",
+        "Refactored prediction engine to consume jobs from SQS queues, improving job throughput in production by 43% and eliminating unmaintained dependencies from production builds.",
+        "Automated production backup testing and restoration using Terraform, increasing testing coverage from less than 1% of platform data to 100% and achieving a recovery time of under 20 minutes."
       ],
       "images": [
         {
@@ -21,15 +22,16 @@
     },
     {
       "id": "gene2lead",
-      "company": "Gene2Lead",
+      "company": "Gene2Lead Ltd",
       "logo": "/assets/logos/gene2lead.png",
       "role": "Software Engineer Intern",
-      "startDate": "Sep 2024",
+      "startDate": "Aug 2024",
       "endDate": "Jul 2025",
       "tech": ["PyTorch", "FastAPI", "React"],
       "highlights": [
-        "Deployed inference endpoints on AWS SageMaker, saving roughly 8 hours each month in coordination overhead.",
-        "Built pre-processing pipelines ingesting 16,000+ protein structures for drug discovery research."
+        "Implemented featurization, GPU training, and inference using PyTorch to analyze 7 million protein-drug interactions with deep learning models, accelerating site selection in drug discovery.",
+        "Deployed candidate selection REST APIs on AWS Sagemaker, enabling 30+ commercial users to programatically obtain a ranked list of candidates scored on reactivity.",
+        "Built a proof-of-concept visualization tool developed with React and FastAPI for understanding proteomic data and gaining trust in black box ML models deployed in production."
       ],
       "images": [
         {
@@ -41,6 +43,14 @@
           "alt": "Gene2Lead app screenshot 2"
         }
       ]
+    }
+  ],
+  "open_source": [
+    {
+      "name": "trustgraph",
+      "url": "https://github.com/trustgraph-ai/trustgraph",
+      "date": "Apr 2025",
+      "description": "Centralized configuration for a Python RAG library in trustgraph (2K+ GitHub stars), alleviating timeout failures observed in cloud deployments with network latency spikes."
     }
   ],
   "github_projects": [
