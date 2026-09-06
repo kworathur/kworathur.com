@@ -6,10 +6,9 @@
  */
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import '../styles/global.scss';
-// Prism base theme — token colors are overridden by the CSS custom properties
-// (--code, --code-background) defined in global.scss for theme-aware syntax highlighting
+// Load Prism first so global.scss can override panel colors without !important.
 import 'prismjs/themes/prism-tomorrow.css';
+import '../styles/global.scss';
 
 interface Props {
   /** Page-specific title; combined as "{title} | kworathur.com" */
@@ -42,6 +41,12 @@ const metaDescription = description ?? "Keshav Worathur's developer portfolio.";
       as="font"
       type="font/woff2"
       crossorigin
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
     />
     <link rel="manifest" href="/manifest.webmanifest" />
     <!-- Umami analytics loaded with defer to avoid blocking rendering -->

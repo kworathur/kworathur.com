@@ -1,39 +1,24 @@
-.section {
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--text-normal);
-  margin-bottom: 2rem;
-}
-
-.heading {
-  font-family: 'Albertus var', serif;
-  font-weight: 400;
-  font-size: 2rem;
-  color: var(--text-title);
-  margin: 0 0 1rem;
-  letter-spacing: 0;
-  line-height: 1.1;
-}
-
 .list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 2.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.15rem;
 }
 
 .card {
-  border: 1px solid var(--text-title);
-  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 0;
+  padding: 0;
 }
 
 .titleLine {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+  gap: 0.4rem 1rem;
+  margin-bottom: 0.2rem;
   flex-wrap: wrap;
 }
 
@@ -41,30 +26,18 @@
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-title);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+  text-decoration: none;
 
   &:hover {
-    color: var(--color-b);
-    transition: 0.3s color;
+    text-decoration: underline;
+    text-decoration-color: var(--text-title);
   }
 }
 
 .date {
-  font-size: 0.85rem;
-  color: var(--text-normal);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
   white-space: nowrap;
   flex-shrink: 0;
-}
-
-.description {
-  margin: 0 0 0.6rem;
-  font-size: 0.9rem;
-  color: var(--text-normal);
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
 }

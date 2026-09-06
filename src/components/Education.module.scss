@@ -1,23 +1,8 @@
-.section {
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--text-normal);
-  margin-bottom: 2rem;
-}
-
-.heading {
-  font-family: 'Albertus var', serif;
-  font-weight: 400;
-  font-size: 2rem;
-  color: var(--text-title);
-  margin: 0 0 1rem;
-  letter-spacing: 0;
-  line-height: 1.1;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 @media (width < 600px) {
@@ -27,11 +12,10 @@
 }
 
 .card {
-  border: 1px solid var(--text-title);
-  padding: 1rem;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .cardHeader {
@@ -41,8 +25,8 @@
 }
 
 .logo {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -50,7 +34,7 @@
 .institution {
   margin: 0;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-title);
   line-height: 1.3;
 }
@@ -64,12 +48,12 @@
 
 .meta {
   margin: 0;
-  font-size: 0.85rem;
-  color: var(--text-normal);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
 }
 
 .courses {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
 }

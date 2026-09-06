@@ -1,17 +1,17 @@
 ---
-title: 'What a Broken Benchmark Taught Me About Reproducible Experiments'
+title: 'Chasing datacenter energy savings that seemed too good to be true'
 date: '2026-05-04'
-description: "A story about chasing datacenter energy savings that seemed too good to be true."
+description: 'Chasing datacenter energy savings that seemed too good to be true'
 type: 'blog'
 featuredImage: './thumbnail.jpg'
 tags: ['Performance', 'Distributed Tracing', 'Jaeger', 'Linux']
 ---
 
-For a few weeks this spring, I thought my team had uncovered a way to make datacenters more energy efficient. Spoiler: we hadn't. This post is a story of how I tried (and failed) to reproduce our initial results, sprinkled with tips for building more robust benchmarks.
+For a few weeks this spring, I thought my team had uncovered a way to make datacenters more energy efficient. Spoiler: we hadn't. This post is a story of how I tried (and failed) to reproduce our initial results, with some tips for building more robust benchmarks.
 
 Datacenters — the windowless buildings behind every online purchase, post, and prompt — are consuming electricity at alarming rates. Critics argue that datacenters are environmentally disruptive, and recent construction projects have been delayed in part due to these concerns. For our final project in **CS8803: Datacenter Networks and Systems**, we asked: could software make these facilities more energy efficient?
 
-Our approach: clever _load balancing algorithms_ that distribute work amongst hundreds of servers. After being told we couldn't [sink a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launch one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) we were dead set on making our software technique a winner.
+Our approach: clever _load balancing algorithms_ that distribute work amongst hundreds of servers. After being told we couldn't [sink a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launch one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) we were set on making our software technique a winner.
 
 My job was to simulate thousands of users concurrently searching for hotels online while taking detailed measurements of servers' _power consumption_ and _response latency_ (think: time it takes to receive a confirmation message after clicking "book" on AirBnB).
 
@@ -74,7 +74,7 @@ Re-running my experiments without any changes, I found that power measurements v
 
 ![In some runs, schedutil actually *fared worse* than performance on power usage](./schedutil_worse_than_performance.png)
 
-So which of these conclusions should we trust? Prior to starting my experiments, I wrote some custom scripts to deploy the search service without docker, in order to push the server with the highest QPS possible. I revisited the scripts I wrote earlier and noticed a subtle flaw: the placement of tasks on the server was left entirely up to the OS scheduler.
+So which of these conclusions should we trust? Prior to starting my experiments, I wrote some custom scripts to deploy the search service without docker containers, in order to push the server with the highest QPS possible. I revisited the scripts I wrote earlier and noticed a subtle flaw: the placement of tasks on the server was left entirely up to the OS scheduler.
 
 The OS scheduler — the kernel component that decides which task runs on which core — is generally good at spreading tasks across a CPU's cores to minimize resource conflicts. Sometimes, however, it may schedule sub-optimally, placing two compute-bound tasks on the same core while others remain idle. I chose to **pin processes to run on separate cores**, preventing such collisions and making my experimental results more deterministic.
 
@@ -164,4 +164,4 @@ The result was **out-of-sync binaries** across the three servers, which made pow
 
 ![Final Results - Latency](reproducible_latency.png)
 
-In all three follow-up experiments, the bug was in my experiments rather than the application I was experimenting with. Once I controlled for task placement, caching, and binary mismatch, the original power savings from frequency-limiting **largely disappeared** (see power plot above). Both governors still converge in latency at high load (see latency plot above). Our 'big if true' result evaporated with rigor - although a less exciting conclusion, we could feel satisfied that our experiments were rigorous.
+The sum of all three debugging experiments helped show me the flaw in my initial measurements.  Once I controlled for task placement, caching, and binary mismatch, the original power savings from frequency-limiting **largely disappeared** (see power plot above). Both governors still converge in latency at high load (see latency plot above). Just like that, the 'big if true' result disappeared, so our search for energy-efficient datacenter algorithms goes back to square one (for now).

@@ -2,42 +2,146 @@
 import cv from '../data/cv.json';
 import styles from './Experience.module.scss';
 
-const experiences = cv.experiences;
+const experiences = cv.experiences.map((exp) => {
+  const usesImageCaptions = exp.images.some(
+    (image) => 'caption' in image && image.caption
+  );
+  const slides = usesImageCaptions
+    ? exp.images.map((image) => ({
+        src: image.src,
+        alt: image.alt,
+        caption: 'caption' in image ? (image.caption ?? '') : '',
+      }))
+    : exp.highlights.length > 0
+      ? exp.highlights.map((caption, i) => {
+          const image = exp.images[i % Math.max(exp.images.length, 1)];
+          return {
+            src: image?.src,
+            alt: image?.alt ?? '',
+            caption,
+          };
+        })
+      : exp.images.map((image) => ({
+          src: image.src,
+          alt: image.alt,
+          caption: '',
+        }));
+
+  return { ...exp, slides };
+});
 ---
 
-<section class={styles.section}>
-  <h2 class={styles.heading}>Experience</h2>
+<section>
+  <h2 class="section-label">Experience</h2>
 
-  {experiences.map((exp, i) => (
-    <div class={styles.entryZone}>
-      <div class={styles.entry} style={`z-index: ${i + 1}`}>
-        <div class={styles.entryInner}>
-          <div class={styles.entryInfo}>
+  {
+    experiences.map((exp, i) => (
+      <div class={styles.entryZone}>
+        <div class={styles.entry} style={`z-index: ${i + 1}`}>
+          <div class={styles.entryInner}>
             <img src={exp.logo} alt={exp.company} class={styles.logo} />
             <p class={styles.role}>
-              <strong>{exp.role}</strong>{' '}| {exp.startDate} – {exp.endDate}
+              <strong>{exp.role}</strong> | {exp.location} | {exp.startDate} –{' '}
+              {exp.endDate}
             </p>
             <p class={styles.tech}>Technologies: {exp.tech.join(', ')}</p>
-            <ul class={styles.highlights}>
-              {exp.highlights.map((h) => <li>{h}</li>)}
-            </ul>
-          </div>
 
-          <div class={`${styles.carouselContainer} ${exp.images.length > 1 ? styles.hasMarkers : ''}`}>
-            <ul class={styles.carousel}>
-              {exp.images.map((img, j) => (
-                <li
-                  class={styles.carouselSlide}
-                  data-label={`Slide ${j + 1}`}
-                  style={`--thumbnail: url(${img.src})`}
-                >
-                  <img src={img.src} alt={img.alt} />
-                </li>
-              ))}
-            </ul>
+            {exp.slides.length > 0 && (
+              <div
+                class={`${styles.carouselContainer} ${exp.slides.length > 1 ? styles.hasControls : ''}`}
+                data-carousel
+              >
+                {exp.slides.length > 1 && (
+                  <button
+                    type="button"
+                    class={`${styles.chevron} ${styles.chevronPrev}`}
+                    data-carousel-prev
+                    aria-label={`Previous ${exp.company} slide`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                  </button>
+                )}
+                <ul class={styles.carousel} data-carousel-track>
+                  {exp.slides.map((slide) => (
+                    <li class={styles.carouselSlide}>
+                      <figure class={styles.figure}>
+                        {slide.src && (
+                          <img
+                            src={slide.src}
+                            alt={slide.alt}
+                            class={
+                              slide.src.endsWith('.svg')
+                                ? styles.diagram
+                                : undefined
+                            }
+                          />
+                        )}
+                        {slide.caption && (
+                          <figcaption
+                            class={styles.caption}
+                            set:text={slide.caption}
+                          />
+                        )}
+                      </figure>
+                    </li>
+                  ))}
+                </ul>
+                {exp.slides.length > 1 && (
+                  <button
+                    type="button"
+                    class={`${styles.chevron} ${styles.chevronNext}`}
+                    data-carousel-next
+                    aria-label={`Next ${exp.company} slide`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
-    </div>
-  ))}
+    ))
+  }
 </section>
+
+<script>
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest('[data-carousel-prev], [data-carousel-next]');
+    if (!button) return;
+    const wrap = button.closest('[data-carousel]');
+    if (!wrap) return;
+    const track = wrap.querySelector('[data-carousel-track]');
+    if (!(track instanceof HTMLElement)) return;
+    const dir = button.hasAttribute('data-carousel-next') ? 1 : -1;
+    track.scrollBy({ left: dir * track.clientWidth, behavior: 'smooth' });
+  });
+</script>

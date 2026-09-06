@@ -8,29 +8,32 @@ const allPosts = (await getCollection('blog')).sort(
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr);
-  return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  return d.toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
 }
 ---
-<section class={`${styles.section} dot-grid`}>
-  <h2 class={styles.heading}>Writing</h2>
+
+<section>
+  <h2 class="section-label">Writing</h2>
   <ul class={styles.list}>
-    {allPosts.map((post) => {
-      const slug = post.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
-      const link = `/blog/${slug}`;
-      return (
-        <li class={styles.card}>
-          <div class={styles.titleLine}>
-            <a href={link} class={styles.title}>{post.data.title}</a>
-            <span class={styles.date}>{formatDate(post.data.date)}</span>
-          </div>
-          {post.data.description && <p class={styles.description}>{post.data.description}</p>}
-          {post.data.tags && post.data.tags.length > 0 && (
-            <div class={styles.tags}>
-              {post.data.tags.map((tag) => <div class="tech">{tag}</div>)}
+    {
+      allPosts.map((post) => {
+        const slug = post.id.replace(/\/index\.md$/, '').replace(/\.md$/, '');
+        const link = `/blog/${slug}`;
+        return (
+          <li class={styles.card}>
+            <div class={styles.titleLine}>
+              <a href={link} class={styles.title}>
+                {post.data.title}
+              </a>
+              <span class={styles.date}>{formatDate(post.data.date)}</span>
             </div>
-          )}
-        </li>
-      );
-    })}
+          </li>
+        );
+      })
+    }
   </ul>
 </section>
