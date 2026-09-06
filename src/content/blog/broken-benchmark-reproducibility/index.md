@@ -164,4 +164,4 @@ The result was **out-of-sync binaries** across the three servers, which made pow
 
 ![Final Results - Latency](reproducible_latency.png)
 
-The sum of all three debugging experiments helped show me the flaw in my initial measreuments.  Once I controlled for task placement, caching, and binary mismatch, the original power savings from frequency-limiting **largely disappeared** (see power plot above). Both governors still converge in latency at high load (see latency plot above). Just like that, the 'big if true' result disappeared, so our search for energy-efficient datacenter algorithms goes back to square one (for now).
+The sum of all three debugging experiments helped show me the flaw in my initial measurements.  Once I controlled for task placement, caching, and binary mismatch, the original power savings from frequency-limiting **largely disappeared** (see power plot above). Both governors still converge in latency at high load (see latency plot above). Just like that, the 'big if true' result disappeared, so our search for energy-efficient datacenter algorithms goes back to square one (for now).
