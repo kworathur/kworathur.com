@@ -3,29 +3,36 @@ import cv from '../data/cv.json';
 import styles from './Projects.module.scss';
 
 const githubProjects = cv.github_projects;
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+}
 ---
 
 <section>
   <h2 class="section-label">Projects</h2>
-  <div class={styles.grid}>
+  <ul class={styles.list}>
     {
       githubProjects.map((project) => (
-        <a
-          href={project.html_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          class={styles.card}
-        >
-          <p class={styles.cardTitle}>{project.name}</p>
-          <p class={styles.cardDesc}>{project.description}</p>
-          <div class={styles.cardMeta}>
-            {project.language && <div class="tech">{project.language}</div>}
-            {project.topics.slice(0, 3).map((t) => (
-              <div class="tech">{t}</div>
-            ))}
+        <li class={styles.item}>
+          <div class={styles.titleLine}>
+            <a
+              href={project.html_url}
+              class={styles.title}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {project.name}
+            </a>
+            <span class={styles.date}>{formatDate(project.pushed_at)}</span>
           </div>
-        </a>
+          <p class={styles.description}>{project.description}</p>
+        </li>
       ))
     }
-  </div>
+  </ul>
 </section>

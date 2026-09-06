@@ -4,22 +4,13 @@
   position: sticky;
   top: 0;
   background-color: var(--background);
-  padding: 0 0 2rem;
+  padding: 0 0 2.5rem;
 }
 
 .entryInner {
   display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
-
-.entryInfo {
-  flex: 0 0 auto;
-  width: 22rem;
-  max-width: 100%;
-  display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: 0.65rem;
 }
 
@@ -48,41 +39,25 @@
   color: var(--text-muted);
 }
 
-.highlights {
-  margin: 0;
-  padding-left: 1.1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-
-  li {
-    margin: 0;
-    font-size: 0.95rem;
-    color: var(--text-normal);
-    line-height: 1.5;
-  }
-}
-
 .carouselContainer {
-  flex: 1;
-  min-width: 200px;
   position: relative;
   display: grid;
+  grid-template-columns: 1fr;
   grid-template-areas: 'carousel';
-  grid-template-rows: auto;
-  margin: 0;
   align-items: center;
+  width: 100%;
+  max-width: 38rem;
+  margin: 0.5rem auto 0;
 }
 
 .hasControls {
-  padding: 0 1.75rem;
+  grid-template-columns: 1.75rem 1fr 1.75rem;
+  grid-template-areas: 'prev carousel next';
+  column-gap: 0.35rem;
 }
 
 .chevron {
-  position: absolute;
-  top: 50%;
   z-index: 1;
-  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,11 +75,11 @@
 }
 
 .chevronPrev {
-  left: 0;
+  grid-area: prev;
 }
 
 .chevronNext {
-  right: 0;
+  grid-area: next;
 }
 
 .carousel {
@@ -122,14 +97,29 @@
 
   .carouselSlide {
     scroll-snap-align: center;
-
-    img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border: 1px solid var(--border);
-    }
   }
+}
+
+.figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--border);
+}
+
+.caption {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-normal);
+  text-align: center;
 }
 
 /* stylelint-enable custom-property-pattern, selector-pseudo-class-no-unknown, selector-type-no-unknown, no-descending-specificity */

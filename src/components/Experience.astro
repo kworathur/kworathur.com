@@ -2,7 +2,25 @@
 import cv from '../data/cv.json';
 import styles from './Experience.module.scss';
 
-const experiences = cv.experiences;
+const experiences = cv.experiences.map((exp) => {
+  const slides =
+    exp.highlights.length > 0
+      ? exp.highlights.map((caption, i) => {
+          const image = exp.images[i % Math.max(exp.images.length, 1)];
+          return {
+            src: image?.src,
+            alt: image?.alt ?? '',
+            caption,
+          };
+        })
+      : exp.images.map((image) => ({
+          src: image.src,
+          alt: image.alt,
+          caption: '',
+        }));
+
+  return { ...exp, slides };
+});
 ---
 
 <section>
@@ -13,77 +31,79 @@ const experiences = cv.experiences;
       <div class={styles.entryZone}>
         <div class={styles.entry} style={`z-index: ${i + 1}`}>
           <div class={styles.entryInner}>
-            <div class={styles.entryInfo}>
-              <img src={exp.logo} alt={exp.company} class={styles.logo} />
-              <p class={styles.role}>
-                <strong>{exp.role}</strong> | {exp.startDate} – {exp.endDate}
-              </p>
-              <p class={styles.tech}>Technologies: {exp.tech.join(', ')}</p>
-              <ul class={styles.highlights}>
-                {exp.highlights.map((h) => (
-                  <li>{h}</li>
-                ))}
-              </ul>
-            </div>
+            <img src={exp.logo} alt={exp.company} class={styles.logo} />
+            <p class={styles.role}>
+              <strong>{exp.role}</strong> | {exp.startDate} – {exp.endDate}
+            </p>
+            <p class={styles.tech}>Technologies: {exp.tech.join(', ')}</p>
 
-            <div
-              class={`${styles.carouselContainer} ${exp.images.length > 1 ? styles.hasControls : ''}`}
-              data-carousel
-            >
-              {exp.images.length > 1 && (
-                <button
-                  type="button"
-                  class={`${styles.chevron} ${styles.chevronPrev}`}
-                  data-carousel-prev
-                  aria-label={`Previous ${exp.company} image`}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
+            {exp.slides.length > 0 && (
+              <div
+                class={`${styles.carouselContainer} ${exp.slides.length > 1 ? styles.hasControls : ''}`}
+                data-carousel
+              >
+                {exp.slides.length > 1 && (
+                  <button
+                    type="button"
+                    class={`${styles.chevron} ${styles.chevronPrev}`}
+                    data-carousel-prev
+                    aria-label={`Previous ${exp.company} slide`}
                   >
-                    <polyline points="15 18 9 12 15 6" />
-                  </svg>
-                </button>
-              )}
-              <ul class={styles.carousel} data-carousel-track>
-                {exp.images.map((img) => (
-                  <li class={styles.carouselSlide}>
-                    <img src={img.src} alt={img.alt} />
-                  </li>
-                ))}
-              </ul>
-              {exp.images.length > 1 && (
-                <button
-                  type="button"
-                  class={`${styles.chevron} ${styles.chevronNext}`}
-                  data-carousel-next
-                  aria-label={`Next ${exp.company} image`}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                  </button>
+                )}
+                <ul class={styles.carousel} data-carousel-track>
+                  {exp.slides.map((slide) => (
+                    <li class={styles.carouselSlide}>
+                      <figure class={styles.figure}>
+                        {slide.src && <img src={slide.src} alt={slide.alt} />}
+                        {slide.caption && (
+                          <figcaption class={styles.caption}>
+                            {slide.caption}
+                          </figcaption>
+                        )}
+                      </figure>
+                    </li>
+                  ))}
+                </ul>
+                {exp.slides.length > 1 && (
+                  <button
+                    type="button"
+                    class={`${styles.chevron} ${styles.chevronNext}`}
+                    data-carousel-next
+                    aria-label={`Next ${exp.company} slide`}
                   >
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </button>
-              )}
-            </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -91,16 +111,16 @@ const experiences = cv.experiences;
   }
 </section>
 
-<script is:inline>
-  document.addEventListener('click', function (event) {
-    const button = event.target.closest(
-      '[data-carousel-prev], [data-carousel-next]'
-    );
+<script>
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest('[data-carousel-prev], [data-carousel-next]');
     if (!button) return;
     const wrap = button.closest('[data-carousel]');
     if (!wrap) return;
     const track = wrap.querySelector('[data-carousel-track]');
-    if (!track) return;
+    if (!(track instanceof HTMLElement)) return;
     const dir = button.hasAttribute('data-carousel-next') ? 1 : -1;
     track.scrollBy({ left: dir * track.clientWidth, behavior: 'smooth' });
   });

@@ -95,7 +95,11 @@
       "startDate": "Aug 2025",
       "endDate": "Dec 2026",
       "gpa": "4.0/4.0",
-      "courses": ["CS6220: Advanced OS"]
+      "courses": [
+        "CS 6210: Advanced Operating Systems",
+        "CSE 6230: High Performance Computing",
+        "CS 6222: ML Systems"
+      ]
     },
     {
       "id": "uoft",
@@ -106,7 +110,7 @@
       "startDate": "Sep 2020",
       "endDate": "Apr 2025",
       "gpa": "3.94/4",
-      "courses": ["CSC367: Parallel Programming"]
+      "courses": ["CSC367: Parallel Programming", "CSC409: Scalable Computing"]
     }
   ]
 }
