@@ -5,6 +5,7 @@
       "company": "Matmerize",
       "logo": "/assets/logos/matmerize.png",
       "role": "Software Engineer Intern",
+      "location": "Atlanta, GA",
       "startDate": "May 2026",
       "endDate": "Aug 2026",
       "tech": ["AWS", "Terraform", "Python", "C++"],
@@ -15,8 +16,14 @@
       ],
       "images": [
         {
-          "src": "/assets/matmerize-architecture.png",
-          "alt": "Matmerize pull-based architecture diagram"
+          "src": "/assets/matmerize-pull-based-architecture.svg",
+          "alt": "Matmerize pull-based prediction architecture",
+          "caption": "Refactored prediction engine to consume jobs from SQS queues, improving job throughput in production by 43% and eliminating unmaintained dependencies from production builds."
+        },
+        {
+          "src": "/assets/matmerize-backup-automation.svg",
+          "alt": "Matmerize backup testing and restoration architecture",
+          "caption": "Automated production backup testing and restoration using Terraform, increasing testing coverage from less than 1% of platform data to 100% and achieving a recovery time of under 20 minutes."
         }
       ]
     },
@@ -25,6 +32,7 @@
       "company": "Gene2Lead Ltd",
       "logo": "/assets/logos/gene2lead.png",
       "role": "Software Engineer Intern",
+      "location": "Remote",
       "startDate": "Aug 2024",
       "endDate": "Jul 2025",
       "tech": ["PyTorch", "FastAPI", "React"],

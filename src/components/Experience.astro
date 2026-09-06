@@ -3,8 +3,16 @@ import cv from '../data/cv.json';
 import styles from './Experience.module.scss';
 
 const experiences = cv.experiences.map((exp) => {
-  const slides =
-    exp.highlights.length > 0
+  const usesImageCaptions = exp.images.some(
+    (image) => 'caption' in image && image.caption
+  );
+  const slides = usesImageCaptions
+    ? exp.images.map((image) => ({
+        src: image.src,
+        alt: image.alt,
+        caption: 'caption' in image ? (image.caption ?? '') : '',
+      }))
+    : exp.highlights.length > 0
       ? exp.highlights.map((caption, i) => {
           const image = exp.images[i % Math.max(exp.images.length, 1)];
           return {
@@ -33,7 +41,8 @@ const experiences = cv.experiences.map((exp) => {
           <div class={styles.entryInner}>
             <img src={exp.logo} alt={exp.company} class={styles.logo} />
             <p class={styles.role}>
-              <strong>{exp.role}</strong> | {exp.startDate} – {exp.endDate}
+              <strong>{exp.role}</strong> | {exp.location} | {exp.startDate} –{' '}
+              {exp.endDate}
             </p>
             <p class={styles.tech}>Technologies: {exp.tech.join(', ')}</p>
 
@@ -69,11 +78,22 @@ const experiences = cv.experiences.map((exp) => {
                   {exp.slides.map((slide) => (
                     <li class={styles.carouselSlide}>
                       <figure class={styles.figure}>
-                        {slide.src && <img src={slide.src} alt={slide.alt} />}
+                        {slide.src && (
+                          <img
+                            src={slide.src}
+                            alt={slide.alt}
+                            class={
+                              slide.src.endsWith('.svg')
+                                ? styles.diagram
+                                : undefined
+                            }
+                          />
+                        )}
                         {slide.caption && (
-                          <figcaption class={styles.caption}>
-                            {slide.caption}
-                          </figcaption>
+                          <figcaption
+                            class={styles.caption}
+                            set:text={slide.caption}
+                          />
                         )}
                       </figure>
                     </li>

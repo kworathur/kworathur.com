@@ -46,7 +46,7 @@
   grid-template-areas: 'carousel';
   align-items: center;
   width: 100%;
-  max-width: 38rem;
+  max-width: 100%;
   margin: 0.5rem auto 0;
 }
 
@@ -112,6 +112,19 @@
   height: auto;
   display: block;
   border: 1px solid var(--border);
+}
+
+.figure img.diagram {
+  border: 0;
+  background: transparent;
+}
+
+:global(:root.light) .figure img.diagram {
+  mix-blend-mode: multiply;
+}
+
+:global(:root.dark) .figure img.diagram {
+  filter: invert(1) hue-rotate(180deg);
 }
 
 .caption {
