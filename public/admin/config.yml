@@ -1,0 +1,80 @@
+backend:
+  name: github
+  repo: kworathur/kworathur.com
+  branch: main
+
+# Used only when running `npx decap-server` next to `npm run dev`.
+local_backend: true
+
+site_url: https://kworathur.com
+display_url: https://kworathur.com
+
+media_folder: public/assets/uploads
+public_folder: /assets/uploads
+
+collections:
+  - name: posts
+    label: Posts
+    label_singular: Post
+    folder: src/content/blog
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    summary: '{{title}} ({{date}})'
+    sortable_fields: ['date', 'title']
+    fields:
+      - { label: Title, name: title, widget: string }
+      - {
+          label: Date,
+          name: date,
+          widget: datetime,
+          date_format: 'YYYY-MM-DD',
+          time_format: false,
+          format: 'YYYY-MM-DD',
+        }
+      - {
+          label: Description,
+          name: description,
+          widget: text,
+          hint: Short summary for search engines and link previews.,
+        }
+      - { label: Type, name: type, widget: hidden, default: blog }
+      - {
+          label: Tags,
+          name: tags,
+          widget: list,
+          required: false,
+          hint: Add one tag per line.,
+        }
+      - { label: Featured image, name: featuredImage, widget: hidden, required: false }
+      - {
+          label: Featured image caption,
+          name: featuredImageCaption,
+          widget: hidden,
+          required: false,
+        }
+      - { label: Body, name: body, widget: markdown }
+
+  - name: pages
+    label: Pages
+    files:
+      - name: now
+        label: Now page
+        file: src/content/now/now.md
+        media_folder: /public/assets/now
+        public_folder: /assets/now
+        fields:
+          - {
+              label: Last updated,
+              name: updated,
+              widget: datetime,
+              date_format: 'YYYY-MM-DD',
+              time_format: false,
+              format: 'YYYY-MM-DD',
+              hint: Set this to today's date when you edit the page.,
+            }
+          - { label: Body, name: body, widget: markdown }

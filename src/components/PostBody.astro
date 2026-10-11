@@ -2,14 +2,14 @@
 import type { Post } from '../lib/posts';
 
 interface Props {
-  body: Post['body'];
+  Content: Post['Content'];
 }
 
-const { body } = Astro.props;
+const { Content } = Astro.props;
 ---
 
 <div class="prose">
-  {'Content' in body ? <body.Content /> : <Fragment set:html={body.html} />}
+  <Content />
 </div>
 
 <script>

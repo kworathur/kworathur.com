@@ -2,13 +2,14 @@
 
 # kworathur.com
 
-A minimalist blog built with [Astro](https://astro.build) and [Sanity](https://www.sanity.io) as the headless CMS.
+A minimalist blog built with [Astro](https://astro.build) and [Decap CMS](https://decapcms.org).
 
 | Path           | Content                                        |
 | -------------- | ---------------------------------------------- |
 | `/`            | Intro (with resume link) and list of all posts |
 | `/blog/<slug>` | A single post                                  |
 | `/now`         | What I am working on now                       |
+| `/admin`       | Decap CMS editor (login required)              |
 
 ## Develop
 
@@ -17,53 +18,46 @@ npm install
 npm run dev
 ```
 
-The site runs at `http://localhost:4321`. Without `SANITY_PROJECT_ID`, the site builds from the local markdown only:
+The site runs at `http://localhost:4321`.
 
-- `src/content/blog/<slug>/index.md` holds a post.
+## Content
+
+All content is markdown in the repository:
+
+- `src/content/blog/<slug>/index.md` holds a post. Put its images in the same folder.
 - `src/content/now/now.md` holds the `/now` page.
 
-## Write from your phone (Sanity CMS)
+You can edit these files by hand, or use the CMS.
 
-Posts and the `/now` page live in a hosted Sanity Studio. The Studio works in a phone browser. Add it to your home screen for one-tap access.
+## Edit from the browser or your phone (Decap CMS)
 
-The Studio code is in `studio/`. It defines two content types:
+Go to `https://kworathur.com/admin` and log in with GitHub. You can create and edit posts and the Now page. When you tap **Publish**, Decap commits the change to `main`. Netlify then rebuilds the site. The change is live after about one minute.
 
-- **Post**: title, slug, published date, description, and a rich-text body (headings, lists, links, quotes, images, code).
-- **Now page**: a single document with a rich-text body. The site shows the last publish date automatically.
-
-A CMS post with the same slug as a local markdown post replaces the local post.
+On a phone, add `/admin` to your home screen for one-tap access.
 
 ### One-time setup
 
-1. Create a project at [sanity.io/manage](https://www.sanity.io/manage). Note the project ID.
-2. Copy `studio/.env.example` to `studio/.env`. Set `SANITY_STUDIO_PROJECT_ID`.
-3. Deploy the Studio:
+Decap logs in through GitHub OAuth. Netlify provides the login service, so you do not run a server.
 
-   ```bash
-   cd studio
-   npm install
-   npx sanity login
-   npx sanity deploy
-   ```
+1. In GitHub, open **Settings > Developer settings > OAuth Apps > New OAuth App**.
+   - Homepage URL: `https://kworathur.com`
+   - Authorization callback URL: `https://api.netlify.com/auth/done`
+2. Copy the **Client ID**. Generate a **Client secret** and copy it.
+3. In Netlify, open **Project configuration > Access & security > OAuth**.
+4. Choose **Install provider**, select **GitHub**, and paste the Client ID and Client secret.
+5. Open `https://kworathur.com/admin` and log in. Your GitHub account needs write access to this repository.
 
-   Choose a hostname. The Studio is then available at `https://<hostname>.sanity.studio`.
+Only GitHub users with write access to the repository can publish.
 
-4. In Netlify, open **Site configuration > Environment variables**. Add `SANITY_PROJECT_ID`. Add `SANITY_DATASET` if it is not `production`.
-5. In Netlify, open **Site configuration > Build & deploy > Build hooks**. Create a build hook and copy its URL.
-6. In Sanity, open **API > Webhooks** and create a webhook:
-   - URL: the Netlify build hook URL
-   - Trigger on: Create, Update, Delete
-   - Filter: `_type in ["post", "now"]`
-   - Projection: leave empty
-   - Drafts: off
+### Run the CMS locally
 
-### Publish a post
+1. Run `npx decap-server` in one terminal.
+2. Run `npm run dev` in another terminal.
+3. Open `http://localhost:4321/admin/index.html`. Choose **Login**.
 
-1. Open the Studio on your phone.
-2. Create a Post. Write the content.
-3. Tap **Publish**.
+Local edits change files in your working tree. No login is needed.
 
-The webhook starts a Netlify build. The post appears on the site after about one minute.
+The CMS configuration is in `public/admin/config.yml`.
 
 ## Scripts
 
