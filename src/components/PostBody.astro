@@ -1,0 +1,22 @@
+---
+import type { Post } from '../lib/posts';
+
+interface Props {
+  body: Post['body'];
+}
+
+const { body } = Astro.props;
+---
+
+<div class="prose">
+  {'Content' in body ? <body.Content /> : <Fragment set:html={body.html} />}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLImageElement>('.prose img').forEach((img) => {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', () => {
+      window.open(img.currentSrc || img.src, '_blank', 'noopener,noreferrer');
+    });
+  });
+</script>

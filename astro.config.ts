@@ -1,10 +1,8 @@
 import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
 import type { Root, Element } from 'hast';
 
 // Rehype plugin: wraps standalone <p><img …/></p> blocks in <figure> elements
-// and appends <figcaption> from the alt text, matching gatsby-remark-images
-// showCaptions: ['title', 'alt'] behaviour.
+// and appends <figcaption> from the title or alt text.
 // Handles both single-image and multi-image paragraphs (adjacent markdown image
 // lines produce a single <p> with multiple <img> children).
 // Uses splice() throughout to avoid hast Root/Element children type variance.
@@ -25,7 +23,10 @@ function rehypeFigureCaption() {
     }
 
     function isWhitespaceText(node: Element['children'][number]): boolean {
-      return node.type === 'text' && /^\s*$/.test(String((node as { value?: unknown }).value ?? ''));
+      return (
+        node.type === 'text' &&
+        /^\s*$/.test(String((node as { value?: unknown }).value ?? ''))
+      );
     }
 
     function processChildren(children: Element['children']): void {
@@ -33,18 +34,18 @@ function rehypeFigureCaption() {
       for (let i = children.length - 1; i >= 0; i--) {
         const child = children[i];
         if (child.type !== 'element') continue;
-        // Recurse into non-<p> elements first
         if (child.tagName !== 'p') {
           processChildren(child.children);
           continue;
         }
-        // For <p>: check whether all non-whitespace children are <img>
-        const realChildren = child.children.filter(c => !isWhitespaceText(c));
+        const realChildren = child.children.filter((c) => !isWhitespaceText(c));
         const allImgs =
           realChildren.length > 0 &&
-          realChildren.every(c => c.type === 'element' && (c as Element).tagName === 'img');
+          realChildren.every(
+            (c) => c.type === 'element' && (c as Element).tagName === 'img'
+          );
         if (allImgs) {
-          const figures = realChildren.map(c => makeFigure(c as Element));
+          const figures = realChildren.map((c) => makeFigure(c as Element));
           children.splice(i, 1, ...figures);
         }
       }
@@ -57,11 +58,16 @@ function rehypeFigureCaption() {
 export default defineConfig({
   site: 'https://kworathur.com',
   trailingSlash: 'never',
-  integrations: [react()],
+  redirects: {
+    '/blog': '/',
+  },
   markdown: {
     syntaxHighlight: 'prism',
     rehypePlugins: [
-      ['rehype-external-links', { target: '_blank', rel: ['noopener', 'noreferrer'] }],
+      [
+        'rehype-external-links',
+        { target: '_blank', rel: ['noopener', 'noreferrer'] },
+      ],
       rehypeFigureCaption,
     ],
   },

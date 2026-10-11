@@ -1,33 +1,29 @@
 ---
-/**
- * BaseLayout.astro
- * Main page layout replacing Format.tsx and SEO.tsx.
- * Renders the full HTML shell with head metadata, header, slot content, and footer.
- */
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-// Load Prism first so global.scss can override panel colors without !important.
+
 import 'prismjs/themes/prism-tomorrow.css';
 import '../styles/global.scss';
 
 interface Props {
-  /** Page-specific title; combined as "{title} | kworathur.com" */
-  title: string;
-  /** Optional meta description */
+  title?: string;
   description?: string;
-  /** Optional absolute URL for og:image */
   ogImage?: string;
 }
 
 const { title, description, ogImage } = Astro.props;
-const pageTitle = `${title} | kworathur.com`;
-const metaDescription = description ?? "Keshav Worathur's developer portfolio.";
+const siteName = 'Keshav Worathur';
+const pageTitle = title ? `${title} | ${siteName}` : siteName;
+const metaDescription =
+  description ??
+  'Keshav Worathur writes about performance engineering and distributed systems for ML.';
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
     <title>{pageTitle}</title>
     <meta name="description" content={metaDescription} />
     {ogImage && <meta property="og:image" content={ogImage} />}
@@ -46,28 +42,13 @@ const metaDescription = description ?? "Keshav Worathur's developer portfolio.";
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu+Mono:wght@400;700&display=swap"
     />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <!-- Umami analytics loaded with defer to avoid blocking rendering -->
     <script
       defer
       src="https://cloud.umami.is/script.js"
       data-website-id="debd09d3-019b-4a83-98c8-78e3b844df35"></script>
-    <!-- Inline theme-init script: apply dark/light class before body renders to prevent FOUC -->
-    <script is:inline>
-      (function () {
-        const stored = localStorage.getItem('theme');
-        const preferred = window.matchMedia('(prefers-color-scheme: dark)')
-          .matches
-          ? 'dark'
-          : 'light';
-        document.documentElement.classList.add(
-          stored != null ? stored : preferred
-        );
-      })();
-    </script>
-    <!-- Unregister any service workers left over from the old Gatsby/offline-plugin build -->
     <script is:inline>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -79,8 +60,7 @@ const metaDescription = description ?? "Keshav Worathur's developer portfolio.";
     </script>
   </head>
   <body>
-    <!-- Page wrapper: max-width centering and padding matching the original Format component -->
-    <div class="resume">
+    <div class="page">
       <Header />
       <main>
         <slot />

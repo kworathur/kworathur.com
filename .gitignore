@@ -1,4 +1,7 @@
 node_modules/
 .cache/
 dist
+.astro/
+.env
 .DS_Store
+.playwright-mcp/
