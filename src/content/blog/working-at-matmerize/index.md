@@ -10,7 +10,7 @@ tags: ['Experience', 'AWS', 'Terraform', 'Python', 'C++']
 
 **Stack:** AWS, Terraform, Python, C++
 
-Matmerize builds a platform that predicts chemical and material properties. During my internship I worked on three projects that touched the prediction engine, the job pipeline, and the backup story for production data.
+During my internship I worked on three projects: 
 
 # Faster predictions with C++
 
