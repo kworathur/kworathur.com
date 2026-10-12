@@ -2,7 +2,7 @@
   "name": "kworathur.com",
   "version": "2.0.0",
   "private": true,
-  "description": "Keshav's developer portfolio featuring a blog",
+  "description": "Keshav Worathur's minimalist blog",
   "keywords": [
     "astro"
   ],
@@ -19,12 +19,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@astrojs/react": "^4.0.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
     "astro": "^5.0.0",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
     "rehype-external-links": "^3.0.0",
     "sass": "^1.99.0",
     "sharp": "^0.34.5",
