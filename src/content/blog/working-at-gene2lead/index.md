@@ -1,16 +1,22 @@
 ---
-title: 'Working at Gene2Lead'
-date: '2025-07-31'
-description: 'Software Engineer Intern at Gene2Lead: deep learning on protein-drug interactions, candidate selection APIs, and a visualization tool.'
-type: 'experience'
-tags: ['Experience', 'PyTorch', 'FastAPI', 'React']
+title: Working at Gene2Lead
+date: 2025-07-31
+description: "Software Engineer Intern at Gene2Lead: deep learning on
+  protein-drug interactions, candidate selection APIs, and a visualization
+  tool."
+type: experience
+tags:
+  - Experience
+  - PyTorch
+  - FastAPI
+  - React
 ---
 
 **Software Engineer Intern** · Remote · Aug 2024 – Jul 2025
 
 **Stack:** PyTorch, FastAPI, React
 
-Gene2Lead applies machine learning to drug discovery. I spent a year working on the models, the APIs that serve them, and a tool for understanding what the models learn.
+Gene2Lead develops ML tools to survey the vast human proteome to discover new therapies, experimentally validate them, and bring them to market. I was one of two software engineers, where I spent my time developing more accurate models and helping deploy them to our end users.
 
 # Deep learning on protein-drug interactions
 
