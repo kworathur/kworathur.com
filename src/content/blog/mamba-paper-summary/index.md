@@ -1,5 +1,5 @@
 ---
-title: Mamba Paper Summary
+title: Writing Fast Mamba Kernels for TPUs
 date: 2026-10-13
 description: A summary of the paper "Linear-Time Sequence Modeling with
   Selective State Spaces" (Gu and Dao, COLM 2024) that introduces the Mamba
