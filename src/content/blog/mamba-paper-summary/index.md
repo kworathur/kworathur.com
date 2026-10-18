@@ -5,6 +5,8 @@ description: A summary of the paper "Linear-Time Sequence Modeling with
   Selective State Spaces" (Gu and Dao, COLM 2024) that introduces the Mamba
   architecture.
 type: blog
+tags:
+  - ml-systems
 ---
 Linear-Time Sequence Modeling with Selective State Spaces
 Authors: Albert Gu, Tri Dao
