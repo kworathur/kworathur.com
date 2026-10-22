@@ -2,11 +2,16 @@
 title: Writing Fast Mamba Kernels for TPUs
 date: 2026-10-13
 description: Rapid developments in structured state space models and hardware
-  accelerators like TPUs have expanded the options for efficient ML inference.
+  accelerators like TPUs have expanded the options for efficient ML inference. I
+  take this post as a chance to explore a single point in a rapidly growing
+  kernel optimization space
 type: blog
 tags:
   - ml-systems
 ---
+
+Rapid developments in both model architectures and dedicated accelerators for inference are expanding the kernel optimization space. This post is a chance for me to share my findings while exploring just one point in this space.
+
 
 # What Makes an SSM Different from a Transformer?
  
