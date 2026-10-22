@@ -1,21 +1,16 @@
 ---
 title: Writing Fast Mamba Kernels for TPUs
 date: 2026-10-13
-description: Rapid developments in structured state space models and hardware
-  accelerators like TPUs have expanded the options for efficient ML inference. I
-  take this post as a chance to explore a single point in a rapidly growing
-  kernel optimization space
+description: "Rapid developments in structured state space models and hardware
+  accelerators such as TPUs have expanded the options for efficient ML
+  inference. "
 type: blog
 tags:
   - ml-systems
 ---
-
-Rapid developments in both model architectures and dedicated accelerators for inference are expanding the kernel optimization space. This post is a chance for me to share my findings while exploring just one point in this space.
-
-
 # What Makes an SSM Different from a Transformer?
  
-The "state" in a structured state space sequence model (SSM) has a fixed size regardless of input length, while a transformer's attention mechanism computes a dot product for each previous key. At each step i of generation a transformer computes i - 1 dot products in its masked-self attention layer. Repeatedly performing this step to grow a sequence up to $n$ tokens results in inference that is quadratic in n. 
+The "state" in a structured state space sequence model (SSM) has a fixed size regardless of input length, while a transformer's attention mechanism computes a dot product for each previous key. At each step $i$ of generation a transformer computes $i - 1$ dot products in its masked-self attention layer. Repeatedly performing this step to grow a sequence up to $n$ tokens results in inference that is quadratic in n. 
 
 # References
 
