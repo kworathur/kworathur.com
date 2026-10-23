@@ -1,10 +1,14 @@
 ---
-title: 'Chasing datacenter energy savings that seemed too good to be true'
-date: '2026-05-04'
-description: 'Chasing datacenter energy savings that seemed too good to be true'
-type: 'blog'
-featuredImage: './thumbnail.jpg'
-tags: ['Performance', 'Distributed Tracing', 'Jaeger', 'Linux']
+title: Chasing datacenter energy savings that seemed too good to be true
+date: 2026-05-04
+description: Chasing datacenter energy savings that seemed too good to be true
+type: blog
+tags:
+  - Performance
+  - Distributed Tracing
+  - Jaeger
+  - Linux
+featuredImage: ./thumbnail.jpg
 ---
 
 For a few weeks this spring, I thought my team had uncovered a way to make datacenters more energy efficient. Spoiler: we hadn't. This post is a story of how I tried (and failed) to reproduce our initial results, with some tips for building more robust benchmarks.
@@ -68,7 +72,7 @@ There's our p99 latency in the fifth row from the bottom! It looks like 99 perce
 With that context and baseline in place, let's get into the investigation. We'll look at **three potential flaws** in my setup.
 Along the way, I'll share some general tips for reproducible benchmarking, which can help not only researchers, but engineers in industry too! Just as researchers make claims in papers that must be backed by reproducible results, companies make guarantees about how their services will perform in the real world through _service-level objectives (SLOs)_.
 
-## Pinning Down Noisy Results
+## Non-determinism by core affinity
 
 Re-running my experiments without any changes, I found that power measurements varied between runs, with a standard deviation in power measurements of roughly **~2 watts**. This variability sometimes made it look like `schedutil` provided worse energy efficiency at high load than `performance`; in some runs, the opposite was true.
 
@@ -89,7 +93,7 @@ Controlling for task placement helped me stabilize my power measurements in betw
 
 ![New power plots show a clear convergence in power usage between the two governors](./power_consumption_converges.png)
 
-## Ruling Out the Cache
+## Non-determinism by caching
 
 Remember how I said I ran all `performance` governor trials before `schedutil` trials? That seemingly benign detail might have biased the `schedutil` results in its favor due to shared cache state between trials. Caches provide faster accesses to frequently used application data than your standard database query. In the hotel search service, cache reads are included in the critical path to help the server maximize its response throughput.
 
@@ -109,7 +113,7 @@ As a follow up, I decided to switch the order of my experiments - I would run `s
 
 I turned my attention to the power measurements, the ones that showed a gap between `schedutil` and `performance`.
 
-## Reconciling the Servers
+## Non-determinism by human
 
 After making my experiments reproducible, I started digging into my `git` commit history to find a version of the codebase that produced those peculiar power results at the start of this post. I had about **50 commits** that I made in the days prior to obtaining the initial results:
 
