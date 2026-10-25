@@ -2,8 +2,8 @@
 title: Writing Fast Mamba Kernels for TPUs
 date: 2026-10-13
 description: "Rapid developments in structured state space models and hardware
-  accelerators such as TPUs have expanded the options for efficient ML
-  inference. "
+  accelerators such as TPUs have expanded the options for efficient ML inference
+  and kernel optimization. "
 type: blog
 tags:
   - ml-systems
@@ -14,7 +14,7 @@ The "state" in a structured state space sequence model (SSM) has a fixed size re
 
 # TPU v5e Roofline Model for Baseline Implementation
 
-Without porting the custom CUDA kernels for selective scan to TPU just yet, let's see how SSMs perform without a more naive selection mechanism. I'm using a TPU v5e, which features TensorCores with massive matrix multiply units like newer TPU generations, while saving cost.
+Without porting the custom CUDA kernels for selective scan to TPU just yet, let's see how SSMs perform without a more naive selection mechanism. I'm using a TPU v5e, which features TensorCores with massive matrix multiply units like newer TPU generations, at a lower cost.
 
 
 
