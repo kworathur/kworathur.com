@@ -8,13 +8,15 @@ type: blog
 tags:
   - ml-systems
 ---
-# TPU v5e Roofline Model and Naive Implementation
-
-Let's take a linear-time invariant SSM as the naive implementation of our algorithm and measure its properties on a TPU v5e.
-
 # What Makes an SSM Different from a Transformer?
  
 The "state" in a structured state space sequence model (SSM) has a fixed size regardless of input length, while a transformer's attention mechanism computes a dot product for each previous key. At each step $i$ of generation a transformer computes $i - 1$ dot products in its masked-self attention layer. Repeatedly performing this step to grow a sequence up to $n$ tokens results in inference that is quadratic in n. 
+
+# TPU v5e Roofline Model for Baseline Implementation
+
+Without porting the custom CUDA kernels for selective scan to TPU just yet, let's see how SSMs perform without a more naive selection mechanism. I'm using a TPU v5e, which features TensorCores with massive matrix multiply units like newer TPU generations, while saving cost.
+
+
 
 # References
 
