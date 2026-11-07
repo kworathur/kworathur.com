@@ -1,5 +1,5 @@
 ---
-title: Writing Fast Mamba Kernels for TPUs
+title: Writing fast mamba kernels for TPUs
 date: 2026-10-13
 description: "A venture into programming for alternative accelerators "
 type: blog
