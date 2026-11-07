@@ -15,7 +15,7 @@ The "state" in a structured state space sequence model (SSM) has a fixed size re
 
 # TPU v5e Roofline Model for Baseline Implementation
 
-Without porting the custom CUDA kernels for selective scan to TPU just yet, let's see how SSMs perform without a more naive selection mechanism. I'm using a TPU v5e, which features TensorCores with massive matrix multiply units like newer TPU generations, at a lower cost.
+Without porting the custom CUDA kernels for selective scan to TPU just yet, let's see how SSMs perform using hidden state updates computed sequentially over an input with $L$ positions. I'm using a TPU v5e, which features TensorCores with massive matrix multiply units like newer TPU generations, at a lower cost.
 
 ![Trying out different loop optimizations before parallelizing the state updates](./mamba_tpu_roofiline_plot.png)
 
