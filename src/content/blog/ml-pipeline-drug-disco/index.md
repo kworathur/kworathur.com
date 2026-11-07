@@ -1,5 +1,5 @@
 ---
-title: ML Pipelines for Drug Discovery at Gene2Lead
+title: Analyzing potential drug targets at the proteome scale with ML
 date: 2025-07-31
 description: "Software Engineer Intern at Gene2Lead: deep learning on
   protein-drug interactions, candidate selection APIs, and a visualization
