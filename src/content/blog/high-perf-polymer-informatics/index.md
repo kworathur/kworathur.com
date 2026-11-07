@@ -1,5 +1,5 @@
 ---
-title: Working at Matmerize
+title: Building reliable systems for AI-driven polymer informatics
 date: 2026-08-31
 description: "Software Engineer Intern at Matmerize: faster predictions, a
   pull-based prediction engine, and automated backup restoration."
@@ -12,9 +12,7 @@ tags:
   - C++
 ---
 
-**Software Engineer Intern** · Atlanta, GA · May 2026 – Aug 2026
-
-**Stack:** AWS, Terraform, Python, C++
+While at Matmerize, I've been able to work on interesting backend development problems in the polymer informatics space:
 
 # Re-Architecting our Prediction Engine
 
