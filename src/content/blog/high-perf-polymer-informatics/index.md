@@ -24,6 +24,6 @@ Our prediction engine previously relied on a deprecated AWs library to receive n
 
 # Automated backup testing and restoration
 
-We test backups of our production data frequently enough that it can be a little cumbersome to inspect data and job details by hand. Using some terraform and bash scripts, I automated testing of our production backups. Coverage went from less than 1% of platform data to 100%, and recovery now under 20 minutes, down from ~1 hour and 45 minutes.
+We test backups of our production data frequently enough that it can be a little cumbersome to inspect data and job details by hand. Using some terraform and bash scripts, I automated testing of our production backups. Coverage went from less than 1% of platform data to 100%, and recovery now takes **under 20 minutes**, down from ~1 hour and 45 minutes.
 
 ![Automated production backup testing and restoration using Terraform, increasing testing coverage from less than 1% of platform data to 100% and achieving a recovery time of under 20 minutes.](/assets/matmerize-backup-automation.svg)
