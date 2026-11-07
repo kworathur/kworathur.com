@@ -16,7 +16,7 @@ While at Matmerize, I've been able to work on interesting backend development pr
 
 # Re-Architecting our Prediction Engine
 
-Our prediction engine previously relied on a deprecated AWS library to receive new training hobs. Rather than having our worker instances have work pushed to them, I refactored them to pull jobs from SQS queues natively.
+Our prediction engine previously relied on a deprecated AWS library to receive new training jobs. Rather than having our worker instances have work pushed to them, I refactored them to pull jobs from SQS queues natively.
 
 ![The refactored prediction engine removes `sqsd`, an unmaintaned dependency, from production builds.](/assets/matmerize-pull-based-architecture.svg)
 
