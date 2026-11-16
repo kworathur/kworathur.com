@@ -30,6 +30,18 @@ All content is markdown in the repository:
 
 You can edit these files by hand, or use the CMS.
 
+### Equations
+
+Posts support LaTeX through KaTeX. Write inline math between single dollar signs (`$e^{i\pi} + 1 = 0$`). Write a display equation between double dollar signs, each on its own line:
+
+```
+$$
+\int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}
+$$
+```
+
+A plain dollar amount such as `$5` is safe as long as there is no second `$` in the same paragraph. Write `\$` to be sure. Invalid LaTeX shows in red instead of breaking the build. In the CMS, switch the body to **Markdown** mode (the toggle above the editor) when you type equations. The rich text mode may change backslashes and underscores when it saves. The editor preview does not render math. The published page does.
+
 The resume is not in this repository. It is served from CloudFront at `https://uploads.kworathur.com/keshav_worathur_resume.pdf`. To update it, upload a new file to the S3 bucket and invalidate the path in CloudFront.
 
 ## Choosing where each asset is served from

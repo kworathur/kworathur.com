@@ -1,4 +1,6 @@
 import { defineConfig } from 'astro/config';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import type { Root, Element } from 'hast';
 import type { Root as MdRoot, Parent as MdParent } from 'mdast';
 
@@ -147,8 +149,9 @@ export default defineConfig({
   },
   markdown: {
     syntaxHighlight: 'prism',
-    remarkPlugins: [remarkVideoShortcode],
+    remarkPlugins: [remarkMath, remarkVideoShortcode],
     rehypePlugins: [
+      rehypeKatex,
       [
         'rehype-external-links',
         { target: '_blank', rel: ['noopener', 'noreferrer'] },
