@@ -9,6 +9,8 @@ local_backend: true
 site_url: https://kworathur.com
 display_url: https://kworathur.com
 
+# Paths stay site-relative so the editor preview works before a deploy ends.
+# The site build points them at the CDN when PUBLIC_CDN_URL is set.
 media_folder: public/assets/uploads
 public_folder: /assets/uploads
 
@@ -50,7 +52,14 @@ collections:
           required: false,
           hint: Add one tag per line.,
         }
-      - { label: Featured image, name: featuredImage, widget: hidden, required: false }
+      - {
+          label: Cover image,
+          name: featuredImage,
+          widget: image,
+          required: false,
+          choose_url: false,
+          hint: Optional. Shown on the home page card. Without one the card gets a gradient.,
+        }
       - {
           label: Featured image caption,
           name: featuredImageCaption,

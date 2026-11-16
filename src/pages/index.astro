@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Intro from '../components/Intro.astro';
-import PostList from '../components/PostList.astro';
+import PostGrid from '../components/PostGrid.astro';
 import { getPosts } from '../lib/posts';
 
 const posts = await getPosts();
@@ -9,8 +9,5 @@ const posts = await getPosts();
 
 <BaseLayout>
   <Intro />
-  <section aria-labelledby="writing-heading">
-    <h2 id="writing-heading" class="section-heading">Writing</h2>
-    <PostList posts={posts} />
-  </section>
+  <PostGrid posts={posts} />
 </BaseLayout>

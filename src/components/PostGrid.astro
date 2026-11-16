@@ -1,0 +1,27 @@
+---
+import PostCard from './PostCard.astro';
+import { groupByYear } from '../lib/posts';
+import type { Post } from '../lib/posts';
+
+interface Props {
+  posts: Post[];
+}
+
+const groups = groupByYear(Astro.props.posts);
+---
+
+{
+  groups.map(({ year, posts }) => (
+    <section class="year-group" aria-labelledby={`year-${year}`}>
+      <h2 id={`year-${year}`} class="year-heading">
+        {year}
+      </h2>
+      <hr />
+      <div class="card-grid">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    </section>
+  ))
+}

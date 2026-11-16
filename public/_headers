@@ -1,0 +1,10 @@
+# Cache rules for the CloudFront distribution that pulls from this site.
+# /_astro/ file names contain a content hash, so they never change.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+# Files uploaded in the CMS or kept in public/assets keep their names.
+/assets/*
+  Cache-Control: public, max-age=86400
+  Access-Control-Allow-Origin: *

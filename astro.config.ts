@@ -1,6 +1,38 @@
 import { defineConfig } from 'astro/config';
 import type { Root, Element } from 'hast';
 
+// Origin of the CloudFront distribution that serves static assets,
+// e.g. https://cdn.kworathur.com. Leave unset to serve assets from the site.
+try {
+  process.loadEnvFile('.env');
+} catch {
+  // No .env file: rely on the process environment (for example on Netlify).
+}
+const cdnUrl = (process.env.PUBLIC_CDN_URL ?? '').replace(/\/+$/, '');
+
+// Rehype plugin: points root-relative /assets/ URLs in markdown (images and
+// downloads uploaded through the CMS) at the CDN. The CMS keeps writing
+// site-relative paths, so its previews still work before a deploy finishes.
+function rehypeCdnAssets() {
+  return (tree: Root) => {
+    if (!cdnUrl) return;
+    function visit(node: Root | Element): void {
+      if (node.type === 'element') {
+        for (const key of ['src', 'href'] as const) {
+          const value = node.properties?.[key];
+          if (typeof value === 'string' && value.startsWith('/assets/')) {
+            node.properties[key] = `${cdnUrl}${value}`;
+          }
+        }
+      }
+      for (const child of node.children) {
+        if (child.type === 'element') visit(child);
+      }
+    }
+    visit(tree);
+  };
+}
+
 // Rehype plugin: wraps standalone <p><img …/></p> blocks in <figure> elements
 // and appends <figcaption> from the title or alt text.
 // Handles both single-image and multi-image paragraphs (adjacent markdown image
@@ -58,6 +90,9 @@ function rehypeFigureCaption() {
 export default defineConfig({
   site: 'https://kworathur.com',
   trailingSlash: 'never',
+  build: {
+    assetsPrefix: cdnUrl || undefined,
+  },
   redirects: {
     '/blog': '/',
   },
@@ -69,6 +104,7 @@ export default defineConfig({
         { target: '_blank', rel: ['noopener', 'noreferrer'] },
       ],
       rehypeFigureCaption,
+      rehypeCdnAssets,
     ],
   },
 });
