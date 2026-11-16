@@ -8,7 +8,6 @@ tags:
   - Distributed Tracing
   - Jaeger
   - Linux
-featuredImage: ./thumbnail.jpg
 ---
 
 For a few weeks this spring, I thought my team had uncovered a way to make datacenters more energy efficient. Spoiler: we hadn't. This post is a story of how I tried (and failed) to reproduce our initial results, with some tips for building more robust benchmarks.
