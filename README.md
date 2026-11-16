@@ -30,7 +30,27 @@ All content is markdown in the repository:
 
 You can edit these files by hand, or use the CMS.
 
-The resume is `public/keshav_worathur_resume.pdf`. To update it, replace the file and commit. Netlify serves it from its own CDN at `/keshav_worathur_resume.pdf`.
+The resume is not in this repository. It is served from CloudFront at `https://uploads.kworathur.com/keshav_worathur_resume.pdf`. To update it, upload a new file to the S3 bucket and invalidate the path in CloudFront.
+
+## Choosing where each asset is served from
+
+Any asset can come from Netlify or CloudFront. To move one, change its URL:
+
+- A file in `public/` is served by Netlify at `/<name>`. A file in the S3 bucket is served by CloudFront at `https://uploads.kworathur.com/<name>`.
+- Link to the file with the full URL for the host you want, in the intro, in a post, or in the CMS. To switch hosts, upload the file to the other host and change the URL.
+- Build output and CMS image uploads follow `PUBLIC_CDN_URL` (see below).
+
+## Videos and other large files
+
+GitHub limits files to 100 MB, and the CMS commits files to the repository. Put videos in S3 and link them by URL:
+
+1. Encode as H.264 MP4 so it plays on every phone: `ffmpeg -i in.mov -c:v libx264 -crf 23 -movflags +faststart -c:a aac out.mp4`.
+2. Upload with a unique name and a long cache time: `aws s3 cp out.mp4 s3://kworathur-portfolio/videos/2026/demo.mp4 --cache-control "public, max-age=31536000, immutable"`.
+3. In the CMS, open the post body and choose **Add component > Video**. Enter `https://uploads.kworathur.com/videos/2026/demo.mp4`. A poster image URL is optional.
+
+The CMS saves this as `{{< video src="URL" >}}` on its own line in the markdown. The site turns it into a `<video>` player. CloudFront serves video in ranges, so playback starts quickly and seeking works.
+
+The CMS cannot upload to S3. Upload from the AWS console or the AWS CLI. The CMS only links to the file.
 
 ## Edit from the browser or your phone (Decap CMS)
 

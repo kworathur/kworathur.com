@@ -389,6 +389,14 @@ p {
     margin: 0 auto;
   }
 
+  video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1.75rem auto;
+    border-radius: 6px;
+  }
+
   figure {
     margin: 1.75rem 0;
     text-align: center;
