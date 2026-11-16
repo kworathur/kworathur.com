@@ -2,7 +2,8 @@
 const links = [
   {
     label: 'Resume',
-    href: 'https://uploads.kworathur.com/keshav_worathur_resume.pdf',
+    href: '/keshav_worathur_resume.pdf',
+    newTab: true,
   },
   { label: 'GitHub', href: 'https://github.com/kworathur' },
   { label: 'LinkedIn', href: 'https://linkedin.com/in/kworathur' },
@@ -31,9 +32,13 @@ const links = [
           {i > 0 && <span aria-hidden="true">·</span>}
           <a
             href={link.href}
-            target={link.href.startsWith('http') ? '_blank' : undefined}
+            target={
+              link.newTab || link.href.startsWith('http') ? '_blank' : undefined
+            }
             rel={
-              link.href.startsWith('http') ? 'noopener noreferrer' : undefined
+              link.newTab || link.href.startsWith('http')
+                ? 'noopener noreferrer'
+                : undefined
             }
           >
             {link.label}

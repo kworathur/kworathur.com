@@ -30,6 +30,8 @@ All content is markdown in the repository:
 
 You can edit these files by hand, or use the CMS.
 
+The resume is `public/keshav_worathur_resume.pdf`. To update it, replace the file and commit. Netlify serves it from its own CDN at `/keshav_worathur_resume.pdf`.
+
 ## Edit from the browser or your phone (Decap CMS)
 
 Go to `https://kworathur.com/admin` and log in with GitHub. You can create and edit posts and the Now page. When you tap **Publish**, Decap commits the change to `main`. Netlify then rebuilds the site. The change is live after about one minute.
@@ -62,7 +64,7 @@ The CMS configuration is in `public/admin/config.yml`.
 
 ## Static assets and the CDN (CloudFront)
 
-By default, the site serves all assets itself. Set `PUBLIC_CDN_URL` (for example `https://cdn.kworathur.com`) to serve static assets from a CloudFront distribution instead. The build then uses the CDN address for:
+By default, Netlify serves all assets from its own CDN. Set `PUBLIC_CDN_URL` (for example `https://cdn.kworathur.com`) to serve static assets from a CloudFront distribution instead. The build then uses the CDN address for:
 
 - Built CSS, fonts (Inter, Ubuntu Mono, Albertus), and optimized images (`/_astro/*`).
 - Images and files that posts reference as `/assets/...`. This includes files uploaded in the CMS.
