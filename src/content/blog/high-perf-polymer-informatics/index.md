@@ -4,12 +4,11 @@ date: 2026-08-31
 description: "Software Engineer Intern at Matmerize: faster predictions, a
   pull-based prediction engine, and automated backup restoration."
 type: experience
+archived: true
 tags:
-  - Experience
-  - AWS
-  - Terraform
-  - Python
-  - C++
+  - backend-dev
+  - cloud-infra
+  - automation
 ---
 
 While at Matmerize, I've been able to work on interesting backend development problems in the polymer informatics space:

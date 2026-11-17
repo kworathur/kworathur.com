@@ -1,5 +1,88 @@
 import { defineConfig } from 'astro/config';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import type { Root, Element } from 'hast';
+import type { Root as MdRoot, Parent as MdParent } from 'mdast';
+
+// Origin of the CloudFront distribution that serves static assets,
+// e.g. https://cdn.kworathur.com. Leave unset to serve assets from the site.
+try {
+  process.loadEnvFile('.env');
+} catch {
+  // No .env file: rely on the process environment (for example on Netlify).
+}
+const cdnUrl = (process.env.PUBLIC_CDN_URL ?? '').replace(/\/+$/, '');
+
+// Rehype plugin: points root-relative /assets/ URLs in markdown (images and
+// downloads uploaded through the CMS) at the CDN. The CMS keeps writing
+// site-relative paths, so its previews still work before a deploy finishes.
+function rehypeCdnAssets() {
+  return (tree: Root) => {
+    if (!cdnUrl) return;
+    function visit(node: Root | Element): void {
+      if (node.type === 'element') {
+        for (const key of ['src', 'href'] as const) {
+          const value = node.properties?.[key];
+          if (typeof value === 'string' && value.startsWith('/assets/')) {
+            node.properties[key] = `${cdnUrl}${value}`;
+          }
+        }
+      }
+      for (const child of node.children) {
+        if (child.type === 'element') visit(child);
+      }
+    }
+    visit(tree);
+  };
+}
+
+// Remark plugin: turns a paragraph that only holds {{< video src="URL" >}}
+// (the CMS "Video" button) into a <video> tag. Use an optional poster="URL".
+function remarkVideoShortcode() {
+  const shortcode =
+    /^\{\{<\s*video\s+src="([^"]+)"(?:\s+poster="([^"]*)")?\s*>\}\}$/;
+  const isSafeUrl = (url: string) => /^(https?:\/\/|\/)/.test(url);
+  const withCdn = (url: string) =>
+    cdnUrl && url.startsWith('/assets/') ? `${cdnUrl}${url}` : url;
+  const attr = (value: string) =>
+    value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
+  // Smart quotes turn " into curly quotes and GFM turns URLs into links
+  // before this plugin runs, so rebuild the plain text of the paragraph.
+  function plainText(node: MdParent['children'][number]): string {
+    if (node.type === 'text') return node.value;
+    if (node.type === 'link') return node.children.map(plainText).join('');
+    return '\u0000';
+  }
+
+  return (tree: MdRoot) => {
+    function visit(node: MdParent): void {
+      node.children.forEach((child, i) => {
+        if (child.type === 'paragraph') {
+          const text = child.children
+            .map(plainText)
+            .join('')
+            .replace(/[\u201c\u201d]/g, '"')
+            .trim();
+          const match = shortcode.exec(text);
+          if (match && isSafeUrl(match[1])) {
+            const poster =
+              match[2] && isSafeUrl(match[2])
+                ? ` poster="${attr(withCdn(match[2]))}"`
+                : '';
+            node.children[i] = {
+              type: 'html',
+              value: `<video controls playsinline preload="metadata" src="${attr(withCdn(match[1]))}"${poster}></video>`,
+            };
+            return;
+          }
+        }
+        if ('children' in child) visit(child as MdParent);
+      });
+    }
+    visit(tree);
+  };
+}
 
 // Rehype plugin: wraps standalone <p><img …/></p> blocks in <figure> elements
 // and appends <figcaption> from the title or alt text.
@@ -58,17 +141,23 @@ function rehypeFigureCaption() {
 export default defineConfig({
   site: 'https://kworathur.com',
   trailingSlash: 'never',
+  build: {
+    assetsPrefix: cdnUrl || undefined,
+  },
   redirects: {
     '/blog': '/',
   },
   markdown: {
     syntaxHighlight: 'prism',
+    remarkPlugins: [remarkMath, remarkVideoShortcode],
     rehypePlugins: [
+      rehypeKatex,
       [
         'rehype-external-links',
         { target: '_blank', rel: ['noopener', 'noreferrer'] },
       ],
       rehypeFigureCaption,
+      rehypeCdnAssets,
     ],
   },
 });

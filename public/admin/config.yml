@@ -9,6 +9,8 @@ local_backend: true
 site_url: https://kworathur.com
 display_url: https://kworathur.com
 
+# Paths stay site-relative so the editor preview works before a deploy ends.
+# The site build points them at the CDN when PUBLIC_CDN_URL is set.
 media_folder: public/assets/uploads
 public_folder: /assets/uploads
 
@@ -26,6 +28,8 @@ collections:
     format: frontmatter
     summary: '{{title}} ({{date}})'
     sortable_fields: ['date', 'title']
+    view_filters:
+      - { label: Archived, field: archived, pattern: true }
     fields:
       - { label: Title, name: title, widget: string }
       - {
@@ -50,12 +54,27 @@ collections:
           required: false,
           hint: Add one tag per line.,
         }
-      - { label: Featured image, name: featuredImage, widget: hidden, required: false }
+      - {
+          label: Cover image,
+          name: featuredImage,
+          widget: image,
+          required: false,
+          choose_url: false,
+          hint: Optional. Shown on the home page card. Without one the card gets a gradient.,
+        }
       - {
           label: Featured image caption,
           name: featuredImageCaption,
           widget: hidden,
           required: false,
+        }
+      - {
+          label: Archived,
+          name: archived,
+          widget: boolean,
+          default: false,
+          required: false,
+          hint: Turn on to hide this post from the website. The post stays in the CMS and the repository.,
         }
       - { label: Body, name: body, widget: markdown }
 

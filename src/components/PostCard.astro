@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets';
+import { formatDate } from '../lib/posts';
+import type { Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const MAX_TAGS = 3;
+
+// Posts without a cover image get a two-color gradient. The hues come from
+// the slug, so a post keeps the same gradient on every build.
+function hash(value: string): number {
+  let h = 0;
+  for (const char of value) h = (h * 31 + char.charCodeAt(0)) >>> 0;
+  return h;
+}
+const h = hash(post.slug);
+const hueA = h % 360;
+const hueB = (hueA + 40 + ((h >>> 9) % 50)) % 360;
+---
+
+<a class="card" href={`/blog/${post.slug}`}>
+  <div
+    class="card-cover"
+    style={post.cover ? undefined : `--hue-a: ${hueA}; --hue-b: ${hueB};`}
+    data-gradient={post.cover ? undefined : ''}
+  >
+    {
+      post.cover && (
+        <Image
+          src={post.cover}
+          alt=""
+          width={640}
+          widths={[320, 640, 960]}
+          sizes="(min-width: 640px) 240px, 90vw"
+          loading="lazy"
+        />
+      )
+    }
+  </div>
+  <div class="card-body">
+    <h3 class="card-title">{post.title}</h3>
+    <div class="card-meta">
+      <time datetime={post.date}>{formatDate(post.date)}</time>
+      {
+        post.tags
+          .slice(0, MAX_TAGS)
+          .map((tag) => <span class="chip">{tag}</span>)
+      }
+    </div>
+  </div>
+</a>

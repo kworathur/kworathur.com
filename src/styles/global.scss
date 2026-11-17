@@ -3,7 +3,7 @@
   font-weight: 100 900;
   font-display: swap;
   font-style: normal;
-  src: url('/fonts/AlbertusMTStd.woff2') format('woff2');
+  src: url('../assets/fonts/AlbertusMTStd.woff2') format('woff2');
 }
 
 :root {
@@ -15,9 +15,19 @@
   --border: #ddd;
   --code-bg: #f5f5f5;
   --code-text: #222;
-  --font-serif:
-    'Gentium Book Plus', 'Gentium Book Basic', georgia, 'Times New Roman',
-    serif;
+  --card-bg: #fff;
+  --card-hover-bg: #fbfbfa;
+  --card-border: rgb(55 53 47 / 12%);
+  --card-shadow: 0 1px 2px rgb(15 15 15 / 5%);
+  --card-shadow-hover: 0 6px 18px rgb(15 15 15 / 10%);
+  --chip-bg: rgb(227 226 224 / 55%);
+  --chip-text: #5a5955;
+  --cover-s: 70%;
+  --cover-l1: 86%;
+  --cover-l2: 76%;
+  --font-sans:
+    'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', roboto, sans-serif;
   --font-mono:
     'Ubuntu Mono', 'SFMono-Regular', menlo, consolas, 'Liberation Mono',
     monospace;
@@ -36,6 +46,16 @@
     --border: #333;
     --code-bg: #1c1c1c;
     --code-text: #e6e6e6;
+    --card-bg: #1a1a1a;
+    --card-hover-bg: #212121;
+    --card-border: rgb(255 255 255 / 10%);
+    --card-shadow: 0 1px 2px rgb(0 0 0 / 25%);
+    --card-shadow-hover: 0 6px 18px rgb(0 0 0 / 40%);
+    --chip-bg: rgb(255 255 255 / 9%);
+    --chip-text: #c7c7c4;
+    --cover-s: 40%;
+    --cover-l1: 40%;
+    --cover-l2: 30%;
   }
 }
 
@@ -45,20 +65,14 @@
 
 html {
   text-size-adjust: 100%;
-  font-size: 18px;
-}
-
-@media (width >= 640px) {
-  html {
-    font-size: 20px;
-  }
+  font-size: 16px;
 }
 
 body {
   margin: 0;
   color: var(--text);
-  font-family: var(--font-serif);
-  line-height: 1.55;
+  font-family: var(--font-sans);
+  line-height: 1.65;
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
 }
@@ -70,7 +84,7 @@ body {
 
 .page {
   width: 100%;
-  max-width: 44rem;
+  max-width: 48rem;
   min-height: 100dvh;
   margin: 0 auto;
   padding: 0 1.25rem;
@@ -103,12 +117,13 @@ h3,
 h4 {
   margin: 0;
   color: var(--heading);
-  font-weight: 400;
+  font-weight: 650;
+  letter-spacing: -0.02em;
   line-height: 1.25;
 }
 
 h1 {
-  font-size: 2.2rem;
+  font-size: 2.1rem;
 }
 
 p {
@@ -141,6 +156,7 @@ p {
   nav a {
     color: var(--muted);
     font-size: 0.9rem;
+    font-weight: 500;
   }
 
   nav a:hover,
@@ -165,7 +181,8 @@ p {
   margin-bottom: 3rem;
 
   h1 {
-    font-size: 2.6rem;
+    font-size: 2.5rem;
+    letter-spacing: -0.03em;
   }
 
   p {
@@ -182,56 +199,113 @@ p {
   }
 }
 
-.section-heading {
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.4rem;
-  font-size: 1.3rem;
-  border-bottom: 1px solid var(--border);
+.year-group {
+  margin-bottom: 2.5rem;
+
+  hr {
+    height: 1px;
+    margin: 0.5rem 0 1.25rem;
+    border: 0;
+    background: var(--border);
+  }
 }
 
-.post-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.year-heading {
+  font-size: 1.5rem;
+}
 
-  li {
-    margin: 0;
-  }
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  gap: 1rem;
+}
 
-  .post-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1.25rem;
-    padding: 0.45rem 0;
-  }
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: inherit;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  transition:
+    box-shadow 0.15s ease,
+    transform 0.15s ease,
+    background-color 0.15s ease;
 
-  .post-row:hover {
+  &:hover {
     text-decoration: none;
+    background: var(--card-hover-bg);
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-2px);
   }
 
-  .post-title {
-    color: var(--link);
+  &:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+  }
+}
+
+.card-cover {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-bottom: 1px solid var(--card-border);
+
+  &[data-gradient] {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--hue-a) var(--cover-s) var(--cover-l1)),
+      hsl(var(--hue-b) var(--cover-s) var(--cover-l2))
+    );
   }
 
-  .post-row:hover .post-title {
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
+}
+
+.card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.8rem 0.9rem 0.9rem;
+}
+
+.card-title {
+  margin: 0;
+  color: var(--heading);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: auto;
 
   time {
-    flex-shrink: 0;
+    margin-right: 0.15rem;
     color: var(--muted);
-    font-size: 0.8rem;
-    white-space: nowrap;
+    font-size: 0.78rem;
   }
 }
 
-@media (width < 480px) {
-  .post-list .post-row {
-    flex-direction: column;
-    gap: 0;
-  }
+.chip {
+  padding: 0.05rem 0.45rem;
+  color: var(--chip-text);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  background: var(--chip-bg);
+  border-radius: 4px;
 }
 
 .meta {
@@ -243,7 +317,7 @@ p {
   margin-bottom: 2rem;
 
   h1 {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
   }
 
   .meta {
@@ -257,23 +331,23 @@ p {
 }
 
 .prose {
+  max-width: 42rem;
   overflow-wrap: break-word;
 
   h1,
   h2 {
     margin: 2.25rem 0 0;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 
   h3 {
     margin: 2rem 0 0;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   h4 {
     margin: 1.5rem 0 0;
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: 1.05rem;
   }
 
   h1 + p,
@@ -313,6 +387,19 @@ p {
     max-width: 100%;
     height: auto;
     margin: 0 auto;
+  }
+
+  video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1.75rem auto;
+    border-radius: 6px;
+  }
+
+  .katex-display {
+    margin: 1.5rem 0;
+    overflow: auto hidden;
   }
 
   figure {

@@ -1,4 +1,5 @@
 import { getCollection, render } from 'astro:content';
+import type { ImageMetadata } from 'astro';
 
 type Content = Awaited<ReturnType<typeof render>>['Content'];
 
@@ -8,6 +9,9 @@ export interface Post {
   /** ISO date (YYYY-MM-DD) */
   date: string;
   description: string;
+  tags: string[];
+  /** Cover image uploaded in the CMS, if any. */
+  cover?: ImageMetadata;
   Content: Content;
 }
 
@@ -20,9 +24,9 @@ function entrySlug(id: string): string {
   return id.replace(/\/index(\.md)?$/, '').replace(/\.md$/, '');
 }
 
-/** All posts, newest first. */
+/** Published posts, newest first. Archived posts are left out. */
 export async function getPosts(): Promise<Post[]> {
-  const entries = await getCollection('blog');
+  const entries = await getCollection('blog', ({ data }) => !data.archived);
   const posts = await Promise.all(
     entries.map(async (entry) => {
       const { Content } = await render(entry);
@@ -31,6 +35,8 @@ export async function getPosts(): Promise<Post[]> {
         title: entry.data.title,
         date: entry.data.date,
         description: entry.data.description,
+        tags: entry.data.tags ?? [],
+        cover: entry.data.featuredImage,
         Content,
       };
     })
@@ -56,4 +62,16 @@ export function formatDate(
     ...options,
     timeZone: 'UTC',
   });
+}
+
+/** Groups posts by year, newest year first. Keeps each group's post order. */
+export function groupByYear(posts: Post[]): { year: string; posts: Post[] }[] {
+  const groups = new Map<string, Post[]>();
+  for (const post of posts) {
+    const year = post.date.slice(0, 4);
+    groups.set(year, [...(groups.get(year) ?? []), post]);
+  }
+  return [...groups.entries()]
+    .sort(([a], [b]) => b.localeCompare(a))
+    .map(([year, yearPosts]) => ({ year, posts: yearPosts }));
 }

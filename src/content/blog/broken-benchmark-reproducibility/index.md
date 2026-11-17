@@ -8,7 +8,6 @@ tags:
   - Distributed Tracing
   - Jaeger
   - Linux
-featuredImage: ./thumbnail.jpg
 ---
 
 For a few weeks this spring, I thought my team had uncovered a way to make datacenters more energy efficient. Spoiler: we hadn't. This post is a story of how I tried (and failed) to reproduce our initial results, with some tips for building more robust benchmarks.
@@ -128,7 +127,7 @@ When I ran `git bisect start`, I was prompted to give a reference to a known "ba
 
 The process of using `git bisect` to find the breaking change in my code looked something like this:
 
-- I would let git bisect pick a commit roughly in the middle of the good–bad range
+- I would let git bisect pick a commit roughly in the middle of the commit range
 - I would compile the search service binaries, run my experiments, and spot-check the power results.
 - I would mark the commit good or bad with `git bisect good` or `git bisect bad`, then let bisect pick the next candidate, filtering out roughly half of all remaining commits on each pass.
 
