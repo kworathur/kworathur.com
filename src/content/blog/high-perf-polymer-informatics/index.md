@@ -6,11 +6,9 @@ description: "Software Engineer Intern at Matmerize: faster predictions, a
 type: experience
 archived: true
 tags:
-  - Experience
-  - AWS
-  - Terraform
-  - Python
-  - C++
+  - backend-dev
+  - cloud-infra
+  - automation
 ---
 
 While at Matmerize, I've been able to work on interesting backend development problems in the polymer informatics space:
