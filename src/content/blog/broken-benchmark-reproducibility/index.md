@@ -4,29 +4,25 @@ date: 2026-05-04
 description: Chasing datacenter energy savings that seemed too good to be true
 type: blog
 tags:
-  - Performance
-  - Distributed Tracing
-  - Jaeger
-  - Linux
+  - distributed-systems
 ---
-
 For a few weeks this spring, I thought my team had uncovered a way to make datacenters more energy efficient. Spoiler: we hadn't. This post is a story of how I tried (and failed) to reproduce our initial results, with some tips for building more robust benchmarks.
 
 Datacenters — the windowless buildings behind every online purchase, post, and prompt — are consuming electricity at alarming rates. Critics argue that datacenters are environmentally disruptive, and recent construction projects have been delayed in part due to these concerns. For our final project in **CS8803: Datacenter Networks and Systems**, we asked: could software make these facilities more energy efficient?
 
-Our approach: clever _load balancing algorithms_ that distribute work amongst hundreds of servers. After being told we couldn't [sink a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launch one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) we were set on making our software technique a winner.
+Our approach: clever *load balancing algorithms* that distribute work amongst hundreds of servers. After being told we couldn't [sink a datacenter in the ocean](https://news.microsoft.com/source/features/sustainability/project-natick-underwater-datacenter/) or [launch one into space](https://www.npr.org/2026/04/03/nx-s1-5718416/ai-data-centers-in-space-spacex-elon-musk) we were set on making our software technique a winner.
 
-My job was to simulate thousands of users concurrently searching for hotels online while taking detailed measurements of servers' _power consumption_ and _response latency_ (think: time it takes to receive a confirmation message after clicking "book" on AirBnB).
+My job was to simulate thousands of users concurrently searching for hotels online while taking detailed measurements of servers' *power consumption* and *response latency* (think: time it takes to receive a confirmation message after clicking "book" on AirBnB).
 
 # How It All Started
 
 ![Big if true: the one figure in our 6-page report that caught our professor's eye](questionable_results.png)
 
-The figure above shows two plots: latency on the left, power consumption on the right, as we increase the number of queries per second (QPS). In the latency plot, solid lines represent median latency while dashed lines represent p99 latency (i.e. the latency that 99% of requests come in under). In both plots, the blue and orange lines represent different _frequency governors_. These frequency governors act similar to a speed limiter in a car: they intentionally limit the CPU clock rate (or top speed) to optimize for power utilization (or fuel economy/safety).
+The figure above shows two plots: latency on the left, power consumption on the right, as we increase the number of queries per second (QPS). In the latency plot, solid lines represent median latency while dashed lines represent p99 latency (i.e. the latency that 99% of requests come in under). In both plots, the blue and orange lines represent different *frequency governors*. These frequency governors act similar to a speed limiter in a car: they intentionally limit the CPU clock rate (or top speed) to optimize for power utilization (or fuel economy/safety).
 
 In the power plot, we can see the `schedutil` governor (blue line) uses consistently less power than the `performance` governor (orange line). Meanwhile, the latency plot shows that `schedutil` matches `performance` in terms of latency as we increase the QPS. `schedutil` dynamically adjusts clock rate based on demand; `performance` pins it at maximum. This made the result feasible, but nonetheless surprising, since earlier experiments hadn't shown such a clear power gap between the two. Intuitively, `schedutil` should have pushed the clock rate near maximum at high load to close the power gap, which was not the case here.  
 
-If this result held up, it would mean **real power savings** for some production workloads without any modifications to an application's code. The best part is we don't have to sacrifice _p99 latency_, a metric datacenter operators tend to care about most, because it captures the worst experience most users will have. Admittedly, I didn't recognize the impact of this discovery at the time — but our professor did!
+If this result held up, it would mean **real power savings** for some production workloads without any modifications to an application's code. The best part is we don't have to sacrifice *p99 latency*, a metric datacenter operators tend to care about most, because it captures the worst experience most users will have. Admittedly, I didn't recognize the impact of this discovery at the time — but our professor did!
 
 # Debugging My Experiments
 
@@ -40,15 +36,13 @@ Second, the tight deadlines encouraged me to run multiple experiments in paralle
 
 Before I explain my debugging approach, it's important to understand which quantities I am measuring and how they are being measured. I ran my experiments on the hotel search service of the open-source [DeathStarBench](https://github.com/kworathur/DeathStarBench/) benchmarking suite, measuring three key quantities:
 
-- _p50 latency_ (i.e. median latency), which is the time 50% of requests complete under.
+* *p50 latency* (i.e. median latency), which is the time 50% of requests complete under.
+* *p99 latency*, which is the time 99% of requests complete under. Latency measurements are reported in milliseconds and are obtained from a load testing tool called `wrk`, running on the client.
+* *power consumption* of the server that handles search requests, measured in watts and collected by the `powerstat` command-line utility running on the server. `powerstat` uses hardware interfaces on Intel machines to obtain accurate running average power measurements.
 
-- _p99 latency_, which is the time 99% of requests complete under. Latency measurements are reported in milliseconds and are obtained from a load testing tool called `wrk`, running on the client.
+I'm measuring these quantities while incrementing the number of QPS until the server reaches its *saturation point*: the point at which a server cannot take on any more requests per unit time. Each trial tests a single QPS level, and I performed all trials for the `performance` governor before the `schedutil` governor.
 
-- _power consumption_ of the server that handles search requests, measured in watts and collected by the `powerstat` command-line utility running on the server. `powerstat` uses hardware interfaces on Intel machines to obtain accurate running average power measurements.
-
-I'm measuring these quantities while incrementing the number of QPS until the server reaches its _saturation point_: the point at which a server cannot take on any more requests per unit time. Each trial tests a single QPS level, and I performed all trials for the `performance` governor before the `schedutil` governor.
-
-We choose the `performance` governor as a baseline since it does _not_ limit the CPU's clock rate, and we want to see whether limiting clock rates can improve energy efficiency. Let's quickly run a test at low load (1000 QPS) to establish a baseline.
+We choose the `performance` governor as a baseline since it does *not* limit the CPU's clock rate, and we want to see whether limiting clock rates can improve energy efficiency. Let's quickly run a test at low load (1000 QPS) to establish a baseline.
 
 ```text
 Test Results @ http://10.10.1.2:5000
@@ -69,7 +63,7 @@ Test Results @ http://10.10.1.2:5000
 There's our p99 latency in the fifth row from the bottom! It looks like 99 percent of requests completed in under ~22 milliseconds. On the power side, `powerstat` reports the server using ~63W of power on average over a 60 second trial. These initial measurements will help us sanity check our fixes as we start debugging.
 
 With that context and baseline in place, let's get into the investigation. We'll look at **three potential flaws** in my setup.
-Along the way, I'll share some general tips for reproducible benchmarking, which can help not only researchers, but engineers in industry too! Just as researchers make claims in papers that must be backed by reproducible results, companies make guarantees about how their services will perform in the real world through _service-level objectives (SLOs)_.
+Along the way, I'll share some general tips for reproducible benchmarking, which can help not only researchers, but engineers in industry too! Just as researchers make claims in papers that must be backed by reproducible results, companies make guarantees about how their services will perform in the real world through *service-level objectives (SLOs)*.
 
 ## Non-determinism by core affinity
 
@@ -121,15 +115,15 @@ git log --oneline --pretty=fuller --all | grep 'Keshav' | wc -l
       53
 ```
 
-Rather than check all of these commits one by one, I chose to use `git bisect`. This command essentially reduces my O(N) search for a breaking change to O(log\_2(N)), where N is the number of commits to inspect. 
+Rather than check all of these commits one by one, I chose to use `git bisect`. This command essentially reduces my O(N) search for a breaking change to O(log_2(N)), where N is the number of commits to inspect. 
 
-When I ran `git bisect start`, I was prompted to give a reference to a known "bad" commit — a version of the codebase where I _couldn't_ reproduce my results. Next, I was prompted to give a known "good" commit — a version of the codebase where I _could_ reproduce my results:
+When I ran `git bisect start`, I was prompted to give a reference to a known "bad" commit — a version of the codebase where I *couldn't* reproduce my results. Next, I was prompted to give a known "good" commit — a version of the codebase where I *could* reproduce my results:
 
 The process of using `git bisect` to find the breaking change in my code looked something like this:
 
-- I would let git bisect pick a commit roughly in the middle of the commit range
-- I would compile the search service binaries, run my experiments, and spot-check the power results.
-- I would mark the commit good or bad with `git bisect good` or `git bisect bad`, then let bisect pick the next candidate, filtering out roughly half of all remaining commits on each pass.
+* I would let git bisect pick a commit roughly in the middle of the commit range
+* I would compile the search service binaries, run my experiments, and spot-check the power results.
+* I would mark the commit good or bad with `git bisect good` or `git bisect bad`, then let bisect pick the next candidate, filtering out roughly half of all remaining commits on each pass.
 
 Finally, `git bisect` was able to point me to the commit that broke my benchmark:
 
