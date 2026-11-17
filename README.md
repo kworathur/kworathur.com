@@ -27,6 +27,9 @@ All content is markdown in the repository:
 - `src/content/blog/<slug>/index.md` holds a post. Put its images in the same folder.
 - A post can have a cover image (`featuredImage` in the front matter, set with the **Cover image** field in the CMS). The home page card shows it. A post without a cover image gets a two-color gradient.
 - `src/content/now/now.md` holds the `/now` page.
+- A post with `archived: true` in the front matter is left out of the site. It does not appear on the home page and its page is not built, so its URL returns a 404. In the CMS, turn on the **Archived** toggle on the post and publish. Use the **Filter by** menu in the post list to show only archived posts. Turn the toggle off to bring a post back.
+
+Archiving hides a post from the website only. The markdown stays in this repository, and the repository is public. To remove a post for good, delete it.
 
 You can edit these files by hand, or use the CMS.
 

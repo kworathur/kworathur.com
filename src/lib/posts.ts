@@ -24,9 +24,9 @@ function entrySlug(id: string): string {
   return id.replace(/\/index(\.md)?$/, '').replace(/\.md$/, '');
 }
 
-/** All posts, newest first. */
+/** Published posts, newest first. Archived posts are left out. */
 export async function getPosts(): Promise<Post[]> {
-  const entries = await getCollection('blog');
+  const entries = await getCollection('blog', ({ data }) => !data.archived);
   const posts = await Promise.all(
     entries.map(async (entry) => {
       const { Content } = await render(entry);

@@ -22,6 +22,7 @@ const blog = defineCollection({
       featuredImage: z.preprocess(relativeImagePath, image()).optional(),
       featuredImageCaption: z.string().optional(),
       tags: z.array(z.string()).optional(),
+      archived: z.boolean().default(false),
     }),
 });
 

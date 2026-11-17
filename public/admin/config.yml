@@ -28,6 +28,8 @@ collections:
     format: frontmatter
     summary: '{{title}} ({{date}})'
     sortable_fields: ['date', 'title']
+    view_filters:
+      - { label: Archived, field: archived, pattern: true }
     fields:
       - { label: Title, name: title, widget: string }
       - {
@@ -65,6 +67,14 @@ collections:
           name: featuredImageCaption,
           widget: hidden,
           required: false,
+        }
+      - {
+          label: Archived,
+          name: archived,
+          widget: boolean,
+          default: false,
+          required: false,
+          hint: Turn on to hide this post from the website. The post stays in the CMS and the repository.,
         }
       - { label: Body, name: body, widget: markdown }
 
