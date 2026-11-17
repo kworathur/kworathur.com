@@ -1,5 +1,5 @@
 ---
-title: TPU Kernel Optimization for Sequence Models
+title: TPU kernel optimization for sequence models
 date: 2026-10-13
 description: "A venture into programming for alternative accelerators "
 type: blog
