@@ -5,6 +5,7 @@ description: "Software Engineer Intern at Gene2Lead: deep learning on
   protein-drug interactions, candidate selection APIs, and a visualization
   tool."
 type: experience
+archived: true
 tags:
   - Experience
   - PyTorch

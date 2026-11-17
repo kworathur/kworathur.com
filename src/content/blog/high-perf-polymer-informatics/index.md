@@ -4,6 +4,7 @@ date: 2026-08-31
 description: "Software Engineer Intern at Matmerize: faster predictions, a
   pull-based prediction engine, and automated backup restoration."
 type: experience
+archived: true
 tags:
   - Experience
   - AWS
