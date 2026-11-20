@@ -30,6 +30,8 @@ The code for a mamba block is designed to efficiently use a GPU's memory hierarc
 1. CPU-bound for-loop: this was my first attempt, which performed quite poorly since it called the forward pass of Mamba $L$ times for a sequence of length $L$, resulting in a large number of device memory transfers and high idle time. Didn't include this in the roofline model since it performed terribly.
 2. For-loop inside `forward()` method: this approach reduced the number of host-device transfers since `forward()` was now only called once per sequence.
 3. Messing with physical memory allocation of tensors: the GPU-optimized version of Mamba prefers to store the hidden state tensors in batch-feature-sequence order, while I found that collapsing tensors into two dimensions by combining batch and sequence dimensions actually resulted in a noticeable increase in HBM utilization.
-4. Last, I used `torch.compile()` to automatically fuse certain operations, leading to an increase in arithmetic intensity.## References
+4. Last, I used `torch.compile()` to automatically fuse certain operations, leading to an increase in arithmetic intensity.
+
+\## References
 
 \[1] A. Gu and T. Dao, “Mamba: Linear-Time Sequence Modeling With Selective State Spaces,” arXiv.org, Dec. 01, 2023. https://arxiv.org/abs/2312.00752 (accessed Oct. 22, 2026).
