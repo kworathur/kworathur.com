@@ -17,7 +17,7 @@ Can we build an accurate model entirely out of these memory-efficient building b
 
 ## What makes mamba's architecture different from the transformer?
 
-The selective state update found in Mamba is a recurrence that uses the previous hidden state $h_{t - 1}$ to compute the current hidden state $h_{t}$ (the size of hidden states never changes). Because of this dependency, there is no easy way to vectorize sequence encoding in transformers. While it might seem that the only way to compute the recurrence is to go step by step, there is a better way. When adding up numbers 1 to 100, we don't need to go left-to-right: we can split up the sum any way we want to divide and conquer. Both addition, and mamba's core recurrence, are associative.
+The selective state update found in Mamba is a recurrence that uses the previous hidden state $h*{t - 1}$ to compute the current hidden state $h*{t}$ (the size of hidden states never changes). Because of this dependency, there is no easy way to vectorize sequence encoding like we can in transformers. While it might seem that the only way to compute the recurrence is to go step by step, there is a better way. When adding up numbers 1 to 100, we don't need to go left-to-right: we can split up the sum any way we want to divide and conquer. Both addition, and mamba's core recurrence, are associative.
 
 ![This diagram represents just one iteration in a for-loop over $L$ positions in the Mamba recurrence](/assets/mamba_ssm_forward.drawio.svg)
 
@@ -25,16 +25,11 @@ The selective state update found in Mamba is a recurrence that uses the previous
 
 The code for a mamba block is designed to efficiently use a GPU's memory hierarchy, so I was curious to see how the performance gains would transfer to TPUs. Before trying to port the CUDA kernels to JAX, I first wanted to see how much performance I could get out of a simple for loop. I tried four main configurations:
 
-
 ![Trying out different loop optimizations before parallelizing the state updates](./mamba_tpu_roofiline_plot.png)
 
-
 1. CPU-bound for-loop: this was my first attempt, which performed quite poorly since it called the forward pass of Mamba $L$ times for a sequence of length $L$, resulting in a large number of device memory transfers and high idle time. Didn't include this in the roofline model since it performed terribly.
-
 2. For-loop inside `forward()` method: this approach reduced the number of host-device transfers since `forward()` was now only called once per sequence.
-
 3. Messing with physical memory allocation of tensors: the GPU-optimized version of Mamba prefers to store the hidden state tensors in batch-feature-sequence order, while I found that collapsing tensors into two dimensions by combining batch and sequence dimensions actually resulted in a noticeable increase in HBM utilization.
- 
 4. Last, I used `torch.compile()` to automatically fuse certain operations, leading to an increase in arithmetic intensity.## References
 
 \[1] A. Gu and T. Dao, “Mamba: Linear-Time Sequence Modeling With Selective State Spaces,” arXiv.org, Dec. 01, 2023. https://arxiv.org/abs/2312.00752 (accessed Oct. 22, 2026).
