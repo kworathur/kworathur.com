@@ -5,6 +5,7 @@ description: "A venture into programming for alternative accelerators "
 type: blog
 tags:
   - ml-systems
+featuredImage: mamba_tpu_roofiline_plot.png
 ---
 # Motivation
 
@@ -14,13 +15,13 @@ One night, when I was debugging a memory allocation bug in vLLM specifically aff
 
 Can we build an accurate model entirely out of these memory-efficient building blocks, side-stepping the accuracy vs. latency tradeoff that comes with transformers? For now, that seems unlikely, but these blocks, known in the literature as **Mamba blocks**, are here to stay. However, the rich toolkit developed for transformer inference optimization - KV cache compression, paged attention, flash attention, and more - will not be readily applicable. So how can we perform efficient inference with these transformer alternatives?
 
-## What Makes an SSM Different from a Transformer?
+## What makes an SSM different from a transformer?
 
 To understand how these models are implemented in code, a basic understanding of their math is helpful. The "state" in a structured state space sequence model (SSM) has a fixed size regardless of input length, while a transformer's attention mechanism computes a dot product for each previous key. At each step $i$ of generation, a transformer computes $i - 1$ dot products in its masked-self attention layer. Repeatedly performing this step to grow a sequence up to $n$ tokens results in inference that is quadratic in $n$. 
 
 ![This diagram represents just one iteration in a for-loop over $L$ positions in the Mamba recurrence](/assets/mamba_ssm_forward.drawio.svg)
 
-## TPU v5e Roofline Model
+## TPU v5e roofline model
 
 Before porting the custom CUDA kernels for selective scan to TPU, let's see how SSMs perform using hidden state updates computed sequentially over an input with $L$ positions:
 
